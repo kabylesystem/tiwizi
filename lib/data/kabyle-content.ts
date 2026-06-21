@@ -136,103 +136,39 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Comment",
+      "type": "multiple-choice",
+      "prompt": "acu",
+      "latin": "acu",
+      "audioId": 7167504,
       "options": [
-       "kra",
-       "ayen",
-       "amek",
-       "acu"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "D ____",
-      "latin": "D aṭas!",
-      "fr": "C'est beaucoup !",
-      "options": [
-       "kra",
-       "ayen",
-       "aṭas",
-       "acu"
-      ],
-      "correctAnswer": 2,
-      "audioId": 10190921
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D aṭas!",
-      "audioId": 10190921,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "C'est beaucoup !",
-       "Qu'y avait-il ?"
+       "Un (numéral et indéfini)",
+       "Quelque chose",
+       "Qu'est-ce que",
+       "Ce, cela"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Maintenant",
+      "prompt": "Qu'est-ce que",
       "options": [
+       "yiwen",
        "kra",
-       "ayen",
-       "tura",
-       "acu"
+       "acu",
+       "ayen"
       ],
       "correctAnswer": 2
      },
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Amek ihi?",
-      "audioId": 7065921,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Quoi de beau ?",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Mačči da.",
-      "audioId": 7354610,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Ce n'est pas ici.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Aru kra.",
-      "audioId": 7535829,
+      "latin": "Acu yellan?",
+      "audioId": 7167504,
       "options": [
        "Choisis-en un.",
-       "Sais-tu pourquoi ?",
        "Écris quelque chose.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ṛuḥ tura.",
-      "audioId": 7188281,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Va, maintenant.",
-       "Qu'y avait-il ?"
+       "Qu'y avait-il ?",
+       "Sais-tu pourquoi ?"
       ],
       "correctAnswer": 2
      },
@@ -251,6 +187,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7167504
      },
      {
+      "type": "order-words",
+      "prompt": "Qu'y avait-il ?",
+      "latin": "Acu yellan?",
+      "correctAnswer": "Acu yellan?",
+      "audioId": 7167504
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "ayen",
+      "latin": "ayen",
+      "audioId": 9205275,
+      "options": [
+       "Un (numéral et indéfini)",
+       "Quelque chose",
+       "Ce, cela",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Ce, cela",
+      "options": [
+       "yiwen",
+       "kra",
+       "ayen",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Teẓriḍ ayen?",
+      "audioId": 9205275,
+      "options": [
+       "Choisis-en un.",
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Teẓriḍ ____",
       "latin": "Teẓriḍ ayen?",
@@ -265,6 +245,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 9205275
      },
      {
+      "type": "order-words",
+      "prompt": "Sais-tu pourquoi ?",
+      "latin": "Teẓriḍ ayen?",
+      "correctAnswer": "Teẓriḍ ayen?",
+      "audioId": 9205275
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "kra",
+      "latin": "kra",
+      "audioId": 7535829,
+      "options": [
+       "Un (numéral et indéfini)",
+       "Ce, cela",
+       "Quelque chose",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Quelque chose",
+      "options": [
+       "yiwen",
+       "ayen",
+       "kra",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Aru kra.",
+      "audioId": 7535829,
+      "options": [
+       "Choisis-en un.",
+       "Sais-tu pourquoi ?",
+       "Écris quelque chose.",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Aru ____",
       "latin": "Aru kra.",
@@ -277,6 +301,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 7535829
+     },
+     {
+      "type": "order-words",
+      "prompt": "Écris quelque chose.",
+      "latin": "Aru kra.",
+      "correctAnswer": "Aru kra.",
+      "audioId": 7535829
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "yiwen",
+      "latin": "yiwen",
+      "audioId": 8193691,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Un (numéral et indéfini)",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Un (numéral et indéfini)",
+      "options": [
+       "kra",
+       "ayen",
+       "yiwen",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Xtir yiwen.",
+      "audioId": 8193691,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Choisis-en un.",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Xtir ____",
+      "latin": "Xtir yiwen.",
+      "fr": "Choisis-en un.",
+      "options": [
+       "kra",
+       "ayen",
+       "yiwen",
+       "acu"
+      ],
+      "correctAnswer": 2,
+      "audioId": 8193691
+     },
+     {
+      "type": "order-words",
+      "prompt": "Choisis-en un.",
+      "latin": "Xtir yiwen.",
+      "correctAnswer": "Xtir yiwen.",
+      "audioId": 8193691
      }
     ]
    },
@@ -395,50 +484,25 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Les gens",
+      "type": "multiple-choice",
+      "prompt": "nekk",
+      "latin": "nekk",
+      "audioId": 8558373,
       "options": [
-       "kra",
-       "ayen",
-       "medden",
-       "acu"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Ttarguɣ ____ iḍ.",
-      "latin": "Ttarguɣ yal iḍ.",
-      "fr": "Je rêve chaque nuit.",
-      "options": [
-       "kra",
-       "ayen",
-       "yal",
-       "acu"
-      ],
-      "correctAnswer": 2,
-      "audioId": 8100242
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ttarguɣ yal iḍ.",
-      "audioId": 8100242,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Je rêve chaque nuit.",
-       "Qu'y avait-il ?"
+       "Quelque chose",
+       "Ce, cela",
+       "Moi",
+       "Qu'est-ce que"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Gens de",
+      "prompt": "Moi",
       "options": [
        "kra",
        "ayen",
-       "at",
+       "nekk",
        "acu"
       ],
       "correctAnswer": 2
@@ -446,51 +510,12 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Ttemcabin medden.",
-      "audioId": 8797287,
+      "latin": "I nekk?",
+      "audioId": 8558373,
       "options": [
        "Écris quelque chose.",
        "Sais-tu pourquoi ?",
-       "Les gens se rassemblent.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Acḥal aya.",
-      "audioId": 7372702,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Il y a longtemps.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ulac ugur.",
-      "audioId": 7081687,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Aucun problème !",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D at talwit.",
-      "audioId": 7546880,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Ce sont des personnes pacifiques.",
+       "Est-ce que c'est pour moi ?",
        "Qu'y avait-il ?"
       ],
       "correctAnswer": 2
@@ -510,6 +535,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8558373
      },
      {
+      "type": "order-words",
+      "prompt": "Est-ce que c'est pour moi ?",
+      "latin": "I nekk?",
+      "correctAnswer": "I nekk?",
+      "audioId": 8558373
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "mliḥ",
+      "latin": "mliḥ",
+      "audioId": 8250071,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Bien ! D'accord !",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Bien ! D'accord !",
+      "options": [
+       "kra",
+       "ayen",
+       "mliḥ",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ečč mliḥ!",
+      "audioId": 8250071,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Mangez beaucoup !",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Ečč ____",
       "latin": "Ečč mliḥ!",
@@ -524,6 +593,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8250071
      },
      {
+      "type": "order-words",
+      "prompt": "Mangez beaucoup !",
+      "latin": "Ečč mliḥ!",
+      "correctAnswer": "Ečč mliḥ!",
+      "audioId": 8250071
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "ulac",
+      "latin": "ulac",
+      "audioId": 7081687,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Rien",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Rien",
+      "options": [
+       "kra",
+       "ayen",
+       "ulac",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ulac ugur.",
+      "audioId": 7081687,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Aucun problème !",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ ugur.",
       "latin": "Ulac ugur.",
@@ -536,6 +649,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 7081687
+     },
+     {
+      "type": "order-words",
+      "prompt": "Aucun problème !",
+      "latin": "Ulac ugur.",
+      "correctAnswer": "Ulac ugur.",
+      "audioId": 7081687
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "ar",
+      "latin": "ar",
+      "audioId": 7031989,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Jusqu'à",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Jusqu'à",
+      "options": [
+       "kra",
+       "ayen",
+       "ar",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ar tufat!",
+      "audioId": 7031989,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Au revoir !",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "____ tufat!",
+      "latin": "Ar tufat!",
+      "fr": "Au revoir !",
+      "options": [
+       "kra",
+       "ayen",
+       "ar",
+       "acu"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7031989
+     },
+     {
+      "type": "order-words",
+      "prompt": "Au revoir !",
+      "latin": "Ar tufat!",
+      "correctAnswer": "Ar tufat!",
+      "audioId": 7031989
      }
     ]
    },
@@ -654,50 +832,25 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Jour",
+      "type": "multiple-choice",
+      "prompt": "din",
+      "latin": "din",
+      "audioId": 7491979,
       "options": [
-       "kra",
-       "ayen",
-       "ass",
-       "acu"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Ruḥen ____",
-      "latin": "Ruḥen zik.",
-      "fr": "Ils sont partis tôt.",
-      "options": [
-       "kra",
-       "ayen",
-       "zik",
-       "acu"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7533771
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ruḥen zik.",
-      "audioId": 7533771,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Ils sont partis tôt.",
-       "Qu'y avait-il ?"
+       "Quelque chose",
+       "Ce, cela",
+       "Là (lieu dont il a été question)",
+       "Qu'est-ce que"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Quand",
+      "prompt": "Là (lieu dont il a été question)",
       "options": [
        "kra",
        "ayen",
-       "melmi",
+       "din",
        "acu"
       ],
       "correctAnswer": 2
@@ -705,51 +858,12 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Ass ameggaz.",
-      "audioId": 7244609,
+      "latin": "Qqim din!",
+      "audioId": 7491979,
       "options": [
        "Écris quelque chose.",
        "Sais-tu pourquoi ?",
-       "Je vous souhaite une excellente journée.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Wehmeɣ imi k-ẓṛiɣ.",
-      "audioId": 7372046,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Je suis surpris de vous voir.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Mazal ṭṭseɣ.",
-      "audioId": 7557193,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Je suis encore endormi.",
-       "Qu'y avait-il ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Melmi tluleḍ?",
-      "audioId": 7100791,
-      "options": [
-       "Écris quelque chose.",
-       "Sais-tu pourquoi ?",
-       "Quelle est ta date de naissance ?",
+       "Reste où tu es !",
        "Qu'y avait-il ?"
       ],
       "correctAnswer": 2
@@ -769,6 +883,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7491979
      },
      {
+      "type": "order-words",
+      "prompt": "Reste où tu es !",
+      "latin": "Qqim din!",
+      "correctAnswer": "Qqim din!",
+      "audioId": 7491979
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "anwa",
+      "latin": "anwa",
+      "audioId": 7167332,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Lequel",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Lequel",
+      "options": [
+       "kra",
+       "ayen",
+       "anwa",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Anwa wa?",
+      "audioId": 7167332,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "C’est qui ?",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ wa?",
       "latin": "Anwa wa?",
@@ -783,6 +941,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7167332
      },
      {
+      "type": "order-words",
+      "prompt": "C’est qui ?",
+      "latin": "Anwa wa?",
+      "correctAnswer": "Anwa wa?",
+      "audioId": 7167332
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "mazal",
+      "latin": "mazal",
+      "audioId": 7557193,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Encore",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Encore",
+      "options": [
+       "kra",
+       "ayen",
+       "mazal",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Mazal ṭṭseɣ.",
+      "audioId": 7557193,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Je suis encore endormi.",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ ṭṭseɣ.",
       "latin": "Mazal ṭṭseɣ.",
@@ -795,6 +997,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 7557193
+     },
+     {
+      "type": "order-words",
+      "prompt": "Je suis encore endormi.",
+      "latin": "Mazal ṭṭseɣ.",
+      "correctAnswer": "Mazal ṭṭseɣ.",
+      "audioId": 7557193
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "kečč",
+      "latin": "kečč",
+      "audioId": 7363242,
+      "options": [
+       "Quelque chose",
+       "Ce, cela",
+       "Toi",
+       "Qu'est-ce que"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Toi",
+      "options": [
+       "kra",
+       "ayen",
+       "kečč",
+       "acu"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "I kečč?",
+      "audioId": 7363242,
+      "options": [
+       "Écris quelque chose.",
+       "Sais-tu pourquoi ?",
+       "Et vous ?",
+       "Qu'y avait-il ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "I ____",
+      "latin": "I kečč?",
+      "fr": "Et vous ?",
+      "options": [
+       "kra",
+       "ayen",
+       "kečč",
+       "acu"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7363242
+     },
+     {
+      "type": "order-words",
+      "prompt": "Et vous ?",
+      "latin": "I kečč?",
+      "correctAnswer": "I kečč?",
+      "audioId": 7363242
      }
     ]
    }
@@ -925,90 +1192,39 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Parole",
+      "type": "multiple-choice",
+      "prompt": "ihi",
+      "latin": "ihi",
+      "audioId": 7065921,
       "options": [
-       "iḍelli",
-       "azekka",
-       "awal",
-       "ihi"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Uɣeɣ ____",
-      "latin": "Uɣeɣ awal.",
-      "fr": "J'ai obéi.",
-      "options": [
-       "iḍelli",
-       "azekka",
-       "awal",
-       "ihi"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7274202
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Uɣeɣ awal.",
-      "audioId": 7274202,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "J'ai obéi.",
-       "Quoi de beau ?"
+       "État",
+       "Hier",
+       "Et alors ! Interjection marquant la surprise…",
+       "Demain"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Autre",
+      "prompt": "Et alors ! Interjection marquant la surprise…",
       "options": [
+       "lḥal",
        "iḍelli",
-       "azekka",
-       "nniḍen",
-       "ihi"
+       "ihi",
+       "azekka"
       ],
       "correctAnswer": 2
      },
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "D acu txedmeḍ dɣa?",
-      "audioId": 7295240,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Que fis-tu alors ?",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Bɣiɣ win nniḍen.",
-      "audioId": 7110231,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Je veux l'autre.",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Nehḍeṛ idelli.",
-      "audioId": 7056919,
+      "latin": "Amek ihi?",
+      "audioId": 7065921,
       "options": [
        "Il fait beau.",
-       "À demain.",
        "Nous avons parlé hier.",
-       "Quoi de beau ?"
+       "Quoi de beau ?",
+       "À demain."
       ],
       "correctAnswer": 2
      },
@@ -1027,6 +1243,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7065921
      },
      {
+      "type": "order-words",
+      "prompt": "Quoi de beau ?",
+      "latin": "Amek ihi?",
+      "correctAnswer": "Amek ihi?",
+      "audioId": 7065921
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "azekka",
+      "latin": "azekka",
+      "audioId": 7367241,
+      "options": [
+       "État",
+       "Hier",
+       "Demain",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Demain",
+      "options": [
+       "lḥal",
+       "iḍelli",
+       "azekka",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ar azekka.",
+      "audioId": 7367241,
+      "options": [
+       "Il fait beau.",
+       "Nous avons parlé hier.",
+       "À demain.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Ar ____",
       "latin": "Ar azekka.",
@@ -1039,6 +1299,50 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 7367241
+     },
+     {
+      "type": "order-words",
+      "prompt": "À demain.",
+      "latin": "Ar azekka.",
+      "correctAnswer": "Ar azekka.",
+      "audioId": 7367241
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "iḍelli",
+      "latin": "iḍelli",
+      "audioId": 7056919,
+      "options": [
+       "État",
+       "Demain",
+       "Hier",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Hier",
+      "options": [
+       "lḥal",
+       "azekka",
+       "iḍelli",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Nehḍeṛ idelli.",
+      "audioId": 7056919,
+      "options": [
+       "Il fait beau.",
+       "À demain.",
+       "Nous avons parlé hier.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "fill",
@@ -1055,6 +1359,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7056919
      },
      {
+      "type": "order-words",
+      "prompt": "Nous avons parlé hier.",
+      "latin": "Nehḍeṛ idelli.",
+      "correctAnswer": "Nehḍeṛ idelli.",
+      "audioId": 7056919
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "lḥal",
+      "latin": "lḥal",
+      "audioId": 10664564,
+      "options": [
+       "Hier",
+       "Demain",
+       "État",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "État",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "lḥal",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Yelha lḥal.",
+      "audioId": 10664564,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "Il fait beau.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Yelha ____",
       "latin": "Yelha lḥal.",
@@ -1066,6 +1414,13 @@ export const kabyleUnits: Unit[] = [
        "ihi"
       ],
       "correctAnswer": 2,
+      "audioId": 10664564
+     },
+     {
+      "type": "order-words",
+      "prompt": "Il fait beau.",
+      "latin": "Yelha lḥal.",
+      "correctAnswer": "Yelha lḥal.",
       "audioId": 10664564
      }
     ]
@@ -1185,50 +1540,25 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Maison",
+      "type": "multiple-choice",
+      "prompt": "netta",
+      "latin": "netta",
+      "audioId": 7795224,
       "options": [
-       "iḍelli",
-       "azekka",
-       "axxam",
-       "ihi"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Tom ____ Boston.",
-      "latin": "Tom si Boston.",
-      "fr": "Tom vient de Boston.",
-      "options": [
-       "iḍelli",
-       "azekka",
-       "si",
-       "ihi"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7138675
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Tom si Boston.",
-      "audioId": 7138675,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Tom vient de Boston.",
-       "Quoi de beau ?"
+       "Hier",
+       "Demain",
+       "Lui",
+       "Et alors ! Interjection marquant la surprise…"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Jusqu'à, jusqu'à ce que",
+      "prompt": "Lui",
       "options": [
        "iḍelli",
        "azekka",
-       "armi",
+       "netta",
        "ihi"
       ],
       "correctAnswer": 2
@@ -1236,51 +1566,12 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Nuɣ axxam.",
-      "audioId": 7492425,
+      "latin": "Netta i meẓẓi fell-i.",
+      "audioId": 7795224,
       "options": [
        "Nous avons parlé hier.",
        "À demain.",
-       "Nous avons acheté une maison.",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ɛyiɣ cwiṭ.",
-      "audioId": 7346397,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Je suis un peu fatiguée.",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ugdeɣ acemma.",
-      "audioId": 8249954,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "J'ai un peu peur.",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Amek armi?",
-      "audioId": 7481015,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Comment est-ce possible ?",
+       "Il est plus jeune que moi.",
        "Quoi de beau ?"
       ],
       "correctAnswer": 2
@@ -1300,6 +1591,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7795224
      },
      {
+      "type": "order-words",
+      "prompt": "Il est plus jeune que moi.",
+      "latin": "Netta i meẓẓi fell-i.",
+      "correctAnswer": "Netta i meẓẓi fell-i.",
+      "audioId": 7795224
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "ala",
+      "latin": "ala",
+      "audioId": 10147926,
+      "options": [
+       "Hier",
+       "Demain",
+       "Non !",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Non !",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "ala",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ala kečč.",
+      "audioId": 10147926,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "Tu es le seul.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ kečč.",
       "latin": "Ala kečč.",
@@ -1314,6 +1649,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 10147926
      },
      {
+      "type": "order-words",
+      "prompt": "Tu es le seul.",
+      "latin": "Ala kečč.",
+      "correctAnswer": "Ala kečč.",
+      "audioId": 10147926
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "acemma",
+      "latin": "acemma",
+      "audioId": 8249954,
+      "options": [
+       "Hier",
+       "Demain",
+       "Rien",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Rien",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "acemma",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ugdeɣ acemma.",
+      "audioId": 8249954,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "J'ai un peu peur.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Ugdeɣ ____",
       "latin": "Ugdeɣ acemma.",
@@ -1326,6 +1705,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 8249954
+     },
+     {
+      "type": "order-words",
+      "prompt": "J'ai un peu peur.",
+      "latin": "Ugdeɣ acemma.",
+      "correctAnswer": "Ugdeɣ acemma.",
+      "audioId": 8249954
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "sin",
+      "latin": "sin",
+      "audioId": 7193036,
+      "options": [
+       "Hier",
+       "Demain",
+       "Deux",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Deux",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "sin",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ddren i sin.",
+      "audioId": 7193036,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "Les deux sont vivants.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Ddren i ____",
+      "latin": "Ddren i sin.",
+      "fr": "Les deux sont vivants.",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "sin",
+       "ihi"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7193036
+     },
+     {
+      "type": "order-words",
+      "prompt": "Les deux sont vivants.",
+      "latin": "Ddren i sin.",
+      "correctAnswer": "Ddren i sin.",
+      "audioId": 7193036
      }
     ]
    },
@@ -1444,50 +1888,25 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Vie",
+      "type": "multiple-choice",
+      "prompt": "yerna",
+      "latin": "yerna",
+      "audioId": 9655259,
       "options": [
-       "iḍelli",
-       "azekka",
-       "tudert",
-       "ihi"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Mel ____",
-      "latin": "Mel abrid.",
-      "fr": "Montre le chemin.",
-      "options": [
-       "iḍelli",
-       "azekka",
-       "abrid",
-       "ihi"
-      ],
-      "correctAnswer": 2,
-      "audioId": 8357440
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Mel abrid.",
-      "audioId": 8357440,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Montre le chemin.",
-       "Quoi de beau ?"
+       "Hier",
+       "Demain",
+       "Et puis",
+       "Et alors ! Interjection marquant la surprise…"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Toi",
+      "prompt": "Et puis",
       "options": [
        "iḍelli",
        "azekka",
-       "kemm",
+       "yerna",
        "ihi"
       ],
       "correctAnswer": 2
@@ -1495,51 +1914,12 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Tecbeḥ tudert.",
-      "audioId": 7128191,
+      "latin": "Yerna umneɣ-k.",
+      "audioId": 9655259,
       "options": [
        "Nous avons parlé hier.",
        "À demain.",
-       "La vie est belle.",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Tili rjiɣ-k.",
-      "audioId": 8446537,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Je t'aurais attendu.",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Llan wid imenεen?",
-      "audioId": 7368274,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Y avait-il des survivants ?",
-       "Quoi de beau ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "I kemm?",
-      "audioId": 7363243,
-      "options": [
-       "Nous avons parlé hier.",
-       "À demain.",
-       "Et vous ?",
+       "Pourtant je te crois.",
        "Quoi de beau ?"
       ],
       "correctAnswer": 2
@@ -1559,6 +1939,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 9655259
      },
      {
+      "type": "order-words",
+      "prompt": "Pourtant je te crois.",
+      "latin": "Yerna umneɣ-k.",
+      "correctAnswer": "Yerna umneɣ-k.",
+      "audioId": 9655259
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "yelli",
+      "latin": "yelli",
+      "audioId": 7751028,
+      "options": [
+       "Hier",
+       "Demain",
+       "(Ma) fille",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "(Ma) fille",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "yelli",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "D yelli.",
+      "audioId": 7751028,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "C'est ma fille.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "D ____",
       "latin": "D yelli.",
@@ -1573,6 +1997,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7751028
      },
      {
+      "type": "order-words",
+      "prompt": "C'est ma fille.",
+      "latin": "D yelli.",
+      "correctAnswer": "D yelli.",
+      "audioId": 7751028
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "wid",
+      "latin": "wid",
+      "audioId": 7368274,
+      "options": [
+       "Hier",
+       "Demain",
+       "Ceux-là, ceux qui",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Ceux-là, ceux qui",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "wid",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Llan wid imenεen?",
+      "audioId": 7368274,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "Y avait-il des survivants ?",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Llan ____ imenεen?",
       "latin": "Llan wid imenεen?",
@@ -1585,6 +2053,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 7368274
+     },
+     {
+      "type": "order-words",
+      "prompt": "Y avait-il des survivants ?",
+      "latin": "Llan wid imenεen?",
+      "correctAnswer": "Llan wid imenεen?",
+      "audioId": 7368274
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "maḍi",
+      "latin": "maḍi",
+      "audioId": 7206458,
+      "options": [
+       "Hier",
+       "Demain",
+       "Pas du tout, absolument pas, jamais",
+       "Et alors ! Interjection marquant la surprise…"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Pas du tout, absolument pas, jamais",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "maḍi",
+       "ihi"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ttuɣ maḍi.",
+      "audioId": 7206458,
+      "options": [
+       "Nous avons parlé hier.",
+       "À demain.",
+       "J'ai complètement oublié.",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Ttuɣ ____",
+      "latin": "Ttuɣ maḍi.",
+      "fr": "J'ai complètement oublié.",
+      "options": [
+       "iḍelli",
+       "azekka",
+       "maḍi",
+       "ihi"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7206458
+     },
+     {
+      "type": "order-words",
+      "prompt": "J'ai complètement oublié.",
+      "latin": "Ttuɣ maḍi.",
+      "correctAnswer": "Ttuɣ maḍi.",
+      "audioId": 7206458
      }
     ]
    }
@@ -1715,103 +2248,39 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "#NULL",
+      "type": "multiple-choice",
+      "prompt": "ɣas",
+      "latin": "ɣas",
+      "audioId": 7875339,
       "options": [
-       "gar",
-       "atan",
-       "yili",
-       "ɣas"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Maca ____",
-      "latin": "Maca ayɣer?",
-      "fr": "Mais pourquoi ?",
-      "options": [
-       "gar",
-       "atan",
-       "ayɣer",
-       "ɣas"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7115822
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Maca ayɣer?",
-      "audioId": 7115822,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Mais pourquoi ?",
-       "Vas-y déjà !"
+       "Ce que",
+       "Mm",
+       "Être absent d'esprit",
+       "Maladie"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Celle qui, que",
+      "prompt": "Être absent d'esprit",
       "options": [
+       "ayagi",
        "gar",
-       "atan",
-       "tin",
-       "ɣas"
+       "ɣas",
+       "atan"
       ],
       "correctAnswer": 2
      },
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Ih, ad yili.",
-      "audioId": 7435075,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Je pense que oui.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ers dagi!",
-      "audioId": 9080605,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Descends ici !",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Lliɣ raεeɣ gar lɣaci.",
-      "audioId": 9470218,
+      "latin": "Ɣas ruḥ!",
+      "audioId": 7875339,
       "options": [
        "J'utilise cela.",
-       "Il est vide.",
        "J'étais perdu dans la foule.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Tin d tikti-k.",
-      "audioId": 9690918,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "C'était ton idée.",
-       "Vas-y déjà !"
+       "Vas-y déjà !",
+       "Il est vide."
       ],
       "correctAnswer": 2
      },
@@ -1830,6 +2299,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7875339
      },
      {
+      "type": "order-words",
+      "prompt": "Vas-y déjà !",
+      "latin": "Ɣas ruḥ!",
+      "correctAnswer": "Ɣas ruḥ!",
+      "audioId": 7875339
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "atan",
+      "latin": "atan",
+      "audioId": 7192429,
+      "options": [
+       "Ce que",
+       "Mm",
+       "Maladie",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Maladie",
+      "options": [
+       "ayagi",
+       "gar",
+       "atan",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Atan dilem.",
+      "audioId": 7192429,
+      "options": [
+       "J'utilise cela.",
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ dilem.",
       "latin": "Atan dilem.",
@@ -1844,6 +2357,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7192429
      },
      {
+      "type": "order-words",
+      "prompt": "Il est vide.",
+      "latin": "Atan dilem.",
+      "correctAnswer": "Atan dilem.",
+      "audioId": 7192429
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "gar",
+      "latin": "gar",
+      "audioId": 9470218,
+      "options": [
+       "Ce que",
+       "Maladie",
+       "Mm",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Mm",
+      "options": [
+       "ayagi",
+       "atan",
+       "gar",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Lliɣ raεeɣ gar lɣaci.",
+      "audioId": 9470218,
+      "options": [
+       "J'utilise cela.",
+       "Il est vide.",
+       "J'étais perdu dans la foule.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Lliɣ raεeɣ ____ lɣaci.",
       "latin": "Lliɣ raεeɣ gar lɣaci.",
@@ -1856,6 +2413,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 9470218
+     },
+     {
+      "type": "order-words",
+      "prompt": "J'étais perdu dans la foule.",
+      "latin": "Lliɣ raεeɣ gar lɣaci.",
+      "correctAnswer": "Lliɣ raεeɣ gar lɣaci.",
+      "audioId": 9470218
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "ayagi",
+      "latin": "ayagi",
+      "audioId": 6718513,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Ce que",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Ce que",
+      "options": [
+       "gar",
+       "atan",
+       "ayagi",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Seqdaceɣ ayagi.",
+      "audioId": 6718513,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "J'utilise cela.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Seqdaceɣ ____",
+      "latin": "Seqdaceɣ ayagi.",
+      "fr": "J'utilise cela.",
+      "options": [
+       "gar",
+       "atan",
+       "ayagi",
+       "ɣas"
+      ],
+      "correctAnswer": 2,
+      "audioId": 6718513
+     },
+     {
+      "type": "order-words",
+      "prompt": "J'utilise cela.",
+      "latin": "Seqdaceɣ ayagi.",
+      "correctAnswer": "Seqdaceɣ ayagi.",
+      "audioId": 6718513
      }
     ]
    },
@@ -1974,50 +2596,25 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Limiter",
+      "type": "multiple-choice",
+      "prompt": "dima",
+      "latin": "dima",
+      "audioId": 8840585,
       "options": [
-       "gar",
-       "atan",
-       "ḥedd",
-       "ɣas"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Asgunfu isεa ____ meqqren.",
-      "latin": "Asgunfu isεa azal meqqren.",
-      "fr": "Le repos est important.",
-      "options": [
-       "gar",
-       "atan",
-       "azal",
-       "ɣas"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7314666
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Asgunfu isεa azal meqqren.",
-      "audioId": 7314666,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Le repos est important.",
-       "Vas-y déjà !"
+       "Mm",
+       "Maladie",
+       "Toujours",
+       "Être absent d'esprit"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Ma mère, maman",
+      "prompt": "Toujours",
       "options": [
        "gar",
        "atan",
-       "yemma",
+       "dima",
        "ɣas"
       ],
       "correctAnswer": 2
@@ -2025,51 +2622,12 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Tεeqleḍ ḥedd?",
-      "audioId": 8735550,
+      "latin": "Teεyiḍ dima.",
+      "audioId": 8840585,
       "options": [
        "J'étais perdu dans la foule.",
        "Il est vide.",
-       "Reconnais-tu quiconque ?",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D aman.",
-      "audioId": 10761801,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "C'est de l'eau.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Thudd taddart tnifift-nni.",
-      "audioId": 11548996,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "La tornade a détruit tout le village.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D yemma.",
-      "audioId": 7099367,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "C'est ma maman.",
+       "Tu es toujours fatiguée.",
        "Vas-y déjà !"
       ],
       "correctAnswer": 2
@@ -2089,6 +2647,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8840585
      },
      {
+      "type": "order-words",
+      "prompt": "Tu es toujours fatiguée.",
+      "latin": "Teεyiḍ dima.",
+      "correctAnswer": "Teεyiḍ dima.",
+      "audioId": 8840585
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "deffir",
+      "latin": "deffir",
+      "audioId": 6717469,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Derrière, l'arrière",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Derrière, l'arrière",
+      "options": [
+       "gar",
+       "atan",
+       "deffir",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Deffir nwen.",
+      "audioId": 6717469,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "Après vous.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ nwen.",
       "latin": "Deffir nwen.",
@@ -2103,6 +2705,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 6717469
      },
      {
+      "type": "order-words",
+      "prompt": "Après vous.",
+      "latin": "Deffir nwen.",
+      "correctAnswer": "Deffir nwen.",
+      "audioId": 6717469
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "taddart",
+      "latin": "taddart",
+      "audioId": 11548996,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Village",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Village",
+      "options": [
+       "gar",
+       "atan",
+       "taddart",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Thudd taddart tnifift-nni.",
+      "audioId": 11548996,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "La tornade a détruit tout le village.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Thudd ____ tnifift-nni.",
       "latin": "Thudd taddart tnifift-nni.",
@@ -2115,6 +2761,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 11548996
+     },
+     {
+      "type": "order-words",
+      "prompt": "La tornade a détruit tout le village.",
+      "latin": "Thudd taddart tnifift-nni.",
+      "correctAnswer": "Thudd taddart tnifift-nni.",
+      "audioId": 11548996
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "baba",
+      "latin": "baba",
+      "audioId": 7088527,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Mon père",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Mon père",
+      "options": [
+       "gar",
+       "atan",
+       "baba",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Hatan baba.",
+      "audioId": 7088527,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "Voici mon père.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Hatan ____",
+      "latin": "Hatan baba.",
+      "fr": "Voici mon père.",
+      "options": [
+       "gar",
+       "atan",
+       "baba",
+       "ɣas"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7088527
+     },
+     {
+      "type": "order-words",
+      "prompt": "Voici mon père.",
+      "latin": "Hatan baba.",
+      "correctAnswer": "Hatan baba.",
+      "audioId": 7088527
      }
     ]
    },
@@ -2233,50 +2944,25 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Fois",
+      "type": "multiple-choice",
+      "prompt": "yiḍ",
+      "latin": "yiḍ",
+      "audioId": 8709560,
       "options": [
-       "gar",
-       "atan",
-       "tikkelt",
-       "ɣas"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "D ____",
-      "latin": "D lawan!",
-      "fr": "Il est temps !",
-      "options": [
-       "gar",
-       "atan",
-       "lawan",
-       "ɣas"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7416024
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D lawan!",
-      "audioId": 7416024,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Il est temps !",
-       "Vas-y déjà !"
+       "Mm",
+       "Maladie",
+       "Avec, en compagnie de, et",
+       "Être absent d'esprit"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Laquelle",
+      "prompt": "Avec, en compagnie de, et",
       "options": [
        "gar",
        "atan",
-       "anta",
+       "yiḍ",
        "ɣas"
       ],
       "correctAnswer": 2
@@ -2284,51 +2970,12 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Iṛuḥ Tom tikkelt ɣer Boston.",
-      "audioId": 9973584,
+      "latin": "Ata yiḍ!",
+      "audioId": 8709560,
       "options": [
        "J'étais perdu dans la foule.",
        "Il est vide.",
-       "Tom est allé à Boston une fois.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ruɣ daɣen.",
-      "audioId": 7285211,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "J'ai également pleuré.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Nru merra.",
-      "audioId": 10070185,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Nous avons toutes pleuré.",
-       "Vas-y déjà !"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Anta i tenɣam?",
-      "audioId": 9785727,
-      "options": [
-       "J'étais perdu dans la foule.",
-       "Il est vide.",
-       "Qui avez-vous tué ?",
+       "Quelle nuit !",
        "Vas-y déjà !"
       ],
       "correctAnswer": 2
@@ -2348,6 +2995,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8709560
      },
      {
+      "type": "order-words",
+      "prompt": "Quelle nuit !",
+      "latin": "Ata yiḍ!",
+      "correctAnswer": "Ata yiḍ!",
+      "audioId": 8709560
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "lweqt",
+      "latin": "lweqt",
+      "audioId": 7416023,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Moment",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Moment",
+      "options": [
+       "gar",
+       "atan",
+       "lweqt",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "D lweqt!",
+      "audioId": 7416023,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "Il est temps !",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "D ____",
       "latin": "D lweqt!",
@@ -2362,6 +3053,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7416023
      },
      {
+      "type": "order-words",
+      "prompt": "Il est temps !",
+      "latin": "D lweqt!",
+      "correctAnswer": "D lweqt!",
+      "audioId": 7416023
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "merra",
+      "latin": "merra",
+      "audioId": 10070185,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Fois (en comptant)",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Fois (en comptant)",
+      "options": [
+       "gar",
+       "atan",
+       "merra",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Nru merra.",
+      "audioId": 10070185,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "Nous avons toutes pleuré.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Nru ____",
       "latin": "Nru merra.",
@@ -2374,6 +3109,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 10070185
+     },
+     {
+      "type": "order-words",
+      "prompt": "Nous avons toutes pleuré.",
+      "latin": "Nru merra.",
+      "correctAnswer": "Nru merra.",
+      "audioId": 10070185
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "lemmer",
+      "latin": "lemmer",
+      "audioId": 9011516,
+      "options": [
+       "Mm",
+       "Maladie",
+       "Si",
+       "Être absent d'esprit"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Si",
+      "options": [
+       "gar",
+       "atan",
+       "lemmer",
+       "ɣas"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Bɣiɣ lemmer ad bduɣ.",
+      "audioId": 9011516,
+      "options": [
+       "J'étais perdu dans la foule.",
+       "Il est vide.",
+       "Je voudrais commencer.",
+       "Vas-y déjà !"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Bɣiɣ ____ ad bduɣ.",
+      "latin": "Bɣiɣ lemmer ad bduɣ.",
+      "fr": "Je voudrais commencer.",
+      "options": [
+       "gar",
+       "atan",
+       "lemmer",
+       "ɣas"
+      ],
+      "correctAnswer": 2,
+      "audioId": 9011516
+     },
+     {
+      "type": "order-words",
+      "prompt": "Je voudrais commencer.",
+      "latin": "Bɣiɣ lemmer ad bduɣ.",
+      "correctAnswer": "Bɣiɣ lemmer ad bduɣ.",
+      "audioId": 9011516
      }
     ]
    }
@@ -2458,18 +3258,28 @@ export const kabyleUnits: Unit[] = [
     ],
     "questions": [
      {
-      "type": "order-words",
-      "prompt": "C'est secret.",
-      "latin": "D sser.",
-      "correctAnswer": "D sser.",
-      "audioId": 6718576
+      "type": "multiple-choice",
+      "prompt": "D gma.",
+      "latin": "D gma.",
+      "audioId": 7224727,
+      "options": [
+       "C'était le but.",
+       "C'est secret.",
+       "C'est mon frère.",
+       "Il y a du vent."
+      ],
+      "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "Il y a du vent.",
-      "latin": "D aḍu.",
-      "correctAnswer": "D aḍu.",
-      "audioId": 7372929
+      "type": "mc-kab",
+      "prompt": "C'est mon frère.",
+      "options": [
+       "D iswi.",
+       "D sser.",
+       "D gma.",
+       "D aḍu."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2486,10 +3296,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "Est-ce vrai ?",
-      "latin": "D ṣṣeḥ?",
-      "correctAnswer": "D ṣṣeḥ?",
-      "audioId": 7316437
+      "prompt": "C'est mon frère.",
+      "latin": "D gma.",
+      "correctAnswer": "D gma.",
+      "audioId": 7224727
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "D aḍu.",
+      "latin": "D aḍu.",
+      "audioId": 7372929,
+      "options": [
+       "C'était le but.",
+       "C'est secret.",
+       "Il y a du vent.",
+       "C'est mon frère."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Il y a du vent.",
+      "options": [
+       "D iswi.",
+       "D sser.",
+       "D aḍu.",
+       "D gma."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2501,6 +3335,37 @@ export const kabyleUnits: Unit[] = [
        "C'est secret.",
        "Il y a du vent.",
        "C'est mon frère."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "order-words",
+      "prompt": "Il y a du vent.",
+      "latin": "D aḍu.",
+      "correctAnswer": "D aḍu.",
+      "audioId": 7372929
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "D sser.",
+      "latin": "D sser.",
+      "audioId": 6718576,
+      "options": [
+       "C'était le but.",
+       "Il y a du vent.",
+       "C'est secret.",
+       "C'est mon frère."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "C'est secret.",
+      "options": [
+       "D iswi.",
+       "D aḍu.",
+       "D sser.",
+       "D gma."
       ],
       "correctAnswer": 2
      },
@@ -2519,10 +3384,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "C'était le but.",
+      "prompt": "C'est secret.",
+      "latin": "D sser.",
+      "correctAnswer": "D sser.",
+      "audioId": 6718576
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "D iswi.",
       "latin": "D iswi.",
-      "correctAnswer": "D iswi.",
-      "audioId": 7049128
+      "audioId": 7049128,
+      "options": [
+       "C'est secret.",
+       "Il y a du vent.",
+       "C'était le but.",
+       "C'est mon frère."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "C'était le but.",
+      "options": [
+       "D sser.",
+       "D aḍu.",
+       "D iswi.",
+       "D gma."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2538,56 +3427,11 @@ export const kabyleUnits: Unit[] = [
       "correctAnswer": 2
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D ṣṣeḥ?",
-      "audioId": 7316437,
-      "options": [
-       "C'est secret.",
-       "Il y a du vent.",
-       "Est-ce vrai ?",
-       "C'est mon frère."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D asaḍ.",
-      "audioId": 7741623,
-      "options": [
-       "C'est secret.",
-       "Il y a du vent.",
-       "C'est un héros.",
-       "C'est mon frère."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D illi.",
-      "audioId": 7751029,
-      "options": [
-       "C'est secret.",
-       "Il y a du vent.",
-       "C'est ma fille.",
-       "C'est mon frère."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D ilem.",
-      "audioId": 8144518,
-      "options": [
-       "C'est secret.",
-       "Il y a du vent.",
-       "C'est vide.",
-       "C'est mon frère."
-      ],
-      "correctAnswer": 2
+      "type": "order-words",
+      "prompt": "C'était le but.",
+      "latin": "D iswi.",
+      "correctAnswer": "D iswi.",
+      "audioId": 7049128
      }
     ]
    }
@@ -2672,18 +3516,28 @@ export const kabyleUnits: Unit[] = [
     ],
     "questions": [
      {
-      "type": "order-words",
-      "prompt": "Je vois pas.",
-      "latin": "Ur gziɣ ara.",
-      "correctAnswer": "Ur gziɣ ara.",
-      "audioId": 7207106
+      "type": "multiple-choice",
+      "prompt": "Ur ẓran ara.",
+      "latin": "Ur ẓran ara.",
+      "audioId": 7096584,
+      "options": [
+       "Je suis analphabète.",
+       "Je vois pas.",
+       "Ils ne savaient pas.",
+       "Ne t'endors pas."
+      ],
+      "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "Ne t'endors pas.",
-      "latin": "Ur ggan ara.",
-      "correctAnswer": "Ur ggan ara.",
-      "audioId": 7187533
+      "type": "mc-kab",
+      "prompt": "Ils ne savaient pas.",
+      "options": [
+       "Ur ɣriɣ ara.",
+       "Ur gziɣ ara.",
+       "Ur ẓran ara.",
+       "Ur ggan ara."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2700,10 +3554,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "Ne pleure pas.",
-      "latin": "Ur ttru ara.",
-      "correctAnswer": "Ur ttru ara.",
-      "audioId": 7705524
+      "prompt": "Ils ne savaient pas.",
+      "latin": "Ur ẓran ara.",
+      "correctAnswer": "Ur ẓran ara.",
+      "audioId": 7096584
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ur ggan ara.",
+      "latin": "Ur ggan ara.",
+      "audioId": 7187533,
+      "options": [
+       "Je suis analphabète.",
+       "Je vois pas.",
+       "Ne t'endors pas.",
+       "Ils ne savaient pas."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Ne t'endors pas.",
+      "options": [
+       "Ur ɣriɣ ara.",
+       "Ur gziɣ ara.",
+       "Ur ggan ara.",
+       "Ur ẓran ara."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2715,6 +3593,37 @@ export const kabyleUnits: Unit[] = [
        "Je vois pas.",
        "Ne t'endors pas.",
        "Ils ne savaient pas."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "order-words",
+      "prompt": "Ne t'endors pas.",
+      "latin": "Ur ggan ara.",
+      "correctAnswer": "Ur ggan ara.",
+      "audioId": 7187533
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ur gziɣ ara.",
+      "latin": "Ur gziɣ ara.",
+      "audioId": 7207106,
+      "options": [
+       "Je suis analphabète.",
+       "Ne t'endors pas.",
+       "Je vois pas.",
+       "Ils ne savaient pas."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Je vois pas.",
+      "options": [
+       "Ur ɣriɣ ara.",
+       "Ur ggan ara.",
+       "Ur gziɣ ara.",
+       "Ur ẓran ara."
       ],
       "correctAnswer": 2
      },
@@ -2733,10 +3642,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "Je suis analphabète.",
+      "prompt": "Je vois pas.",
+      "latin": "Ur gziɣ ara.",
+      "correctAnswer": "Ur gziɣ ara.",
+      "audioId": 7207106
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ur ɣriɣ ara.",
       "latin": "Ur ɣriɣ ara.",
-      "correctAnswer": "Ur ɣriɣ ara.",
-      "audioId": 7583737
+      "audioId": 7583737,
+      "options": [
+       "Je vois pas.",
+       "Ne t'endors pas.",
+       "Je suis analphabète.",
+       "Ils ne savaient pas."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Je suis analphabète.",
+      "options": [
+       "Ur gziɣ ara.",
+       "Ur ggan ara.",
+       "Ur ɣriɣ ara.",
+       "Ur ẓran ara."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2752,56 +3685,11 @@ export const kabyleUnits: Unit[] = [
       "correctAnswer": 2
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ur ttru ara.",
-      "audioId": 7705524,
-      "options": [
-       "Je vois pas.",
-       "Ne t'endors pas.",
-       "Ne pleure pas.",
-       "Ils ne savaient pas."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ur sεiɣ ara.",
-      "audioId": 7821604,
-      "options": [
-       "Je vois pas.",
-       "Ne t'endors pas.",
-       "Je n'en ai pas.",
-       "Ils ne savaient pas."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ur icuf ara.",
-      "audioId": 9563382,
-      "options": [
-       "Je vois pas.",
-       "Ne t'endors pas.",
-       "Ça n'a pas enflé.",
-       "Ils ne savaient pas."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ur yewf ara.",
-      "audioId": 9563384,
-      "options": [
-       "Je vois pas.",
-       "Ne t'endors pas.",
-       "Ça n'a pas enflé.",
-       "Ils ne savaient pas."
-      ],
-      "correctAnswer": 2
+      "type": "order-words",
+      "prompt": "Je suis analphabète.",
+      "latin": "Ur ɣriɣ ara.",
+      "correctAnswer": "Ur ɣriɣ ara.",
+      "audioId": 7583737
      }
     ]
    }
@@ -2886,18 +3774,28 @@ export const kabyleUnits: Unit[] = [
     ],
     "questions": [
      {
-      "type": "order-words",
-      "prompt": "Je parlerai.",
-      "latin": "Ad iniɣ.",
-      "correctAnswer": "Ad iniɣ.",
-      "audioId": 7079589
+      "type": "multiple-choice",
+      "prompt": "Ad nruḥ.",
+      "latin": "Ad nruḥ.",
+      "audioId": 6718417,
+      "options": [
+       "On verra.",
+       "Je parlerai.",
+       "Nous irons.",
+       "Je chanterai."
+      ],
+      "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "Je chanterai.",
-      "latin": "Ad cnuɣ.",
-      "correctAnswer": "Ad cnuɣ.",
-      "audioId": 6718444
+      "type": "mc-kab",
+      "prompt": "Nous irons.",
+      "options": [
+       "Ad nẓer.",
+       "Ad iniɣ.",
+       "Ad nruḥ.",
+       "Ad cnuɣ."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2914,10 +3812,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "Est-ce que je commence ?",
-      "latin": "Ad bduɣ?",
-      "correctAnswer": "Ad bduɣ?",
-      "audioId": 7739363
+      "prompt": "Nous irons.",
+      "latin": "Ad nruḥ.",
+      "correctAnswer": "Ad nruḥ.",
+      "audioId": 6718417
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ad cnuɣ.",
+      "latin": "Ad cnuɣ.",
+      "audioId": 6718444,
+      "options": [
+       "On verra.",
+       "Je parlerai.",
+       "Je chanterai.",
+       "Nous irons."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Je chanterai.",
+      "options": [
+       "Ad nẓer.",
+       "Ad iniɣ.",
+       "Ad cnuɣ.",
+       "Ad nruḥ."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2929,6 +3851,37 @@ export const kabyleUnits: Unit[] = [
        "Je parlerai.",
        "Je chanterai.",
        "Nous irons."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "order-words",
+      "prompt": "Je chanterai.",
+      "latin": "Ad cnuɣ.",
+      "correctAnswer": "Ad cnuɣ.",
+      "audioId": 6718444
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ad iniɣ.",
+      "latin": "Ad iniɣ.",
+      "audioId": 7079589,
+      "options": [
+       "On verra.",
+       "Je chanterai.",
+       "Je parlerai.",
+       "Nous irons."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Je parlerai.",
+      "options": [
+       "Ad nẓer.",
+       "Ad cnuɣ.",
+       "Ad iniɣ.",
+       "Ad nruḥ."
       ],
       "correctAnswer": 2
      },
@@ -2947,10 +3900,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "On verra.",
+      "prompt": "Je parlerai.",
+      "latin": "Ad iniɣ.",
+      "correctAnswer": "Ad iniɣ.",
+      "audioId": 7079589
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ad nẓer.",
       "latin": "Ad nẓer.",
-      "correctAnswer": "Ad nẓer.",
-      "audioId": 7524692
+      "audioId": 7524692,
+      "options": [
+       "Je parlerai.",
+       "Je chanterai.",
+       "On verra.",
+       "Nous irons."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "On verra.",
+      "options": [
+       "Ad iniɣ.",
+       "Ad cnuɣ.",
+       "Ad nẓer.",
+       "Ad nruḥ."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -2966,56 +3943,11 @@ export const kabyleUnits: Unit[] = [
       "correctAnswer": 2
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ad bduɣ?",
-      "audioId": 7739363,
-      "options": [
-       "Je parlerai.",
-       "Je chanterai.",
-       "Est-ce que je commence ?",
-       "Nous irons."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ad lḥuɣ.",
-      "audioId": 8328797,
-      "options": [
-       "Je parlerai.",
-       "Je chanterai.",
-       "Je marcherai.",
-       "Nous irons."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ad dduɣ.",
-      "audioId": 8328798,
-      "options": [
-       "Je parlerai.",
-       "Je chanterai.",
-       "Je marcherai.",
-       "Nous irons."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ad εyuɣ.",
-      "audioId": 11533863,
-      "options": [
-       "Je parlerai.",
-       "Je chanterai.",
-       "Je vais être fatigué.",
-       "Nous irons."
-      ],
-      "correctAnswer": 2
+      "type": "order-words",
+      "prompt": "On verra.",
+      "latin": "Ad nẓer.",
+      "correctAnswer": "Ad nẓer.",
+      "audioId": 7524692
      }
     ]
    }
@@ -3100,18 +4032,28 @@ export const kabyleUnits: Unit[] = [
     ],
     "questions": [
      {
-      "type": "order-words",
-      "prompt": "Mais ouais !",
-      "latin": "Amek ihi!",
-      "correctAnswer": "Amek ihi!",
-      "audioId": 7078661
+      "type": "multiple-choice",
+      "prompt": "Anwa wa?",
+      "latin": "Anwa wa?",
+      "audioId": 7167332,
+      "options": [
+       "De quoi cela a-t-il l'air ?",
+       "Mais ouais !",
+       "C’est qui ?",
+       "Quoi de beau ?"
+      ],
+      "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "Quoi de beau ?",
-      "latin": "Amek ihi?",
-      "correctAnswer": "Amek ihi?",
-      "audioId": 7065921
+      "type": "mc-kab",
+      "prompt": "C’est qui ?",
+      "options": [
+       "Amek iga?",
+       "Amek ihi!",
+       "Anwa wa?",
+       "Amek ihi?"
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -3128,10 +4070,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "Il y a longtemps.",
-      "latin": "Acḥal aya.",
-      "correctAnswer": "Acḥal aya.",
-      "audioId": 7372702
+      "prompt": "C’est qui ?",
+      "latin": "Anwa wa?",
+      "correctAnswer": "Anwa wa?",
+      "audioId": 7167332
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Amek ihi?",
+      "latin": "Amek ihi?",
+      "audioId": 7065921,
+      "options": [
+       "De quoi cela a-t-il l'air ?",
+       "Mais ouais !",
+       "Quoi de beau ?",
+       "C’est qui ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Quoi de beau ?",
+      "options": [
+       "Amek iga?",
+       "Amek ihi!",
+       "Amek ihi?",
+       "Anwa wa?"
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -3143,6 +4109,37 @@ export const kabyleUnits: Unit[] = [
        "Mais ouais !",
        "Quoi de beau ?",
        "C’est qui ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "order-words",
+      "prompt": "Quoi de beau ?",
+      "latin": "Amek ihi?",
+      "correctAnswer": "Amek ihi?",
+      "audioId": 7065921
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Amek ihi!",
+      "latin": "Amek ihi!",
+      "audioId": 7078661,
+      "options": [
+       "De quoi cela a-t-il l'air ?",
+       "Quoi de beau ?",
+       "Mais ouais !",
+       "C’est qui ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Mais ouais !",
+      "options": [
+       "Amek iga?",
+       "Amek ihi?",
+       "Amek ihi!",
+       "Anwa wa?"
       ],
       "correctAnswer": 2
      },
@@ -3161,10 +4158,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "De quoi cela a-t-il l'air ?",
+      "prompt": "Mais ouais !",
+      "latin": "Amek ihi!",
+      "correctAnswer": "Amek ihi!",
+      "audioId": 7078661
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Amek iga?",
       "latin": "Amek iga?",
-      "correctAnswer": "Amek iga?",
-      "audioId": 9082440
+      "audioId": 9082440,
+      "options": [
+       "Mais ouais !",
+       "Quoi de beau ?",
+       "De quoi cela a-t-il l'air ?",
+       "C’est qui ?"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "De quoi cela a-t-il l'air ?",
+      "options": [
+       "Amek ihi!",
+       "Amek ihi?",
+       "Amek iga?",
+       "Anwa wa?"
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -3180,56 +4201,11 @@ export const kabyleUnits: Unit[] = [
       "correctAnswer": 2
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Acḥal aya.",
-      "audioId": 7372702,
-      "options": [
-       "Mais ouais !",
-       "Quoi de beau ?",
-       "Il y a longtemps.",
-       "C’est qui ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Amek tgiḍ?",
-      "audioId": 7447124,
-      "options": [
-       "Mais ouais !",
-       "Quoi de beau ?",
-       "Comment avez-vous fait ?",
-       "C’est qui ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Amek armi?",
-      "audioId": 7481015,
-      "options": [
-       "Mais ouais !",
-       "Quoi de beau ?",
-       "Comment est-ce possible ?",
-       "C’est qui ?"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Anwa nekk?",
-      "audioId": 10033055,
-      "options": [
-       "Mais ouais !",
-       "Quoi de beau ?",
-       "Qui suis-je ?",
-       "C’est qui ?"
-      ],
-      "correctAnswer": 2
+      "type": "order-words",
+      "prompt": "De quoi cela a-t-il l'air ?",
+      "latin": "Amek iga?",
+      "correctAnswer": "Amek iga?",
+      "audioId": 9082440
      }
     ]
    }
@@ -3314,18 +4290,28 @@ export const kabyleUnits: Unit[] = [
     ],
     "questions": [
      {
-      "type": "order-words",
-      "prompt": "Il m'en faut davantage.",
-      "latin": "Ilaq-iyi ugar.",
-      "correctAnswer": "Ilaq-iyi ugar.",
-      "audioId": 7278843
+      "type": "multiple-choice",
+      "prompt": "Ilaq akter.",
+      "latin": "Ilaq akter.",
+      "audioId": 7013984,
+      "options": [
+       "Il me faut de l'air.",
+       "Il m'en faut davantage.",
+       "Il en faut plus.",
+       "Il nous faut une autorisation."
+      ],
+      "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "Il nous faut une autorisation.",
-      "latin": "Ilaq-ɣ wurag.",
-      "correctAnswer": "Ilaq-ɣ wurag.",
-      "audioId": 9625769
+      "type": "mc-kab",
+      "prompt": "Il en faut plus.",
+      "options": [
+       "Ilaq-iyi uzwu.",
+       "Ilaq-iyi ugar.",
+       "Ilaq akter.",
+       "Ilaq-ɣ wurag."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -3342,10 +4328,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "J'ai besoin de temps.",
-      "latin": "Ilaq-iyi lweqt.",
-      "correctAnswer": "Ilaq-iyi lweqt.",
-      "audioId": 8723963
+      "prompt": "Il en faut plus.",
+      "latin": "Ilaq akter.",
+      "correctAnswer": "Ilaq akter.",
+      "audioId": 7013984
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ilaq-ɣ wurag.",
+      "latin": "Ilaq-ɣ wurag.",
+      "audioId": 9625769,
+      "options": [
+       "Il me faut de l'air.",
+       "Il m'en faut davantage.",
+       "Il nous faut une autorisation.",
+       "Il en faut plus."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Il nous faut une autorisation.",
+      "options": [
+       "Ilaq-iyi uzwu.",
+       "Ilaq-iyi ugar.",
+       "Ilaq-ɣ wurag.",
+       "Ilaq akter."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -3357,6 +4367,37 @@ export const kabyleUnits: Unit[] = [
        "Il m'en faut davantage.",
        "Il nous faut une autorisation.",
        "Il en faut plus."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "order-words",
+      "prompt": "Il nous faut une autorisation.",
+      "latin": "Ilaq-ɣ wurag.",
+      "correctAnswer": "Ilaq-ɣ wurag.",
+      "audioId": 9625769
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ilaq-iyi ugar.",
+      "latin": "Ilaq-iyi ugar.",
+      "audioId": 7278843,
+      "options": [
+       "Il me faut de l'air.",
+       "Il nous faut une autorisation.",
+       "Il m'en faut davantage.",
+       "Il en faut plus."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Il m'en faut davantage.",
+      "options": [
+       "Ilaq-iyi uzwu.",
+       "Ilaq-ɣ wurag.",
+       "Ilaq-iyi ugar.",
+       "Ilaq akter."
       ],
       "correctAnswer": 2
      },
@@ -3375,10 +4416,34 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
-      "prompt": "Il me faut de l'air.",
+      "prompt": "Il m'en faut davantage.",
+      "latin": "Ilaq-iyi ugar.",
+      "correctAnswer": "Ilaq-iyi ugar.",
+      "audioId": 7278843
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "Ilaq-iyi uzwu.",
       "latin": "Ilaq-iyi uzwu.",
-      "correctAnswer": "Ilaq-iyi uzwu.",
-      "audioId": 9699649
+      "audioId": 9699649,
+      "options": [
+       "Il m'en faut davantage.",
+       "Il nous faut une autorisation.",
+       "Il me faut de l'air.",
+       "Il en faut plus."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Il me faut de l'air.",
+      "options": [
+       "Ilaq-iyi ugar.",
+       "Ilaq-ɣ wurag.",
+       "Ilaq-iyi uzwu.",
+       "Ilaq akter."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "listening",
@@ -3394,56 +4459,11 @@ export const kabyleUnits: Unit[] = [
       "correctAnswer": 2
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ilaq-iyi lweqt.",
-      "audioId": 8723963,
-      "options": [
-       "Il m'en faut davantage.",
-       "Il nous faut une autorisation.",
-       "J'ai besoin de temps.",
-       "Il en faut plus."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ilaq-iyi wayeḍ.",
-      "audioId": 10275429,
-      "options": [
-       "Il m'en faut davantage.",
-       "Il nous faut une autorisation.",
-       "Il m'en faut une autre.",
-       "Il en faut plus."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ilaq-iyi ṣṣabun.",
-      "audioId": 9439176,
-      "options": [
-       "Il m'en faut davantage.",
-       "Il nous faut une autorisation.",
-       "J'ai besoin de savon.",
-       "Il en faut plus."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ilaq-aɣ ugeffur.",
-      "audioId": 9528459,
-      "options": [
-       "Il m'en faut davantage.",
-       "Il nous faut une autorisation.",
-       "Il nous faut de la pluie.",
-       "Il en faut plus."
-      ],
-      "correctAnswer": 2
+      "type": "order-words",
+      "prompt": "Il me faut de l'air.",
+      "latin": "Ilaq-iyi uzwu.",
+      "correctAnswer": "Ilaq-iyi uzwu.",
+      "audioId": 9699649
      }
     ]
    }
@@ -3574,103 +4594,39 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "(Ma) fille",
+      "type": "multiple-choice",
+      "prompt": "yemma",
+      "latin": "yemma",
+      "audioId": 7099367,
       "options": [
-       "gma",
-       "baba",
-       "yelli",
-       "yemma"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Tẓerreḍ ____",
-      "latin": "Tẓerreḍ mmi?",
-      "fr": "Tu vois mon fils ?",
-      "options": [
-       "gma",
-       "baba",
-       "mmi",
-       "yemma"
-      ],
-      "correctAnswer": 2,
-      "audioId": 8292068
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Tẓerreḍ mmi?",
-      "audioId": 8292068,
-      "options": [
-       "C'est mon frère.",
-       "Voici mon père.",
-       "Tu vois mon fils ?",
-       "C'est ma maman."
+       "(Ma) sœur",
+       "Nom de parenté, cf",
+       "Ma mère, maman",
+       "Mon père"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Ma grand-mère",
+      "prompt": "Ma mère, maman",
       "options": [
+       "weltma",
        "gma",
-       "baba",
-       "setti",
-       "yemma"
+       "yemma",
+       "baba"
       ],
       "correctAnswer": 2
      },
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "D yelli.",
-      "audioId": 7751028,
-      "options": [
-       "C'est mon frère.",
-       "Voici mon père.",
-       "C'est ma fille.",
-       "C'est ma maman."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Lhiɣ-d d jeddi.",
-      "audioId": 7880481,
-      "options": [
-       "C'est mon frère.",
-       "Voici mon père.",
-       "Je m'occupe de mon grand-père.",
-       "C'est ma maman."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "D gma.",
-      "audioId": 7224727,
+      "latin": "D yemma.",
+      "audioId": 7099367,
       "options": [
        "J'ai une sœur.",
-       "Voici mon père.",
        "C'est mon frère.",
-       "C'est ma maman."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Setti tella tferres deffir tebḥirt.",
-      "audioId": 7145455,
-      "options": [
-       "C'est mon frère.",
-       "Voici mon père.",
-       "Ma grand-mère sarclait les mauvaises herbes à l'arrière du jardin.",
-       "C'est ma maman."
+       "C'est ma maman.",
+       "Voici mon père."
       ],
       "correctAnswer": 2
      },
@@ -3689,6 +4645,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7099367
      },
      {
+      "type": "order-words",
+      "prompt": "C'est ma maman.",
+      "latin": "D yemma.",
+      "correctAnswer": "D yemma.",
+      "audioId": 7099367
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "baba",
+      "latin": "baba",
+      "audioId": 7088527,
+      "options": [
+       "(Ma) sœur",
+       "Nom de parenté, cf",
+       "Mon père",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Mon père",
+      "options": [
+       "weltma",
+       "gma",
+       "baba",
+       "yemma"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Hatan baba.",
+      "audioId": 7088527,
+      "options": [
+       "J'ai une sœur.",
+       "C'est mon frère.",
+       "Voici mon père.",
+       "C'est ma maman."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Hatan ____",
       "latin": "Hatan baba.",
@@ -3703,6 +4703,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7088527
      },
      {
+      "type": "order-words",
+      "prompt": "Voici mon père.",
+      "latin": "Hatan baba.",
+      "correctAnswer": "Hatan baba.",
+      "audioId": 7088527
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "gma",
+      "latin": "gma",
+      "audioId": 7224727,
+      "options": [
+       "(Ma) sœur",
+       "Mon père",
+       "Nom de parenté, cf",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Nom de parenté, cf",
+      "options": [
+       "weltma",
+       "baba",
+       "gma",
+       "yemma"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "D gma.",
+      "audioId": 7224727,
+      "options": [
+       "J'ai une sœur.",
+       "Voici mon père.",
+       "C'est mon frère.",
+       "C'est ma maman."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "D ____",
       "latin": "D gma.",
@@ -3715,6 +4759,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 7224727
+     },
+     {
+      "type": "order-words",
+      "prompt": "C'est mon frère.",
+      "latin": "D gma.",
+      "correctAnswer": "D gma.",
+      "audioId": 7224727
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "weltma",
+      "latin": "weltma",
+      "audioId": 7105938,
+      "options": [
+       "Nom de parenté, cf",
+       "Mon père",
+       "(Ma) sœur",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "(Ma) sœur",
+      "options": [
+       "gma",
+       "baba",
+       "weltma",
+       "yemma"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Γur-i weltma.",
+      "audioId": 7105938,
+      "options": [
+       "C'est mon frère.",
+       "Voici mon père.",
+       "J'ai une sœur.",
+       "C'est ma maman."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Γur-i ____",
+      "latin": "Γur-i weltma.",
+      "fr": "J'ai une sœur.",
+      "options": [
+       "gma",
+       "baba",
+       "weltma",
+       "yemma"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7105938
+     },
+     {
+      "type": "order-words",
+      "prompt": "J'ai une sœur.",
+      "latin": "Γur-i weltma.",
+      "correctAnswer": "Γur-i weltma.",
+      "audioId": 7105938
      }
     ]
    },
@@ -3823,45 +4932,38 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
+      "type": "multiple-choice",
+      "prompt": "argaz",
+      "latin": "argaz",
+      "audioId": 7275183,
+      "options": [
+       "Nom de parenté, cf",
+       "Mon père",
+       "Homme",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "mc-kab",
-      "prompt": "Maison",
+      "prompt": "Homme",
       "options": [
        "gma",
        "baba",
-       "axxam",
+       "argaz",
        "yemma"
       ],
       "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "J'ai un époux.",
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
       "latin": "Sɛiɣ argaz.",
-      "correctAnswer": "Sɛiɣ argaz.",
-      "audioId": 7275183
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Nuɣ axxam.",
-      "audioId": 7492425,
+      "audioId": 7275183,
       "options": [
        "C'est mon frère.",
        "Voici mon père.",
-       "Nous avons acheté une maison.",
-       "C'est ma maman."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Sɛiɣ tameṭṭut.",
-      "audioId": 11436623,
-      "options": [
-       "C'est mon frère.",
-       "Voici mon père.",
-       "J'ai une femme.",
+       "J'ai un époux.",
        "C'est ma maman."
       ],
       "correctAnswer": 2
@@ -3881,6 +4983,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7275183
      },
      {
+      "type": "order-words",
+      "prompt": "J'ai un époux.",
+      "latin": "Sɛiɣ argaz.",
+      "correctAnswer": "Sɛiɣ argaz.",
+      "audioId": 7275183
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "tameṭṭut",
+      "latin": "tameṭṭut",
+      "audioId": 11436623,
+      "options": [
+       "Nom de parenté, cf",
+       "Mon père",
+       "Femme",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Femme",
+      "options": [
+       "gma",
+       "baba",
+       "tameṭṭut",
+       "yemma"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Sɛiɣ tameṭṭut.",
+      "audioId": 11436623,
+      "options": [
+       "C'est mon frère.",
+       "Voici mon père.",
+       "J'ai une femme.",
+       "C'est ma maman."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Sɛiɣ ____",
       "latin": "Sɛiɣ tameṭṭut.",
@@ -3895,14 +5041,45 @@ export const kabyleUnits: Unit[] = [
       "audioId": 11436623
      },
      {
+      "type": "order-words",
+      "prompt": "J'ai une femme.",
+      "latin": "Sɛiɣ tameṭṭut.",
+      "correctAnswer": "Sɛiɣ tameṭṭut.",
+      "audioId": 11436623
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "aqcic",
+      "latin": "aqcic",
+      "audioId": 8118681,
+      "options": [
+       "Nom de parenté, cf",
+       "Mon père",
+       "Garçon",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Garçon",
+      "options": [
+       "gma",
+       "baba",
+       "aqcic",
+       "yemma"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "D arrac.",
-      "audioId": 8249926,
+      "latin": "Tesɛa-d aqcic.",
+      "audioId": 8118681,
       "options": [
        "C'est mon frère.",
        "Voici mon père.",
-       "Ce sont des garçons.",
+       "Elle a donné naissance à un garçon.",
        "C'est ma maman."
       ],
       "correctAnswer": 2
@@ -3922,6 +5099,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8118681
      },
      {
+      "type": "order-words",
+      "prompt": "Elle a donné naissance à un garçon.",
+      "latin": "Tesɛa-d aqcic.",
+      "correctAnswer": "Tesɛa-d aqcic.",
+      "audioId": 8118681
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "taqcict",
+      "latin": "taqcict",
+      "audioId": 7295860,
+      "options": [
+       "Nom de parenté, cf",
+       "Mon père",
+       "Fille",
+       "Ma mère, maman"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Fille",
+      "options": [
+       "gma",
+       "baba",
+       "taqcict",
+       "yemma"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Tesεiḍ taqcict?",
+      "audioId": 7295860,
+      "options": [
+       "C'est mon frère.",
+       "Voici mon père.",
+       "As-tu une fille ?",
+       "C'est ma maman."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Tesεiḍ ____",
       "latin": "Tesεiḍ taqcict?",
@@ -3936,32 +5157,11 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7295860
      },
      {
-      "type": "fill",
-      "prompt": "D ____",
-      "latin": "D arrac.",
-      "fr": "Ce sont des garçons.",
-      "options": [
-       "gma",
-       "baba",
-       "arrac",
-       "yemma"
-      ],
-      "correctAnswer": 2,
-      "audioId": 8249926
-     },
-     {
-      "type": "fill",
-      "prompt": "Llan d ____ n leεmum.",
-      "latin": "Llan d tarwa n leεmum.",
-      "fr": "Ils étaient cousins.",
-      "options": [
-       "gma",
-       "baba",
-       "tarwa",
-       "yemma"
-      ],
-      "correctAnswer": 2,
-      "audioId": 8383936
+      "type": "order-words",
+      "prompt": "As-tu une fille ?",
+      "latin": "Tesεiḍ taqcict?",
+      "correctAnswer": "Tesεiḍ taqcict?",
+      "audioId": 7295860
      }
     ]
    }
@@ -4092,103 +5292,39 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Eau",
+      "type": "multiple-choice",
+      "prompt": "ass",
+      "latin": "ass",
+      "audioId": 7244609,
       "options": [
-       "tameddit",
-       "iḍ",
-       "aman",
-       "ass"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Tettaɣ ____",
-      "latin": "Tettaɣ aɣrum.",
-      "fr": "Je mange du pain.",
-      "options": [
-       "tameddit",
-       "iḍ",
-       "aɣrum",
-       "ass"
-      ],
-      "correctAnswer": 2,
-      "audioId": 7100917
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Tettaɣ aɣrum.",
-      "audioId": 7100917,
-      "options": [
-       "À ce soir.",
-       "Bonne nuit !",
-       "Je mange du pain.",
-       "Je vous souhaite une excellente journée."
+       "Matin",
+       "Après-midi",
+       "Jour",
+       "#NULL"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Souper",
+      "prompt": "Jour",
       "options": [
+       "ṣṣbeḥ",
        "tameddit",
-       "iḍ",
-       "imensi",
-       "ass"
+       "ass",
+       "iḍ"
       ],
       "correctAnswer": 2
      },
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "D aman.",
-      "audioId": 10761801,
-      "options": [
-       "À ce soir.",
-       "Bonne nuit !",
-       "C'est de l'eau.",
-       "Je vous souhaite une excellente journée."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Sew lqahwa.",
-      "audioId": 8485152,
-      "options": [
-       "À ce soir.",
-       "Bonne nuit !",
-       "Bois du café.",
-       "Je vous souhaite une excellente journée."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ar tameddit.",
-      "audioId": 9774146,
+      "latin": "Ass ameggaz.",
+      "audioId": 7244609,
       "options": [
        "Venez demain matin.",
-       "Bonne nuit !",
        "À ce soir.",
-       "Je vous souhaite une excellente journée."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Tečča imensi.",
-      "audioId": 8544337,
-      "options": [
-       "À ce soir.",
-       "Bonne nuit !",
-       "Elle mangea son dîner.",
-       "Je vous souhaite une excellente journée."
+       "Je vous souhaite une excellente journée.",
+       "Bonne nuit !"
       ],
       "correctAnswer": 2
      },
@@ -4207,6 +5343,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7244609
      },
      {
+      "type": "order-words",
+      "prompt": "Je vous souhaite une excellente journée.",
+      "latin": "Ass ameggaz.",
+      "correctAnswer": "Ass ameggaz.",
+      "audioId": 7244609
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "iḍ",
+      "latin": "iḍ",
+      "audioId": 7059405,
+      "options": [
+       "Matin",
+       "Après-midi",
+       "#NULL",
+       "Jour"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "#NULL",
+      "options": [
+       "ṣṣbeḥ",
+       "tameddit",
+       "iḍ",
+       "ass"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Iḍ ameggaz!",
+      "audioId": 7059405,
+      "options": [
+       "Venez demain matin.",
+       "À ce soir.",
+       "Bonne nuit !",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "____ ameggaz!",
       "latin": "Iḍ ameggaz!",
@@ -4221,6 +5401,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7059405
      },
      {
+      "type": "order-words",
+      "prompt": "Bonne nuit !",
+      "latin": "Iḍ ameggaz!",
+      "correctAnswer": "Iḍ ameggaz!",
+      "audioId": 7059405
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "tameddit",
+      "latin": "tameddit",
+      "audioId": 9774146,
+      "options": [
+       "Matin",
+       "#NULL",
+       "Après-midi",
+       "Jour"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Après-midi",
+      "options": [
+       "ṣṣbeḥ",
+       "iḍ",
+       "tameddit",
+       "ass"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ar tameddit.",
+      "audioId": 9774146,
+      "options": [
+       "Venez demain matin.",
+       "Bonne nuit !",
+       "À ce soir.",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Ar ____",
       "latin": "Ar tameddit.",
@@ -4233,6 +5457,71 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 9774146
+     },
+     {
+      "type": "order-words",
+      "prompt": "À ce soir.",
+      "latin": "Ar tameddit.",
+      "correctAnswer": "Ar tameddit.",
+      "audioId": 9774146
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "ṣṣbeḥ",
+      "latin": "ṣṣbeḥ",
+      "audioId": 7356093,
+      "options": [
+       "Après-midi",
+       "#NULL",
+       "Matin",
+       "Jour"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Matin",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "ṣṣbeḥ",
+       "ass"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "As-d azekka ṣṣbeḥ.",
+      "audioId": 7356093,
+      "options": [
+       "À ce soir.",
+       "Bonne nuit !",
+       "Venez demain matin.",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "As-d azekka ____",
+      "latin": "As-d azekka ṣṣbeḥ.",
+      "fr": "Venez demain matin.",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "ṣṣbeḥ",
+       "ass"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7356093
+     },
+     {
+      "type": "order-words",
+      "prompt": "Venez demain matin.",
+      "latin": "As-d azekka ṣṣbeḥ.",
+      "correctAnswer": "As-d azekka ṣṣbeḥ.",
+      "audioId": 7356093
      }
     ]
    },
@@ -4321,35 +5610,41 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ɣiwel tikli!",
-      "audioId": 11777636,
+      "type": "multiple-choice",
+      "prompt": "imekli",
+      "latin": "imekli",
+      "audioId": 7247693,
       "options": [
-       "À ce soir.",
-       "Bonne nuit !",
-       "Marche plus vite !",
-       "Je vous souhaite une excellente journée."
+       "Après-midi",
+       "#NULL",
+       "Repas dans la journée",
+       "Jour"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Rocher",
+      "prompt": "Repas dans la journée",
       "options": [
        "tameddit",
        "iḍ",
-       "aẓru",
+       "imekli",
        "ass"
       ],
       "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "As-tu déjeuné ?",
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
       "latin": "Teččiḍ imekli?",
-      "correctAnswer": "Teččiḍ imekli?",
-      "audioId": 7247693
+      "audioId": 7247693,
+      "options": [
+       "À ce soir.",
+       "Bonne nuit !",
+       "As-tu déjeuné ?",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "fill",
@@ -4367,10 +5662,119 @@ export const kabyleUnits: Unit[] = [
      },
      {
       "type": "order-words",
+      "prompt": "As-tu déjeuné ?",
+      "latin": "Teččiḍ imekli?",
+      "correctAnswer": "Teččiḍ imekli?",
+      "audioId": 7247693
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "amkan",
+      "latin": "amkan",
+      "audioId": 9569290,
+      "options": [
+       "Après-midi",
+       "#NULL",
+       "Endroit, place, lieu",
+       "Jour"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Endroit, place, lieu",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "amkan",
+       "ass"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Eǧǧ amkan.",
+      "audioId": 9569290,
+      "options": [
+       "À ce soir.",
+       "Bonne nuit !",
+       "Cédez la place.",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Eǧǧ ____",
+      "latin": "Eǧǧ amkan.",
+      "fr": "Cédez la place.",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "amkan",
+       "ass"
+      ],
+      "correctAnswer": 2,
+      "audioId": 9569290
+     },
+     {
+      "type": "order-words",
       "prompt": "Cédez la place.",
       "latin": "Eǧǧ amkan.",
       "correctAnswer": "Eǧǧ amkan.",
       "audioId": 9569290
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "axxam",
+      "latin": "axxam",
+      "audioId": 7492425,
+      "options": [
+       "Après-midi",
+       "#NULL",
+       "Maison",
+       "Jour"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Maison",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "axxam",
+       "ass"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Nuɣ axxam.",
+      "audioId": 7492425,
+      "options": [
+       "À ce soir.",
+       "Bonne nuit !",
+       "Nous avons acheté une maison.",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Nuɣ ____",
+      "latin": "Nuɣ axxam.",
+      "fr": "Nous avons acheté une maison.",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "axxam",
+       "ass"
+      ],
+      "correctAnswer": 2,
+      "audioId": 7492425
      },
      {
       "type": "order-words",
@@ -4378,6 +5782,43 @@ export const kabyleUnits: Unit[] = [
       "latin": "Nuɣ axxam.",
       "correctAnswer": "Nuɣ axxam.",
       "audioId": 7492425
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "tikli",
+      "latin": "tikli",
+      "audioId": 11777636,
+      "options": [
+       "Après-midi",
+       "#NULL",
+       "Marche",
+       "Jour"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Marche",
+      "options": [
+       "tameddit",
+       "iḍ",
+       "tikli",
+       "ass"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ɣiwel tikli!",
+      "audioId": 11777636,
+      "options": [
+       "À ce soir.",
+       "Bonne nuit !",
+       "Marche plus vite !",
+       "Je vous souhaite une excellente journée."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "fill",
@@ -4394,52 +5835,11 @@ export const kabyleUnits: Unit[] = [
       "audioId": 11777636
      },
      {
-      "type": "multiple-choice",
-      "prompt": "tikli",
-      "latin": "tikli",
-      "audioId": 11777636,
-      "options": [
-       "Après-midi",
-       "#NULL",
-       "Marche",
-       "Jour"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "multiple-choice",
-      "prompt": "aẓru",
-      "latin": "aẓru",
-      "audioId": 11098961,
-      "options": [
-       "Après-midi",
-       "#NULL",
-       "Rocher",
-       "Jour"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "mc-kab",
-      "prompt": "Repas dans la journée",
-      "options": [
-       "tameddit",
-       "iḍ",
-       "imekli",
-       "ass"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "mc-kab",
-      "prompt": "Endroit, place, lieu",
-      "options": [
-       "tameddit",
-       "iḍ",
-       "amkan",
-       "ass"
-      ],
-      "correctAnswer": 2
+      "type": "order-words",
+      "prompt": "Marche plus vite !",
+      "latin": "Ɣiwel tikli!",
+      "correctAnswer": "Ɣiwel tikli!",
+      "audioId": 11777636
      }
     ]
    }
@@ -4570,90 +5970,39 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Viande",
+      "type": "multiple-choice",
+      "prompt": "aɣrum",
+      "latin": "aɣrum",
+      "audioId": 7100917,
       "options": [
-       "lqahwa",
-       "aman",
-       "aksum",
-       "aɣrum"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "Nebɣa ____",
-      "latin": "Nebɣa aksum.",
-      "fr": "Nous voulons de la viande.",
-      "options": [
-       "lqahwa",
-       "aman",
-       "aksum",
-       "aɣrum"
-      ],
-      "correctAnswer": 2,
-      "audioId": 11265185
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Deg zzit i yewwa.",
-      "audioId": 10222229,
-      "options": [
-       "Bois du café.",
-       "C'est de l'eau.",
-       "Ça a été cuit dans de l'huile.",
-       "Je mange du pain."
+       "Jardin potager",
+       "Café (boisson et boutique)",
+       "Galette de pâte cuite non levée",
+       "Eau"
       ],
       "correctAnswer": 2
      },
      {
       "type": "mc-kab",
-      "prompt": "Couscous",
+      "prompt": "Galette de pâte cuite non levée",
       "options": [
+       "tibḥirt",
        "lqahwa",
-       "aman",
-       "seksu",
-       "aɣrum"
+       "aɣrum",
+       "aman"
       ],
       "correctAnswer": 2
      },
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Nebɣa aksum.",
-      "audioId": 11265185,
-      "options": [
-       "Bois du café.",
-       "C'est de l'eau.",
-       "Nous voulons de la viande.",
-       "Je mange du pain."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Sɛiɣ tameṭṭut.",
-      "audioId": 11436623,
-      "options": [
-       "Bois du café.",
-       "C'est de l'eau.",
-       "J'ai une femme.",
-       "Je mange du pain."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Sew lqahwa.",
-      "audioId": 8485152,
+      "latin": "Tettaɣ aɣrum.",
+      "audioId": 7100917,
       "options": [
        "Est-ce que tu vois le jardin ?",
-       "C'est de l'eau.",
        "Bois du café.",
-       "Je mange du pain."
+       "Je mange du pain.",
+       "C'est de l'eau."
       ],
       "correctAnswer": 2
      },
@@ -4672,6 +6021,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 7100917
      },
      {
+      "type": "order-words",
+      "prompt": "Je mange du pain.",
+      "latin": "Tettaɣ aɣrum.",
+      "correctAnswer": "Tettaɣ aɣrum.",
+      "audioId": 7100917
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "aman",
+      "latin": "aman",
+      "audioId": 10761801,
+      "options": [
+       "Jardin potager",
+       "Café (boisson et boutique)",
+       "Eau",
+       "Galette de pâte cuite non levée"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Eau",
+      "options": [
+       "tibḥirt",
+       "lqahwa",
+       "aman",
+       "aɣrum"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "D aman.",
+      "audioId": 10761801,
+      "options": [
+       "Est-ce que tu vois le jardin ?",
+       "Bois du café.",
+       "C'est de l'eau.",
+       "Je mange du pain."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "D ____",
       "latin": "D aman.",
@@ -4684,6 +6077,50 @@ export const kabyleUnits: Unit[] = [
       ],
       "correctAnswer": 2,
       "audioId": 10761801
+     },
+     {
+      "type": "order-words",
+      "prompt": "C'est de l'eau.",
+      "latin": "D aman.",
+      "correctAnswer": "D aman.",
+      "audioId": 10761801
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "lqahwa",
+      "latin": "lqahwa",
+      "audioId": 8485152,
+      "options": [
+       "Jardin potager",
+       "Eau",
+       "Café (boisson et boutique)",
+       "Galette de pâte cuite non levée"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Café (boisson et boutique)",
+      "options": [
+       "tibḥirt",
+       "aman",
+       "lqahwa",
+       "aɣrum"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Sew lqahwa.",
+      "audioId": 8485152,
+      "options": [
+       "Est-ce que tu vois le jardin ?",
+       "C'est de l'eau.",
+       "Bois du café.",
+       "Je mange du pain."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "fill",
@@ -4700,6 +6137,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8485152
      },
      {
+      "type": "order-words",
+      "prompt": "Bois du café.",
+      "latin": "Sew lqahwa.",
+      "correctAnswer": "Sew lqahwa.",
+      "audioId": 8485152
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "tibḥirt",
+      "latin": "tibḥirt",
+      "audioId": 7875328,
+      "options": [
+       "Café (boisson et boutique)",
+       "Eau",
+       "Jardin potager",
+       "Galette de pâte cuite non levée"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Jardin potager",
+      "options": [
+       "lqahwa",
+       "aman",
+       "tibḥirt",
+       "aɣrum"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Tettwaliḍ tibḥirt?",
+      "audioId": 7875328,
+      "options": [
+       "Bois du café.",
+       "C'est de l'eau.",
+       "Est-ce que tu vois le jardin ?",
+       "Je mange du pain."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "Tettwaliḍ ____",
       "latin": "Tettwaliḍ tibḥirt?",
@@ -4711,6 +6192,13 @@ export const kabyleUnits: Unit[] = [
        "aɣrum"
       ],
       "correctAnswer": 2,
+      "audioId": 7875328
+     },
+     {
+      "type": "order-words",
+      "prompt": "Est-ce que tu vois le jardin ?",
+      "latin": "Tettwaliḍ tibḥirt?",
+      "correctAnswer": "Tettwaliḍ tibḥirt?",
       "audioId": 7875328
      }
     ]
@@ -4772,11 +6260,41 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "order-words",
-      "prompt": "Ça sent bon !",
-      "latin": "Yettriḥi d aẓidan !",
-      "correctAnswer": "Yettriḥi d aẓidan !",
-      "audioId": 6718532
+      "type": "multiple-choice",
+      "prompt": "aɣi",
+      "latin": "aɣi",
+      "audioId": 7300410,
+      "options": [
+       "Café (boisson et boutique)",
+       "Eau",
+       "Ce",
+       "Galette de pâte cuite non levée"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Ce",
+      "options": [
+       "lqahwa",
+       "aman",
+       "aɣi",
+       "aɣrum"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Amek i as-qqaren i lfakya -agi?",
+      "audioId": 7300410,
+      "options": [
+       "Bois du café.",
+       "C'est de l'eau.",
+       "Comment s'appelle ce fruit ?",
+       "Je mange du pain."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "fill",
@@ -4793,24 +6311,11 @@ export const kabyleUnits: Unit[] = [
       "audioId": 9232139
      },
      {
-      "type": "multiple-choice",
-      "prompt": "aɣi",
-      "latin": "aɣi",
-      "audioId": 7300410,
-      "options": [
-       "Café (boisson et boutique)",
-       "Eau",
-       "Ce",
-       "Galette de pâte cuite non levée"
-      ],
-      "correctAnswer": 2
-     },
-     {
       "type": "order-words",
-      "prompt": "J'ai trempé le doigt dans le miel.",
-      "latin": "Greɣ aḍad-iw deg tament.",
-      "correctAnswer": "Greɣ aḍad-iw deg tament.",
-      "audioId": 9232139
+      "prompt": "Comment s'appelle ce fruit ?",
+      "latin": "Amek i as-qqaren i lfakya -agi?",
+      "correctAnswer": "Amek i as-qqaren i lfakya -agi?",
+      "audioId": 7300410
      },
      {
       "type": "multiple-choice",
@@ -4826,6 +6331,51 @@ export const kabyleUnits: Unit[] = [
       "correctAnswer": 2
      },
      {
+      "type": "mc-kab",
+      "prompt": "Miel d'abeilles",
+      "options": [
+       "lqahwa",
+       "aman",
+       "tament",
+       "aɣrum"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Greɣ aḍad-iw deg tament.",
+      "audioId": 9232139,
+      "options": [
+       "Bois du café.",
+       "C'est de l'eau.",
+       "J'ai trempé le doigt dans le miel.",
+       "Je mange du pain."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Yettriḥi d ____ !",
+      "latin": "Yettriḥi d aẓidan !",
+      "fr": "Ça sent bon !",
+      "options": [
+       "lqahwa",
+       "aman",
+       "aẓidan",
+       "aɣrum"
+      ],
+      "correctAnswer": 2,
+      "audioId": 6718532
+     },
+     {
+      "type": "order-words",
+      "prompt": "J'ai trempé le doigt dans le miel.",
+      "latin": "Greɣ aḍad-iw deg tament.",
+      "correctAnswer": "Greɣ aḍad-iw deg tament.",
+      "audioId": 9232139
+     },
+     {
       "type": "multiple-choice",
       "prompt": "aẓidan",
       "latin": "aẓidan",
@@ -4835,35 +6385,6 @@ export const kabyleUnits: Unit[] = [
        "Eau",
        "Doux",
        "Galette de pâte cuite non levée"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "order-words",
-      "prompt": "Comment s'appelle ce fruit ?",
-      "latin": "Amek i as-qqaren i lfakya -agi?",
-      "correctAnswer": "Amek i as-qqaren i lfakya -agi?",
-      "audioId": 7300410
-     },
-     {
-      "type": "mc-kab",
-      "prompt": "Ce",
-      "options": [
-       "lqahwa",
-       "aman",
-       "aɣi",
-       "aɣrum"
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "mc-kab",
-      "prompt": "Miel d'abeilles",
-      "options": [
-       "lqahwa",
-       "aman",
-       "tament",
-       "aɣrum"
       ],
       "correctAnswer": 2
      },
@@ -4881,15 +6402,22 @@ export const kabyleUnits: Unit[] = [
      {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "Amek i as-qqaren i lfakya -agi?",
-      "audioId": 7300410,
+      "latin": "Yettriḥi d aẓidan !",
+      "audioId": 6718532,
       "options": [
        "Bois du café.",
        "C'est de l'eau.",
-       "Comment s'appelle ce fruit ?",
+       "Ça sent bon !",
        "Je mange du pain."
       ],
       "correctAnswer": 2
+     },
+     {
+      "type": "order-words",
+      "prompt": "Ça sent bon !",
+      "latin": "Yettriḥi d aẓidan !",
+      "correctAnswer": "Yettriḥi d aẓidan !",
+      "audioId": 6718532
      }
     ]
    }
@@ -5010,22 +6538,99 @@ export const kabyleUnits: Unit[] = [
       ]
      },
      {
-      "type": "mc-kab",
-      "prompt": "Marche",
+      "type": "multiple-choice",
+      "prompt": "taddart",
+      "latin": "taddart",
+      "audioId": 11548996,
       "options": [
+       "Groupe bourdonnant, bruyant, qui parle fort",
+       "Gens",
+       "Village",
+       "Terre, terrain"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Village",
+      "options": [
+       "agdud",
+       "imdanen",
+       "taddart",
+       "tamurt"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Thudd taddart tnifift-nni.",
+      "audioId": 11548996,
+      "options": [
+       "C'est un peuple.",
+       "Les hommes sont des idiots.",
+       "La tornade a détruit tout le village.",
+       "C'est un pays libre."
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "fill",
+      "prompt": "Thudd ____ tnifift-nni.",
+      "latin": "Thudd taddart tnifift-nni.",
+      "fr": "La tornade a détruit tout le village.",
+      "options": [
+       "agdud",
+       "imdanen",
+       "taddart",
+       "tamurt"
+      ],
+      "correctAnswer": 2,
+      "audioId": 11548996
+     },
+     {
+      "type": "order-words",
+      "prompt": "La tornade a détruit tout le village.",
+      "latin": "Thudd taddart tnifift-nni.",
+      "correctAnswer": "Thudd taddart tnifift-nni.",
+      "audioId": 11548996
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "tamurt",
+      "latin": "tamurt",
+      "audioId": 10642500,
+      "options": [
+       "Groupe bourdonnant, bruyant, qui parle fort",
+       "Gens",
+       "Terre, terrain",
+       "Village"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Terre, terrain",
+      "options": [
+       "agdud",
        "imdanen",
        "tamurt",
-       "tikli",
        "taddart"
       ],
       "correctAnswer": 2
      },
      {
-      "type": "order-words",
-      "prompt": "Les hommes sont des idiots.",
-      "latin": "Imdanen d ungifen.",
-      "correctAnswer": "Imdanen d ungifen.",
-      "audioId": 8280547
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "D tamurt tilellit.",
+      "audioId": 10642500,
+      "options": [
+       "C'est un peuple.",
+       "Les hommes sont des idiots.",
+       "C'est un pays libre.",
+       "La tornade a détruit tout le village."
+      ],
+      "correctAnswer": 2
      },
      {
       "type": "fill",
@@ -5042,14 +6647,45 @@ export const kabyleUnits: Unit[] = [
       "audioId": 10642500
      },
      {
+      "type": "order-words",
+      "prompt": "C'est un pays libre.",
+      "latin": "D tamurt tilellit.",
+      "correctAnswer": "D tamurt tilellit.",
+      "audioId": 10642500
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "imdanen",
+      "latin": "imdanen",
+      "audioId": 8280547,
+      "options": [
+       "Groupe bourdonnant, bruyant, qui parle fort",
+       "Terre, terrain",
+       "Gens",
+       "Village"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Gens",
+      "options": [
+       "agdud",
+       "tamurt",
+       "imdanen",
+       "taddart"
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "listening",
       "prompt": "Qu'entends-tu ?",
-      "latin": "D tamurt tilellit.",
-      "audioId": 10642500,
+      "latin": "Imdanen d ungifen.",
+      "audioId": 8280547,
       "options": [
        "C'est un peuple.",
-       "Les hommes sont des idiots.",
        "C'est un pays libre.",
+       "Les hommes sont des idiots.",
        "La tornade a détruit tout le village."
       ],
       "correctAnswer": 2
@@ -5069,6 +6705,50 @@ export const kabyleUnits: Unit[] = [
       "audioId": 8280547
      },
      {
+      "type": "order-words",
+      "prompt": "Les hommes sont des idiots.",
+      "latin": "Imdanen d ungifen.",
+      "correctAnswer": "Imdanen d ungifen.",
+      "audioId": 8280547
+     },
+     {
+      "type": "multiple-choice",
+      "prompt": "agdud",
+      "latin": "agdud",
+      "audioId": null,
+      "options": [
+       "Gens",
+       "Terre, terrain",
+       "Groupe bourdonnant, bruyant, qui parle fort",
+       "Village"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "mc-kab",
+      "prompt": "Groupe bourdonnant, bruyant, qui parle fort",
+      "options": [
+       "imdanen",
+       "tamurt",
+       "agdud",
+       "taddart"
+      ],
+      "correctAnswer": 2
+     },
+     {
+      "type": "listening",
+      "prompt": "Qu'entends-tu ?",
+      "latin": "Ɛyiɣ si lxedma.",
+      "audioId": 9543313,
+      "options": [
+       "Les hommes sont des idiots.",
+       "C'est un pays libre.",
+       "Je suis fatigué du travail.",
+       "La tornade a détruit tout le village."
+      ],
+      "correctAnswer": 2
+     },
+     {
       "type": "fill",
       "prompt": "D ____",
       "latin": "D agdud.",
@@ -5083,66 +6763,11 @@ export const kabyleUnits: Unit[] = [
       "audioId": null
      },
      {
-      "type": "listening",
-      "prompt": "Qu'entends-tu ?",
-      "latin": "Ɣiwel tikli!",
-      "audioId": 11777636,
-      "options": [
-       "Les hommes sont des idiots.",
-       "C'est un pays libre.",
-       "Marche plus vite !",
-       "La tornade a détruit tout le village."
-      ],
-      "correctAnswer": 2
-     },
-     {
-      "type": "fill",
-      "prompt": "D ____ n yimɣaṛen.",
-      "latin": "D tajmaɛt n yimɣaṛen.",
-      "fr": "C'est un comité de sages.",
-      "options": [
-       "imdanen",
-       "tamurt",
-       "tajmaɛt",
-       "taddart"
-      ],
-      "correctAnswer": 2,
-      "audioId": null
-     },
-     {
-      "type": "fill",
-      "prompt": "Ɛyiɣ si ____",
-      "latin": "Ɛyiɣ si lxedma.",
-      "fr": "Je suis fatigué du travail.",
-      "options": [
-       "imdanen",
-       "tamurt",
-       "lxedma",
-       "taddart"
-      ],
-      "correctAnswer": 2,
-      "audioId": 9543313
-     },
-     {
-      "type": "fill",
-      "prompt": "Ɣiwel ____",
-      "latin": "Ɣiwel tikli!",
-      "fr": "Marche plus vite !",
-      "options": [
-       "imdanen",
-       "tamurt",
-       "tikli",
-       "taddart"
-      ],
-      "correctAnswer": 2,
-      "audioId": 11777636
-     },
-     {
       "type": "order-words",
-      "prompt": "La tornade a détruit tout le village.",
-      "latin": "Thudd taddart tnifift-nni.",
-      "correctAnswer": "Thudd taddart tnifift-nni.",
-      "audioId": 11548996
+      "prompt": "C'est un peuple.",
+      "latin": "D agdud.",
+      "correctAnswer": "D agdud.",
+      "audioId": null
      }
     ]
    }

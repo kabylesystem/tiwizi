@@ -203,22 +203,32 @@ function vocabLessonsFromCards(cardsAll, unitId, lessonSize) {
     const cards = cardsAll.slice(i, i + lessonSize);
     if (cards.length < 3) break;
     const li = lessons.length + 1;
-    const questions = [];
     const frPool = cardsAll.map((c) => c.ex?.fr).filter(Boolean);
     const kabPool = cardsAll.map((c) => c.kab);
-    for (const c of cards) questions.push(mcWord(c, cardsAll));        // KAB → FR
-    for (const c of cards) questions.push(mcKab(c, kabPool));          // FR → KAB
-    for (const c of cards) if (c.ex?.audioId) questions.push(listening(c.ex, frPool)); // écoute
-    for (const c of cards) { const f = fill(c, kabPool); if (f) questions.push(f); }   // texte à trou
-    for (const c of cards.slice(0, 3)) questions.push(order(c.ex));    // reconstruction
-    const mixed = shuffle(questions).slice(0, 11);
-    mixed.unshift(matchSet(cards.slice(0, Math.min(5, cards.length)))); // associations en ouverture
+    // one bucket per FORMAT so each lesson uses the MAX variety of formats
+    const buckets = [
+      cards.map((c) => mcWord(c, cardsAll)),                              // KAB → FR
+      cards.map((c) => mcKab(c, kabPool)),                               // FR → KAB
+      cards.filter((c) => c.ex?.audioId).map((c) => listening(c.ex, frPool)), // écoute
+      cards.map((c) => fill(c, kabPool)).filter(Boolean),               // texte à trou
+      cards.map((c) => order(c.ex)),                                     // reconstruction
+    ];
+    // round-robin: alternate formats so every type appears, well distributed
+    const questions = [];
+    for (let k = 0; questions.length < 20; k++) {
+      let any = false;
+      for (const b of buckets) {
+        if (b[k]) { questions.push(b[k]); any = true; }
+      }
+      if (!any) break;
+    }
+    questions.unshift(matchSet(cards.slice(0, Math.min(5, cards.length)))); // associations en ouverture
     lessons.push({
       id: `${unitId}-l${li}`,
       title: `Mots ${i + 1}–${i + cards.length}`,
       xpReward: 15,
       cards,
-      questions: mixed,
+      questions,
     });
   }
   return lessons;
@@ -259,9 +269,20 @@ for (const p of PATTERNS) {
   const ex = findSentences(p.pred, 8);
   if (ex.length < 4) continue;
   const frPool = ex.map((e) => e.fr);
+  const cardsP = ex.map((e) => ({ kab: e.kab, fr: e.fr, ex: e }));
+  const kabPoolP = cardsP.map((c) => c.kab);
+  const buckets = [
+    cardsP.map((c) => mcWord(c, cardsP)),                          // phrase → sens
+    cardsP.map((c) => mcKab(c, kabPoolP)),                         // sens → phrase
+    ex.filter((e) => e.audioId).map((e) => listening(e, frPool)),  // écoute
+    ex.map((e) => order(e)),                                       // reconstruction
+  ];
   const questions = [];
-  for (const e of ex) questions.push(listening(e, frPool));
-  for (const e of ex.slice(0, 5)) questions.push(order(e));
+  for (let k = 0; questions.length < 14; k++) {
+    let any = false;
+    for (const b of buckets) { if (b[k]) { questions.push(b[k]); any = true; } }
+    if (!any) break;
+  }
   units.push({
     id: p.id, order: pad(++order_i), kind: "pattern", icon: p.icon, color: "#4A9ECF",
     title: p.title, tifinagh: "", description: p.explain,
@@ -269,7 +290,7 @@ for (const p of PATTERNS) {
       id: `${p.id}-l1`, title: "Reconnaître le pattern", xpReward: 20,
       explain: p.explain,
       cards: ex.slice(0, 6).map((e) => ({ kab: e.kab, tifinagh: tifinagh(e.kab.split(" ")[0]), fr: e.fr, ex: e })),
-      questions: shuffle(questions).slice(0, 12),
+      questions,
     }],
   });
 }
