@@ -62,6 +62,15 @@ rows.sort((a, b) => b.audio - a.audio || a.w - b.w || a.c - b.c);
 
 fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, "pairs.json"), JSON.stringify(rows));
-const deck = rows.filter((r) => r.audio && r.w >= 2 && r.w <= 9).slice(0, 2000);
+
+// graded deck: audio sentences, round-robin across lengths 2..8 so every
+// session mixes short cards and longer ones (needed for reconstruct/dictation)
+const buckets = {};
+for (const r of rows)
+  if (r.audio && r.w >= 2 && r.w <= 8) (buckets[r.w] ??= []).push(r);
+const CAP = 280;
+const deck = [];
+for (let k = 0; k < CAP; k++)
+  for (let w = 2; w <= 8; w++) if (buckets[w]?.[k]) deck.push(buckets[w][k]);
 fs.writeFileSync(path.join(OUT, "deck.json"), JSON.stringify(deck));
 console.log(`pairs: ${rows.length} | audio: ${rows.filter((r) => r.audio).length} | deck: ${deck.length}`);

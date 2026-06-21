@@ -1,47 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { AudioButton, audioUrl } from "@/components/audio-button";
-import {
-  load,
-  save,
-  schedule,
-  touch,
-  NEW_PER_DAY,
-  type Grade,
-  type Store,
-} from "@/lib/srs";
-
-type Card = { id: number; kab: string; fr: string; audio: boolean };
-
-const GRADES: { g: Grade; label: string; hint: string; cls: string }[] = [
-  { g: 0, label: "Encore", hint: "< 1 min", cls: "border-bad/40 text-bad hover:bg-bad-soft" },
-  { g: 1, label: "Difficile", hint: "1 j", cls: "border-line-strong text-ink hover:bg-paper-2" },
-  { g: 2, label: "Bien", hint: "3 j", cls: "border-brand/40 text-brand hover:bg-brand-soft" },
-  { g: 3, label: "Facile", hint: "+", cls: "border-good/40 text-good hover:bg-good-soft" },
-];
+import { useCallback, useEffect, useState } from "react";
+import { AudioButton } from "@/components/audio-button";
+import { SentenceBuilder } from "@/components/exercises/sentence-builder";
+import { buildSession, type Card, type Step } from "@/lib/session";
+import { load, save, schedule, touch, NEW_PER_DAY, type Grade, type Store } from "@/lib/srs";
 
 export default function LearnPage() {
   const [store, setStore] = useState<Store | null>(null);
-  const [queue, setQueue] = useState<Card[]>([]);
-  const [revealed, setRevealed] = useState(false);
+  const [queue, setQueue] = useState<Step[]>([]);
   const [done, setDone] = useState(0);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // build the session
   useEffect(() => {
     const s = load();
     setStore(s);
-    fetch("/api/deck?limit=500")
+    fetch("/api/deck?limit=2000")
       .then((r) => r.json())
       .then((cards: Card[]) => {
-        const now = Date.now();
-        const review = cards.filter((c) => s.cards[c.id] && s.cards[c.id].due <= now);
-        const fresh = cards.filter((c) => !s.cards[c.id]);
         const newLeft = Math.max(0, NEW_PER_DAY - s.newToday);
-        const session = [...review, ...fresh.slice(0, newLeft)];
+        const session = buildSession(cards, s, newLeft);
         setQueue(session);
         setTotal(session.length);
         setLoading(false);
@@ -49,51 +29,32 @@ export default function LearnPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const card = queue[0];
+  const step = queue[0];
 
-  const grade = useCallback(
+  const handle = useCallback(
     (g: Grade) => {
-      if (!store || !card) return;
-      const isNew = !store.cards[card.id];
+      if (!store || !step) return;
+      const isNew = !store.cards[step.card.id];
       const next = { ...store, cards: { ...store.cards } };
-      next.cards[card.id] = schedule(store.cards[card.id], g);
+      next.cards[step.card.id] = schedule(store.cards[step.card.id], g);
       touch(next, isNew);
       save(next);
       setStore(next);
 
       setQueue((q) => {
         const [head, ...rest] = q;
-        // "Encore" → revoir en fin de session
         return g === 0 ? [...rest, head] : rest;
       });
       if (g !== 0) setDone((d) => d + 1);
-      setRevealed(false);
     },
-    [store, card]
+    [store, step]
   );
-
-  // keyboard: space reveal, 1-4 grade
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (!card) return;
-      if (e.code === "Space" || e.code === "Enter") {
-        e.preventDefault();
-        if (!revealed) setRevealed(true);
-      } else if (revealed && ["1", "2", "3", "4"].includes(e.key)) {
-        grade((Number(e.key) - 1) as Grade);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [card, revealed, grade]);
 
   const progress = total ? Math.round((done / total) * 100) : 0;
 
-  if (loading) {
-    return <Centered>Chargement de ta session…</Centered>;
-  }
+  if (loading) return <Centered>Préparation de ta session…</Centered>;
 
-  if (!card) {
+  if (!step) {
     return (
       <Centered>
         <div className="animate-pop text-center">
@@ -101,23 +62,17 @@ export default function LearnPage() {
             ✓
           </div>
           <h1 className="font-display text-3xl font-semibold text-ink">
-            Azul ! Session terminée.
+            Ifukk ! Session terminée.
           </h1>
           <p className="mt-3 text-muted">
-            Tu as révisé {done} {done > 1 ? "phrases" : "phrase"}. Reviens demain —
-            la régularité, c&apos;est tout.
+            {done} {done > 1 ? "exercices bouclés" : "exercice bouclé"}. La
+            régularité, c&apos;est tout — reviens demain.
           </p>
           <div className="mt-7 flex justify-center gap-3">
-            <Link
-              href="/"
-              className="rounded-full bg-ink px-6 py-3 text-sm font-semibold text-paper"
-            >
-              Retour à l&apos;accueil
+            <Link href="/" className="rounded-full bg-ink px-6 py-3 text-sm font-semibold text-paper">
+              Accueil
             </Link>
-            <Link
-              href="/browse"
-              className="rounded-full border border-line-strong bg-card px-6 py-3 text-sm font-semibold text-ink hover:bg-paper-2"
-            >
+            <Link href="/browse" className="rounded-full border border-line-strong bg-card px-6 py-3 text-sm font-semibold text-ink hover:bg-paper-2">
               Lire des phrases
             </Link>
           </div>
@@ -128,8 +83,8 @@ export default function LearnPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-5">
-      {/* progress */}
       <div className="flex items-center gap-4 pt-8">
+        <StepBadge kind={step.kind} />
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper-2">
           <div
             className="h-full rounded-full bg-brand transition-all duration-500"
@@ -141,69 +96,107 @@ export default function LearnPage() {
         </span>
       </div>
 
-      {/* card */}
-      <div className="flex flex-1 flex-col items-center justify-center py-10">
-        <div
-          key={card.id}
-          className="animate-pop w-full rounded-3xl border border-line bg-card px-6 py-12 text-center shadow-[0_24px_70px_-40px_rgba(34,28,20,0.5)]"
-        >
-          <p className="mb-6 text-xs font-medium uppercase tracking-widest text-muted">
-            Kabyle → Français
-          </p>
+      <div className="flex flex-1 flex-col items-center justify-center py-8">
+        {step.kind === "flash" ? (
+          <FlashStep key={step.card.id} card={step.card} onGrade={handle} />
+        ) : (
+          <SentenceBuilder
+            key={step.card.id + step.kind}
+            card={step.card}
+            mode={step.kind === "dictation" ? "audio" : "text"}
+            onResult={handle}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
 
-          <div className="flex flex-col items-center gap-5">
-            <h1 className="kab text-balance text-4xl font-medium leading-snug text-ink md:text-[2.75rem]">
-              {card.kab}
-            </h1>
-            {card.audio && <AudioButton id={card.id} size="lg" autoPlay />}
-          </div>
+const KIND_LABEL: Record<Step["kind"], string> = {
+  flash: "Carte",
+  reconstruct: "Reconstruire",
+  dictation: "Dictée",
+};
 
-          <div className="mt-9 min-h-[3.5rem]">
-            {revealed ? (
-              <p className="animate-pop text-balance text-xl text-brand-deep md:text-2xl">
-                {card.fr}
-              </p>
-            ) : (
-              <button
-                onClick={() => setRevealed(true)}
-                className="rounded-full border border-line-strong bg-paper-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-line"
-              >
-                Afficher la traduction{" "}
-                <kbd className="ml-1 text-xs text-muted">espace</kbd>
-              </button>
-            )}
-          </div>
+function StepBadge({ kind }: { kind: Step["kind"] }) {
+  return (
+    <span className="shrink-0 rounded-full bg-accent-soft px-3 py-1 text-[0.7rem] font-semibold text-accent">
+      {KIND_LABEL[kind]}
+    </span>
+  );
+}
+
+const GRADES: { g: Grade; label: string; hint: string; cls: string }[] = [
+  { g: 0, label: "Encore", hint: "< 1 min", cls: "border-bad/40 text-bad hover:bg-bad-soft" },
+  { g: 1, label: "Difficile", hint: "1 j", cls: "border-line-strong text-ink hover:bg-paper-2" },
+  { g: 2, label: "Bien", hint: "3 j", cls: "border-brand/40 text-brand hover:bg-brand-soft" },
+  { g: 3, label: "Facile", hint: "+", cls: "border-good/40 text-good hover:bg-good-soft" },
+];
+
+function FlashStep({ card, onGrade }: { card: Card; onGrade: (g: Grade) => void }) {
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code === "Space" || e.code === "Enter") {
+        e.preventDefault();
+        if (!revealed) setRevealed(true);
+      } else if (revealed && ["1", "2", "3", "4"].includes(e.key)) {
+        onGrade((Number(e.key) - 1) as Grade);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [revealed, onGrade]);
+
+  return (
+    <div className="w-full">
+      <div className="animate-pop w-full rounded-3xl border border-line bg-card px-6 py-12 text-center shadow-[0_24px_70px_-40px_rgba(34,28,20,0.5)]">
+        <p className="mb-6 text-xs font-medium uppercase tracking-widest text-muted">
+          Kabyle → Français
+        </p>
+        <div className="flex flex-col items-center gap-5">
+          <h1 className="kab text-balance text-4xl font-medium leading-snug text-ink md:text-[2.75rem]">
+            {card.kab}
+          </h1>
+          {card.audio && <AudioButton id={card.id} size="lg" autoPlay />}
+        </div>
+        <div className="mt-9 min-h-[3.5rem]">
+          {revealed ? (
+            <p className="animate-pop text-balance text-xl text-brand-deep md:text-2xl">
+              {card.fr}
+            </p>
+          ) : (
+            <button
+              onClick={() => setRevealed(true)}
+              className="rounded-full border border-line-strong bg-paper-2 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-line"
+            >
+              Afficher la traduction <kbd className="ml-1 text-xs text-muted">espace</kbd>
+            </button>
+          )}
         </div>
       </div>
 
-      {/* grading */}
-      <div className="pb-10">
+      <div className="mt-6">
         {revealed ? (
           <div className="grid grid-cols-4 gap-2.5">
             {GRADES.map((b, i) => (
               <button
                 key={b.g}
-                onClick={() => grade(b.g)}
+                onClick={() => onGrade(b.g)}
                 className={`flex flex-col items-center gap-0.5 rounded-2xl border bg-card py-3.5 text-sm font-semibold transition-colors ${b.cls}`}
               >
                 {b.label}
-                <span className="text-[0.65rem] font-normal opacity-60">
-                  {i + 1} · {b.hint}
-                </span>
+                <span className="text-[0.65rem] font-normal opacity-60">{i + 1} · {b.hint}</span>
               </button>
             ))}
           </div>
         ) : (
           <p className="text-center text-xs text-muted">
-            Essaie de traduire dans ta tête, puis vérifie.
+            Traduis dans ta tête, puis vérifie.
           </p>
         )}
       </div>
-
-      {/* preload next audio */}
-      {queue[1]?.audio && (
-        <link rel="prefetch" as="audio" href={audioUrl(queue[1].id)} />
-      )}
     </div>
   );
 }

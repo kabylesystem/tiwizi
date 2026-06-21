@@ -12,7 +12,7 @@ export function TodayCard() {
   useEffect(() => {
     const s = load();
     setStore(s);
-    fetch("/api/deck?limit=500")
+    fetch("/api/deck?limit=2000")
       .then((r) => r.json())
       .then((cards: { id: number }[]) => {
         const ids = cards.map((c) => c.id);
