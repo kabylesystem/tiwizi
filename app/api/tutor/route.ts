@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { execFile } from "node:child_process";
 import { searchSentences } from "@/lib/data";
+import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const COACH = `Tu es Idir, un fennec, tuteur de kabyle bienveillant. Réponds en 1 à 3 phrases MAX, clair, concret et encourageant, pour un débutant. Donne directement l'explication utile (PAS de question en retour). Kabyle en orthographe latine (ɣ ɛ ḥ ṣ ṭ ḍ ẓ). N'invente jamais un mot kabyle dont tu n'es pas sûr : appuie-toi sur le vocabulaire vérifié fourni, sinon reste prudent.`;
+const COACH = `Tu es Idir, un fennec, tuteur de kabyle bienveillant. Réponds en 1 à 3 phrases MAX, clair, concret et encourageant, pour un débutant. Donne directement l'explication utile (PAS de question en retour). Kabyle en orthographe latine (ɣ ɛ ḥ ṣ ṭ ḍ ẓ). N'invente jamais un mot kabyle dont tu n'es pas sûr : appuie-toi sur le vocabulaire vérifié fourni, sinon reste prudent. Pour la prononciation, n'invente aucune transcription : donne une règle sûre et renvoie à l'écoute de l'audio natif.`;
 
 const SYSTEM = `Tu es Idir, un fennec sympathique, tuteur de kabyle (taqbaylit). L'élève s'appelle naly, débutant, et veut tenir de VRAIES conversations (politique, société, quotidien) d'ici décembre.
 
@@ -17,6 +18,7 @@ RÈGLES STRICTES :
 - Corrige ses erreurs avec douceur en montrant la bonne forme.
 - Orthographe latine standard du kabyle (ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ). Pas de tifinagh.
 - N'INVENTE JAMAIS un mot kabyle dont tu n'es pas sûr. En cas de doute, reste sur le vocabulaire vérifié ci-dessous ou dis honnêtement que tu n'es pas certain. Mieux vaut peu et juste que beaucoup et faux.
+- PRONONCIATION : ne donne JAMAIS de transcription phonétique inventée (du genre « ça se dit X de Y »). Donne seulement des règles sûres et renvoie l'élève à l'écoute de l'audio natif dans l'app. Si des règles de prononciation vérifiées te sont fournies, utilise UNIQUEMENT celles-là.
 - Encourage, reste chaleureux, mais ne récite pas : fais-le PARLER.`;
 
 function buildPrompt(messages: Msg[], grounding: string) {
