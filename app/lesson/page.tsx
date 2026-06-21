@@ -7,7 +7,7 @@ import { Home, Heart, Check, X, ArrowRight, RotateCcw, Star, Volume2, Shuffle, S
 import { kabyleUnits, type Lesson, type Question, type Unit } from "@/lib/data/kabyle-content";
 import { useGameStore } from "@/lib/store/game-store";
 import { useSound } from "@/lib/sound-engine";
-import { AudioButton } from "@/components/audio-button";
+import { AudioButton, audioUrl } from "@/components/audio-button";
 import { FennecMascot } from "@/components/fennec";
 import { IdirHelp } from "@/components/idir-help";
 import { cn } from "@/lib/utils";
@@ -436,9 +436,10 @@ function MatchPairs({ q, color, onResult, onNext }: { q: Question; color: string
               const ok = matched.has(p.i);
               return (
                 <button key={p.i} disabled={ok}
-                  onClick={() => { setSelLeft(p.i); tryMatch(p.i, selRight); }}
-                  className="kab w-full rounded-2xl border-2 p-3 text-center text-lg font-semibold transition-all"
+                  onClick={() => { setSelLeft(p.i); if (p.audioId) { const a = new Audio(audioUrl(p.audioId)); a.play().catch(() => {}); } tryMatch(p.i, selRight); }}
+                  className="kab flex w-full items-center justify-center gap-2 rounded-2xl border-2 p-3 text-center text-lg font-semibold transition-all"
                   style={{ borderColor: ok ? "#5B9A6F" : on ? color : "rgba(200,150,62,0.2)", background: ok ? "rgba(91,154,111,0.12)" : on ? `${color}1a` : "rgba(255,255,255,0.6)", color: ok ? "#5B9A6F" : "#2A1F14", opacity: ok ? 0.6 : 1 }}>
+                  {p.audioId ? <Volume2 className="h-3.5 w-3.5 shrink-0 opacity-45" /> : null}
                   {p.kab}
                 </button>
               );
@@ -473,7 +474,20 @@ function MatchPairs({ q, color, onResult, onNext }: { q: Question; color: string
 function OrderWords({ q, color, onResult, onNext }: { q: Question; color: string; onResult: (ok: boolean) => void; onNext: () => void }) {
   const target = (q.latin || (q.correctAnswer as string)).trim();
   const toks = useMemo(() => target.split(/\s+/).map((tok, i) => ({ tok, i })), [target]);
-  const bankInit = useMemo(() => [...toks].sort(() => Math.random() - 0.5), [toks]);
+  const bankInit = useMemo(() => {
+    if (toks.length < 2) return toks;
+    const target = toks.map((t) => t.tok).join(" ");
+    let a = [...toks];
+    for (let tries = 0; tries < 10; tries++) {
+      a = [...toks];
+      for (let k = a.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [a[k], a[j]] = [a[j], a[k]];
+      }
+      if (a.map((t) => t.tok).join(" ") !== target) break;
+    }
+    return a;
+  }, [toks]);
   const [bank, setBank] = useState(bankInit);
   const [built, setBuilt] = useState<{ tok: string; i: number }[]>([]);
   const [shown, setShown] = useState(false);

@@ -126,7 +126,7 @@ function fill(card, kabPool) {
 }
 // match pairs
 function matchSet(cards) {
-  return { type: "match", prompt: "Associe chaque mot à sa traduction", correctAnswer: 0, pairs: cards.map((c) => ({ kab: c.kab, fr: c.fr })) };
+  return { type: "match", prompt: "Associe chaque mot à sa traduction", correctAnswer: 0, pairs: cards.map((c) => ({ kab: c.kab, fr: c.fr, audioId: c.ex?.audioId ?? null })) };
 }
 function shuffle(a) {
   a = [...a];
@@ -211,7 +211,7 @@ function vocabLessonsFromCards(cardsAll, unitId, lessonSize) {
       cards.map((c) => mcKab(c, kabPool)),                               // FR → KAB
       cards.filter((c) => c.ex?.audioId).map((c) => listening(c.ex, frPool)), // écoute
       cards.map((c) => fill(c, kabPool)).filter(Boolean),               // texte à trou
-      cards.map((c) => order(c.ex)),                                     // reconstruction
+      cards.filter((c) => c.ex && c.ex.kab.trim().split(/\s+/).length >= 3).map((c) => order(c.ex)), // reconstruction (≥3 mots)
     ];
     // round-robin: alternate formats so every type appears, well distributed
     const questions = [];
@@ -275,7 +275,7 @@ for (const p of PATTERNS) {
     cardsP.map((c) => mcWord(c, cardsP)),                          // phrase → sens
     cardsP.map((c) => mcKab(c, kabPoolP)),                         // sens → phrase
     ex.filter((e) => e.audioId).map((e) => listening(e, frPool)),  // écoute
-    ex.map((e) => order(e)),                                       // reconstruction
+    ex.filter((e) => e.kab.trim().split(/\s+/).length >= 3).map((e) => order(e)), // reconstruction (≥3 mots)
   ];
   const questions = [];
   for (let k = 0; questions.length < 14; k++) {
@@ -320,7 +320,7 @@ export type QType = "multiple-choice" | "mc-kab" | "listening" | "order-words" |
 export type Question = {
   type: QType; prompt: string; latin?: string; fr?: string; tifinagh?: string;
   options?: string[]; correctAnswer: number | string; acceptableAnswers?: string[];
-  hint?: string; audioId?: number | null; pairs?: { kab: string; fr: string }[];
+  hint?: string; audioId?: number | null; pairs?: { kab: string; fr: string; audioId?: number | null }[];
 };
 export type Card = { kab: string; tifinagh: string; fr: string; ex: { kab: string; fr: string; audioId: number | null } | null };
 export type Lesson = { id: string; title: string; xpReward: number; explain?: string; cards: Card[]; questions: Question[] };
