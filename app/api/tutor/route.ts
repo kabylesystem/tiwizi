@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { execFile } from "node:child_process";
-import { searchSentences } from "@/lib/data";
+import { searchSentences, searchGrammar } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 
 export const dynamic = "force-dynamic";
@@ -47,10 +47,22 @@ export async function POST(req: NextRequest) {
     .slice(0, 8)
     .map((p) => `- ${p.kab} = ${p.fr}`)
     .join("\n");
-  const grounding = refs
+  const vocab = refs
     ? `Vocabulaire / phrases kabyles VÉRIFIÉS (réels, appuie-toi dessus, ne dévie pas) :\n${refs}`
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
+  // grounded GRAMMAR (naly's Anki decks: système verbal, présentatifs, prépositions…)
+  const gram = searchGrammar(last, 6)
+    .map((g) => `- Q: ${g.q}\n  R: ${g.a}`)
+    .join("\n");
+  const gramGrounding = gram
+    ? `\n\nGRAMMAIRE KABYLE VÉRIFIÉE (utilise ces explications/traductions EXACTES, ne les contredis pas) :\n${gram}`
+    : "";
+
+  // pronunciation rules only when relevant (keeps prompts lean)
+  const pron = PRON_TRIGGER.test(last) ? `\n\n${PRONUNCIATION_REF}` : "";
+
+  const grounding = vocab + gramGrounding + pron;
   const prompt = coach
     ? `${grounding}\n\nDemande : ${body.ask}`
     : buildPrompt(messages, grounding);
@@ -60,7 +72,7 @@ export async function POST(req: NextRequest) {
     const text = await new Promise<string>((resolve, reject) => {
       execFile(
         "claude",
-        ["-p", prompt, "--append-system-prompt", system],
+        ["-p", prompt, "--append-system-prompt", system, "--model", "sonnet", "--max-turns", "1"],
         { timeout: 110_000, maxBuffer: 1024 * 1024 },
         (err, stdout, stderr) => {
           if (err) reject(new Error(stderr || err.message));

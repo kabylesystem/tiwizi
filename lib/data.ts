@@ -85,6 +85,28 @@ export function searchDict(q: string, limit = 40): DictEntry[] {
   return scored.slice(0, limit).map((x) => all[x.i]);
 }
 
+export type GrammarCard = { topic: string; q: string; a: string };
+let _grammar: GrammarCard[] | null = null;
+let _grammarFold: string[] | null = null;
+
+export function searchGrammar(q: string, limit = 5): GrammarCard[] {
+  _grammar ??= read<GrammarCard[]>("grammar-kb.json");
+  _grammarFold ??= _grammar.map((g) => fold(`${g.topic} ${g.q} ${g.a}`));
+  const needle = fold(q).trim();
+  if (!needle) return [];
+  const terms = needle.split(/\s+/).filter((t) => t.length >= 3);
+  const scored: { i: number; s: number }[] = [];
+  for (let i = 0; i < _grammar.length; i++) {
+    const f = _grammarFold[i];
+    let s = 0;
+    if (f.includes(needle)) s += 5;
+    for (const t of terms) if (f.includes(t)) s += 1;
+    if (s > 0) scored.push({ i, s });
+  }
+  scored.sort((a, b) => b.s - a.s || a.i - b.i);
+  return scored.slice(0, limit).map((x) => _grammar![x.i]);
+}
+
 export function stats() {
   const all = pairs();
   return {
