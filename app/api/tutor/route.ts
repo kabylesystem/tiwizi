@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { execFile } from "node:child_process";
-import { searchSentences, searchGrammar } from "@/lib/data";
+import { searchSentences, searchGrammar, searchAssimil } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 
 export const dynamic = "force-dynamic";
@@ -59,10 +59,18 @@ export async function POST(req: NextRequest) {
     ? `\n\nGRAMMAIRE KABYLE VÉRIFIÉE (utilise ces explications/traductions EXACTES, ne les contredis pas) :\n${gram}`
     : "";
 
+  // the Assimil "Le Kabyle de poche" book itself (OCR), retrieved per query
+  const book = searchAssimil(last, 4)
+    .map((c) => `[${c.title}] ${c.text}`)
+    .join("\n---\n");
+  const bookGrounding = book
+    ? `\n\nEXTRAITS DU LIVRE ASSIMIL « LE KABYLE DE POCHE » (référence faisant autorité, appuie-toi dessus) :\n${book}`
+    : "";
+
   // pronunciation rules only when relevant (keeps prompts lean)
   const pron = PRON_TRIGGER.test(last) ? `\n\n${PRONUNCIATION_REF}` : "";
 
-  const grounding = vocab + gramGrounding + pron;
+  const grounding = vocab + bookGrounding + gramGrounding + pron;
   const prompt = coach
     ? `${grounding}\n\nDemande : ${body.ask}`
     : buildPrompt(messages, grounding);

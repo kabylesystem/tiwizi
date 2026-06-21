@@ -107,6 +107,28 @@ export function searchGrammar(q: string, limit = 5): GrammarCard[] {
   return scored.slice(0, limit).map((x) => _grammar![x.i]);
 }
 
+export type AssimilChunk = { title: string; text: string };
+let _assimil: AssimilChunk[] | null = null;
+let _assimilFold: string[] | null = null;
+
+export function searchAssimil(q: string, limit = 4): AssimilChunk[] {
+  _assimil ??= read<AssimilChunk[]>("assimil-kb.json");
+  _assimilFold ??= _assimil.map((c) => fold(`${c.title} ${c.text}`));
+  const needle = fold(q).trim();
+  if (!needle) return [];
+  const terms = needle.split(/\s+/).filter((t) => t.length >= 3);
+  const scored: { i: number; s: number }[] = [];
+  for (let i = 0; i < _assimil.length; i++) {
+    const f = _assimilFold[i];
+    let s = 0;
+    if (f.includes(needle)) s += 4;
+    for (const t of terms) if (f.includes(t)) s += 1;
+    if (s > 0) scored.push({ i, s });
+  }
+  scored.sort((a, b) => b.s - a.s || a.i - b.i);
+  return scored.slice(0, limit).map((x) => _assimil![x.i]);
+}
+
 export function stats() {
   const all = pairs();
   return {
