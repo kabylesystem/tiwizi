@@ -230,14 +230,22 @@ function IntroCard({ explain, card, index, total, color, onNext }: { explain?: s
 
 function QuizCard({ q, color, onResult, onNext }: { q: Question; color: string; onResult: (ok: boolean) => void; onNext: () => void }) {
   if (q.type === "order-words") return <OrderWords q={q} color={color} onResult={onResult} onNext={onNext} />;
+  if (q.type === "match") return <MatchPairs q={q} color={color} onResult={onResult} onNext={onNext} />;
   return <ChoiceQuestion q={q} color={color} onResult={onResult} onNext={onNext} />;
 }
+
+const HEADERS: Record<string, string> = {
+  "multiple-choice": "Choisis la traduction",
+  "mc-kab": "Choisis le mot kabyle",
+  listening: "Écoute",
+  fill: "Complète la phrase",
+};
 
 function ChoiceQuestion({ q, color, onResult, onNext }: { q: Question; color: string; onResult: (ok: boolean) => void; onNext: () => void }) {
   const [sel, setSel] = useState<number | null>(null);
   const [shown, setShown] = useState(false);
   const correctIdx = q.correctAnswer as number;
-  const listening = q.type === "listening";
+  const optionsAreKab = q.type === "mc-kab" || q.type === "fill";
 
   const answer = (i: number) => {
     if (shown) return;
@@ -251,12 +259,19 @@ function ChoiceQuestion({ q, color, onResult, onNext }: { q: Question; color: st
       <Panel>
         <div className="mb-7 text-center">
           <span className="text-xs font-bold uppercase tracking-wider" style={{ color }}>
-            {listening ? "Écoute" : "Choisis la traduction"}
+            {HEADERS[q.type] || "Choisis"}
           </span>
-          {listening ? (
+          {q.type === "listening" ? (
             <div className="mt-4 flex flex-col items-center gap-3">
               {q.audioId && <AudioButton id={q.audioId} size="lg" autoPlay />}
               <p className="text-sm text-muted">Qu&apos;entends-tu ?</p>
+            </div>
+          ) : q.type === "mc-kab" ? (
+            <h2 className="mt-3 text-balance text-3xl font-bold text-brand-deep sm:text-4xl">{q.prompt}</h2>
+          ) : q.type === "fill" ? (
+            <div className="mt-3 flex flex-col items-center gap-3">
+              <h2 className="kab text-balance text-2xl font-bold text-ink sm:text-3xl">{q.prompt}</h2>
+              {q.fr && <p className="text-sm text-muted">({q.fr})</p>}
             </div>
           ) : (
             <div className="mt-3 flex flex-col items-center gap-3">
@@ -277,7 +292,7 @@ function ChoiceQuestion({ q, color, onResult, onNext }: { q: Question; color: st
                 whileTap={!shown ? { scale: 0.98 } : {}}
                 onClick={() => answer(i)}
                 disabled={shown}
-                className="flex items-center justify-between rounded-2xl border-2 p-4 text-left text-base font-semibold transition-colors"
+                className={`flex items-center justify-between rounded-2xl border-2 p-4 text-left text-base font-semibold transition-colors ${optionsAreKab ? "kab text-lg" : ""}`}
                 style={{
                   borderColor: isRight ? "#5B9A6F" : isWrong ? "#D4735E" : "rgba(200,150,62,0.2)",
                   background: isRight ? "rgba(91,154,111,0.12)" : isWrong ? "rgba(212,115,94,0.12)" : "rgba(255,255,255,0.6)",
@@ -296,9 +311,84 @@ function ChoiceQuestion({ q, color, onResult, onNext }: { q: Question; color: st
           shown={shown}
           ok={sel === correctIdx}
           answer={q.options?.[correctIdx]}
-          helpAsk={`Explique simplement, en 1-2 phrases, pourquoi le kabyle "${q.latin}" se traduit par "${q.options?.[correctIdx]}".`}
+          helpAsk={`Explique simplement, en 1-2 phrases, le mot/la phrase kabyle "${q.latin || q.options?.[correctIdx]}".`}
           onNext={onNext}
         />
+      </Panel>
+    </motion.div>
+  );
+}
+
+function MatchPairs({ q, color, onResult, onNext }: { q: Question; color: string; onResult: (ok: boolean) => void; onNext: () => void }) {
+  const pairs = q.pairs || [];
+  const leftCol = useMemo(() => pairs.map((p, i) => ({ ...p, i })), [pairs]);
+  const rightCol = useMemo(() => [...pairs.map((p, i) => ({ ...p, i }))].sort(() => Math.random() - 0.5), [pairs]);
+  const [selLeft, setSelLeft] = useState<number | null>(null);
+  const [selRight, setSelRight] = useState<number | null>(null);
+  const [matched, setMatched] = useState<Set<number>>(new Set());
+  const [wrong, setWrong] = useState<number | null>(null);
+  const [mistakes, setMistakes] = useState(0);
+
+  const tryMatch = (l: number | null, r: number | null) => {
+    if (l == null || r == null) return;
+    if (l === r) {
+      const m = new Set(matched);
+      m.add(l);
+      setMatched(m);
+      setSelLeft(null);
+      setSelRight(null);
+      if (m.size === pairs.length) {
+        onResult(mistakes === 0);
+      }
+    } else {
+      setWrong(r);
+      setMistakes((x) => x + 1);
+      setTimeout(() => { setWrong(null); setSelLeft(null); setSelRight(null); }, 600);
+    }
+  };
+
+  const done = matched.size === pairs.length;
+
+  return (
+    <motion.div initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }}>
+      <Panel>
+        <p className="mb-6 text-center text-xs font-bold uppercase tracking-wider" style={{ color }}>{q.prompt}</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2.5">
+            {leftCol.map((p) => {
+              const on = selLeft === p.i;
+              const ok = matched.has(p.i);
+              return (
+                <button key={p.i} disabled={ok}
+                  onClick={() => { setSelLeft(p.i); tryMatch(p.i, selRight); }}
+                  className="kab w-full rounded-2xl border-2 p-3 text-center text-lg font-semibold transition-all"
+                  style={{ borderColor: ok ? "#5B9A6F" : on ? color : "rgba(200,150,62,0.2)", background: ok ? "rgba(91,154,111,0.12)" : on ? `${color}1a` : "rgba(255,255,255,0.6)", color: ok ? "#5B9A6F" : "#2A1F14", opacity: ok ? 0.6 : 1 }}>
+                  {p.kab}
+                </button>
+              );
+            })}
+          </div>
+          <div className="space-y-2.5">
+            {rightCol.map((p) => {
+              const on = selRight === p.i;
+              const ok = matched.has(p.i);
+              const bad = wrong === p.i;
+              return (
+                <button key={p.i} disabled={ok}
+                  onClick={() => { setSelRight(p.i); tryMatch(selLeft, p.i); }}
+                  className="w-full rounded-2xl border-2 p-3 text-center text-sm font-semibold transition-all"
+                  style={{ borderColor: ok ? "#5B9A6F" : bad ? "#D4735E" : on ? color : "rgba(200,150,62,0.2)", background: ok ? "rgba(91,154,111,0.12)" : bad ? "rgba(212,115,94,0.12)" : on ? `${color}1a` : "rgba(255,255,255,0.6)", color: ok ? "#5B9A6F" : bad ? "#D4735E" : "#2A1F14", opacity: ok ? 0.6 : 1 }}>
+                  {p.fr}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        {done && (
+          <button onClick={onNext} className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-lg font-bold text-white" style={GOLD_BTN}>
+            Continuer <ArrowRight className="h-5 w-5" />
+          </button>
+        )}
       </Panel>
     </motion.div>
   );
