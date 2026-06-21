@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Awal — design tokens
+   Warm editorial palette, Amazigh-inspired (azure / ochre / clay).
+--------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #faf6ee;
+  --paper-2: #f3ecde;
+  --card: #ffffff;
+  --ink: #221c14;
+  --muted: #7c715f;
+  --line: #e8dfcd;
+  --line-strong: #d9cdb4;
+
+  --brand: #1f63b0;       /* Amazigh azure */
+  --brand-deep: #164a85;
+  --brand-soft: #e6eef8;
+  --accent: #cf8a16;      /* ochre / amber */
+  --accent-soft: #f6ecd3;
+  --good: #2f7d5b;
+  --good-soft: #e3f0e8;
+  --bad: #c0492b;         /* clay red (yaz) */
+  --bad-soft: #f6e4de;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+  --font-kab: var(--font-noto-serif);
+
+  --radius: 0.9rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--line);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Kabyle text — guaranteed glyph coverage for ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ */
+.kab {
+  font-family: var(--font-kab), "Noto Serif", Georgia, serif;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+/* subtle paper tint via layered radial gradients */
+.grain {
+  background-image:
+    radial-gradient(circle at 20% 18%, rgba(207, 138, 22, 0.05), transparent 38%),
+    radial-gradient(circle at 82% 8%, rgba(31, 99, 176, 0.05), transparent 34%);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.99); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-pop {
+  animation: pop-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop { animation: none; }
 }

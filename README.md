@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Awal — apprendre le kabyle (taqbaylit) pour de vrai
 
-## Getting Started
+> *Awal* = « la parole, le mot » en kabyle.
 
-First, run the development server:
+La meilleure façon d'apprendre le kabyle, bâtie sur **du contenu humain vérifié**
+plutôt que sur un kabyle approximatif inventé par une IA.
+
+## Le principe
+
+Les LLM sont mauvais en kabyle (langue à faibles ressources). Donc Awal ne leur
+fait pas confiance : tout le contenu vient de **vraies sources humaines**.
+
+- **Input compréhensible** — 208 000 phrases kabyle↔français ([Tatoeba](https://tatoeba.org), CC-BY),
+  dont 23 000 avec **audio de voix natives** (streamé depuis le CDN Tatoeba).
+- **Répétition espacée** — un moteur SM-2 planifie tes révisions (progression locale, `localStorage`).
+- **Dictionnaire** — le **Dallet** numérisé ([DigitizedDallet](https://github.com/sferhah/DigitizedDallet), MIT) :
+  12 500 entrées, sens, racines, exemples.
+
+## Stack
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind 4. Données servies
+en local depuis `data/*.json`, recherche côté serveur (routes API).
+
+## Lancer
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev            # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> En sandbox/inotify limité : `WATCHPACK_POLLING=true pnpm exec next dev`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Reconstruire les données
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Les JSON sont versionnés dans `data/`. Pour les régénérer depuis les sources :
 
-## Learn More
+```bash
+bash scripts/build-data.sh
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/            pages (accueil, /learn, /browse, /dictionary) + routes API
+components/     nav, onglets mobile, bouton audio, logo (yaz ⵣ), carte du jour
+lib/            data (chargement+recherche), srs (SM-2), normalize (recherche tolérante)
+data/           deck.json · pairs.json · dict.json
+scripts/        pipeline de données reproductible
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Sources & licences
 
-## Deploy on Vercel
+| Source | Contenu | Licence |
+|--------|---------|---------|
+| Tatoeba | phrases + audio | CC-BY 2.0 FR |
+| DigitizedDallet | dictionnaire | MIT |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Suite
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Voir [`docs/session.md`](docs/session.md). Prochaine grande étape : un **tuteur IA
+ancré** sur ce corpus (et tournant sur les crédits du plan, pas l'API).
