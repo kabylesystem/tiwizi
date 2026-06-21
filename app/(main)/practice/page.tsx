@@ -80,7 +80,7 @@ export default function PracticePage() {
           const pct = Math.round((done / u.lessons.length) * 100);
           return (
             <Link key={u.id} href={`/lesson?id=${u.lessons[0].id}`} className="flex items-center gap-3 rounded-2xl border border-[rgba(200,150,62,0.18)] bg-[rgba(253,248,240,0.85)] p-4">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-lg" style={{ background: `${u.color}18` }}>{u.icon}</span>
+              <span className="font-tifinagh grid h-10 w-10 shrink-0 place-items-center rounded-xl text-xl" style={{ background: `${u.color}18`, color: u.color }}>{u.icon}</span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-ink">{u.title}</p>
                 <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[rgba(200,150,62,0.12)]">

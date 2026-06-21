@@ -192,7 +192,7 @@ function IntroCard({ explain, card, index, total, color, onNext }: { explain?: s
       <Panel>
         {explain && (
           <div className="mb-6 rounded-2xl p-4 text-sm leading-relaxed" style={{ background: "rgba(74,158,207,0.1)", border: "1px solid rgba(74,158,207,0.25)", color: "#2A1F14" }}>
-            🔗 {explain}
+            {explain}
           </div>
         )}
         <p className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-muted">

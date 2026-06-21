@@ -14,7 +14,7 @@ const tifinagh = Noto_Sans_Tifinagh({
 });
 
 export const metadata: Metadata = {
-  title: "Awal — apprends le kabyle pour de vrai",
+  title: "Tiwizi — apprends le kabyle pour de vrai",
   description:
     "Apprends le kabyle (taqbaylit) comme des legos : les pièces (vocabulaire fréquent), les patterns (grammaire), puis la construction. Contenu humain vérifié (Tatoeba + Dallet), audio natif, tifinagh.",
 };

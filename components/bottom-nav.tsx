@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Dumbbell, BookOpen, User } from "lucide-react";
+import { Home, Sparkles, Dumbbell, BookOpen, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/", label: "Apprendre", icon: Home },
-  { href: "/practice", label: "Pratiquer", icon: Dumbbell },
+  { href: "/tutor", label: "Idir", icon: Sparkles },
+  { href: "/practice", label: "Pratique", icon: Dumbbell },
   { href: "/dictionary", label: "Dico", icon: BookOpen },
   { href: "/profile", label: "Profil", icon: User },
 ];

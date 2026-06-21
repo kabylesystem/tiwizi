@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "Apprendre" },
+  { href: "/tutor", label: "Tuteur IA" },
   { href: "/practice", label: "Pratiquer" },
   { href: "/dictionary", label: "Dictionnaire" },
   { href: "/profile", label: "Profil" },
@@ -26,8 +27,8 @@ export function TopBar() {
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
           <FennecLogo size={34} />
-          <span className="font-display text-xl font-bold tracking-tight text-ink">Awal</span>
-          <span className="font-tifinagh hidden text-brand sm:inline">ⴰⵡⴰⵍ</span>
+          <span className="font-display text-xl font-bold tracking-tight text-ink">Tiwizi</span>
+          <span className="font-tifinagh hidden text-brand sm:inline">ⵜⵉⵡⵉⵣⵉ</span>
         </Link>
 
         <nav className="ml-4 hidden items-center gap-1 md:flex">

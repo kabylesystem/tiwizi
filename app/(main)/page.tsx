@@ -10,12 +10,6 @@ import { FennecMascot } from "@/components/fennec";
 import { AxxamPreview } from "@/components/axxam";
 import { cn } from "@/lib/utils";
 
-const KIND_BADGE: Record<Unit["kind"], string> = {
-  vocab: "🧩 Pièces",
-  pattern: "🔗 Pattern",
-  theme: "🏗️ Construction",
-};
-
 const WORDS = [
   { tif: "ⴰⵣⵓⵍ", lat: "Azul", fr: "Bonjour" },
   { tif: "ⵜⴰⵎⵓⵔⵜ", lat: "Tamurt", fr: "Pays, terre natale" },
@@ -164,8 +158,8 @@ function UnitCard({
     >
       <div className="mb-4 flex items-center gap-3">
         <div
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-xl"
-          style={{ background: `${unit.color}18`, border: `1px solid ${unit.color}30` }}
+          className="font-tifinagh grid h-11 w-11 shrink-0 place-items-center rounded-xl text-2xl"
+          style={{ background: `${unit.color}18`, border: `1px solid ${unit.color}30`, color: unit.color }}
         >
           {unit.icon}
         </div>
