@@ -9,6 +9,7 @@ import { useGameStore } from "@/lib/store/game-store";
 import { useSound } from "@/lib/sound-engine";
 import { AudioButton } from "@/components/audio-button";
 import { FennecMascot } from "@/components/fennec";
+import { IdirHelp } from "@/components/idir-help";
 import { cn } from "@/lib/utils";
 
 function findLesson(id: string | null): { unit: Unit; lesson: Lesson } | null {
@@ -208,6 +209,7 @@ function IntroCard({ explain, card, index, total, color, onNext }: { explain?: s
                 <AudioButton id={card.ex.audioId} size="lg" autoPlay />
               </div>
             )}
+            <IdirHelp ask={`Explique en 2 phrases simples le mot ou la phrase kabyle "${card.kab}" (${card.fr}) et donne une petite astuce pour le retenir.`} />
           </div>
           {card.ex && (
             <div className="rounded-2xl p-4" style={{ background: "rgba(255,255,255,0.6)" }}>
@@ -290,7 +292,13 @@ function ChoiceQuestion({ q, color, onResult, onNext }: { q: Question; color: st
           })}
         </div>
 
-        <Feedback shown={shown} ok={sel === correctIdx} answer={q.options?.[correctIdx]} onNext={onNext} />
+        <Feedback
+          shown={shown}
+          ok={sel === correctIdx}
+          answer={q.options?.[correctIdx]}
+          helpAsk={`Explique simplement, en 1-2 phrases, pourquoi le kabyle "${q.latin}" se traduit par "${q.options?.[correctIdx]}".`}
+          onNext={onNext}
+        />
       </Panel>
     </motion.div>
   );
@@ -349,14 +357,14 @@ function OrderWords({ q, color, onResult, onNext }: { q: Question; color: string
             Vérifier
           </button>
         ) : (
-          <Feedback shown ok={ok} answer={target} onNext={onNext} />
+          <Feedback shown ok={ok} answer={target} helpAsk={`Explique brièvement la structure de la phrase kabyle "${target}" qui veut dire "${q.prompt}".`} onNext={onNext} />
         )}
       </Panel>
     </motion.div>
   );
 }
 
-function Feedback({ shown, ok, answer, onNext }: { shown: boolean; ok: boolean; answer?: string; onNext: () => void }) {
+function Feedback({ shown, ok, answer, onNext, helpAsk }: { shown: boolean; ok: boolean; answer?: string; onNext: () => void; helpAsk?: string }) {
   if (!shown) return null;
   return (
     <AnimatePresence>
@@ -366,6 +374,11 @@ function Feedback({ shown, ok, answer, onNext }: { shown: boolean; ok: boolean; 
             {ok ? "Yelha! (Excellent !)" : "Ur yelhi ara (pas exact)"}
           </p>
           {!ok && answer && <p className="kab mt-1 text-ink">{answer}</p>}
+          {!ok && helpAsk && (
+            <div className="mt-2 flex justify-center">
+              <IdirHelp ask={helpAsk} label="Pourquoi ? Demande à Idir" />
+            </div>
+          )}
         </div>
         <button onClick={onNext} className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-lg font-bold text-white" style={GOLD_BTN}>
           Continuer <ArrowRight className="h-5 w-5" />

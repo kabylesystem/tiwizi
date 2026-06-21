@@ -7,6 +7,8 @@ export const maxDuration = 120;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+const COACH = `Tu es Idir, un fennec, tuteur de kabyle bienveillant. Réponds en 1 à 3 phrases MAX, clair, concret et encourageant, pour un débutant. Donne directement l'explication utile (PAS de question en retour). Kabyle en orthographe latine (ɣ ɛ ḥ ṣ ṭ ḍ ẓ). N'invente jamais un mot kabyle dont tu n'es pas sûr : appuie-toi sur le vocabulaire vérifié fourni, sinon reste prudent.`;
+
 const SYSTEM = `Tu es Idir, un fennec sympathique, tuteur de kabyle (taqbaylit). L'élève s'appelle naly, débutant, et veut tenir de VRAIES conversations (politique, société, quotidien) d'ici décembre.
 
 RÈGLES STRICTES :
@@ -25,17 +27,20 @@ function buildPrompt(messages: Msg[], grounding: string) {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { messages?: Msg[] };
+  let body: { messages?: Msg[]; mode?: string; ask?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "bad json" }, { status: 400 });
   }
-  const messages = (body.messages || []).slice(-12);
-  if (!messages.length) return NextResponse.json({ error: "no messages" }, { status: 400 });
 
-  // grounding: real verified phrases related to the last user message
-  const last = [...messages].reverse().find((m) => m.role === "user")?.content || "";
+  const coach = body.mode === "coach";
+  const messages = (body.messages || []).slice(-12);
+  if (!coach && !messages.length) return NextResponse.json({ error: "no messages" }, { status: 400 });
+  if (coach && !body.ask) return NextResponse.json({ error: "no ask" }, { status: 400 });
+
+  // grounding: real verified phrases related to the topic
+  const last = coach ? body.ask! : [...messages].reverse().find((m) => m.role === "user")?.content || "";
   const refs = searchSentences(last, 8)
     .slice(0, 8)
     .map((p) => `- ${p.kab} = ${p.fr}`)
@@ -44,13 +49,16 @@ export async function POST(req: NextRequest) {
     ? `Vocabulaire / phrases kabyles VÉRIFIÉS (réels, appuie-toi dessus, ne dévie pas) :\n${refs}`
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
-  const prompt = buildPrompt(messages, grounding);
+  const prompt = coach
+    ? `${grounding}\n\nDemande : ${body.ask}`
+    : buildPrompt(messages, grounding);
+  const system = coach ? COACH : SYSTEM;
 
   try {
     const text = await new Promise<string>((resolve, reject) => {
       execFile(
         "claude",
-        ["-p", prompt, "--append-system-prompt", SYSTEM],
+        ["-p", prompt, "--append-system-prompt", system],
         { timeout: 110_000, maxBuffer: 1024 * 1024 },
         (err, stdout, stderr) => {
           if (err) reject(new Error(stderr || err.message));
