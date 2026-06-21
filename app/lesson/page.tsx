@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Heart, Check, X, ArrowRight, RotateCcw, Star } from "lucide-react";
+import { Home, Heart, Check, X, ArrowRight, RotateCcw, Star, Volume2, Shuffle, Sparkles } from "lucide-react";
 import { kabyleUnits, type Lesson, type Question, type Unit } from "@/lib/data/kabyle-content";
 import { useGameStore } from "@/lib/store/game-store";
 import { useSound } from "@/lib/sound-engine";
@@ -34,9 +34,7 @@ function LessonInner() {
   const cards = found?.lesson.cards ?? [];
   const questions = found?.lesson.questions ?? [];
 
-  const [phase, setPhase] = useState<"intro" | "quiz" | "done" | "over">(
-    cards.length ? "intro" : "quiz"
-  );
+  const [phase, setPhase] = useState<"start" | "intro" | "quiz" | "done" | "over">("start");
   const [introIdx, setIntroIdx] = useState(0);
   const [qIdx, setQIdx] = useState(0);
   const [lives, setLives] = useState(5);
@@ -64,9 +62,11 @@ function LessonInner() {
       <Header
         onHome={() => router.push("/")}
         lives={lives}
-        label={phase === "intro" ? "Les pièces" : `${qIdx + 1}/${questions.length}`}
+        label={phase === "start" ? "Prêt ?" : phase === "intro" ? "Les mots" : `${qIdx + 1}/${questions.length}`}
         progress={
-          phase === "intro"
+          phase === "start"
+            ? 0
+            : phase === "intro"
             ? (introIdx / Math.max(1, cards.length)) * 100
             : (qIdx / Math.max(1, questions.length)) * 100
         }
@@ -75,6 +75,16 @@ function LessonInner() {
 
       <main className="flex flex-1 items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-3xl">
+          {phase === "start" && (
+            <StartCard
+              unit={unit}
+              lesson={lesson}
+              cardsCount={cards.length}
+              questions={questions}
+              onStart={() => setPhase(cards.length ? "intro" : "quiz")}
+            />
+          )}
+
           {phase === "intro" && (
             <IntroCard
               key={introIdx}
@@ -183,6 +193,72 @@ function Panel({ children, className = "" }: { children: React.ReactNode; classN
   return (
     <div className={cn("rounded-3xl p-6 sm:p-8", className)} style={{ background: "rgba(249,238,216,0.95)", border: "2px solid rgba(200,150,62,0.2)", boxShadow: "0 20px 60px rgba(200,150,62,0.15)" }}>
       {children}
+    </div>
+  );
+}
+
+const FMT_LABEL: Record<string, string> = {
+  match: "associations",
+  "multiple-choice": "QCM",
+  "mc-kab": "QCM inversé",
+  listening: "écoute",
+  fill: "texte à trou",
+  "order-words": "reconstruction",
+};
+
+function StartCard({
+  unit,
+  lesson,
+  cardsCount,
+  questions,
+  onStart,
+}: {
+  unit: Unit;
+  lesson: Lesson;
+  cardsCount: number;
+  questions: Question[];
+  onStart: () => void;
+}) {
+  const fmts = [...new Set(questions.map((q) => q.type))].map((t) => FMT_LABEL[t]).filter(Boolean);
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <Panel className="text-center">
+        <FennecMascot mood="happy" size={92} />
+        {unit.tifinagh && <p className="font-tifinagh mt-2 text-lg" style={{ color: unit.color }}>{unit.tifinagh}</p>}
+        <h2 className="mt-1 font-display text-3xl text-ink">Azul a naly !</h2>
+        <p className="mt-2 text-muted">
+          Idir : <span className="kab">Ad nelmed iḍ-a.</span> (On apprend aujourd&apos;hui.)
+        </p>
+        <p className="mt-1 text-sm font-semibold" style={{ color: unit.color }}>
+          {unit.title} · {lesson.title}
+        </p>
+
+        <div className="mt-6 space-y-3 rounded-2xl p-4 text-left" style={{ background: "rgba(255,255,255,0.55)" }}>
+          <p className="text-sm font-semibold text-ink">Dans cette leçon, tu vas :</p>
+          <Row icon={<Volume2 className="h-4 w-4" style={{ color: unit.color }} />}>
+            découvrir <b>{cardsCount} mots</b> {cardsCount ? "(avec audio de voix natives)" : "directement en exercice"}
+          </Row>
+          <Row icon={<Shuffle className="h-4 w-4" style={{ color: unit.color }} />}>
+            t&apos;entraîner avec <b>{fmts.length} types d&apos;exercices</b> : {fmts.join(", ")}
+          </Row>
+          <Row icon={<Sparkles className="h-4 w-4" style={{ color: unit.color }} />}>
+            <b>Idir</b> t&apos;explique chaque mot et t&apos;aide quand tu bloques
+          </Row>
+        </div>
+
+        <button onClick={onStart} className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-lg font-bold text-white" style={GOLD_BTN}>
+          C&apos;est parti ! <ArrowRight className="h-5 w-5" />
+        </button>
+      </Panel>
+    </motion.div>
+  );
+}
+
+function Row({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div className="flex items-start gap-2.5 text-sm text-ink">
+      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg" style={{ background: "rgba(200,150,62,0.12)" }}>{icon}</span>
+      <span className="flex-1 leading-relaxed">{children}</span>
     </div>
   );
 }

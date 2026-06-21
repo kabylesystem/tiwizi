@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces, Noto_Serif, Noto_Sans_Tifinagh } from "next/font/google";
+import { Nunito, Noto_Sans, Noto_Sans_Tifinagh } from "next/font/google";
 import "./globals.css";
 import { TifinaghBackground } from "@/components/tifinagh-bg";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin", "latin-ext"], display: "swap" });
-const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], display: "swap" });
-const notoSerif = Noto_Serif({ variable: "--font-noto-serif", subsets: ["latin", "latin-ext"], display: "swap" });
+// Friendly, rounded, warm — fits a language app (no more serifs).
+const nunito = Nunito({ variable: "--font-nunito", subsets: ["latin", "latin-ext"], display: "swap" });
+// Full glyph coverage for Kabyle special letters (ɣ ɛ ḥ ṣ ṭ ḍ ẓ), clean sans.
+const notoSans = Noto_Sans({ variable: "--font-noto-sans", subsets: ["latin", "latin-ext"], display: "swap" });
 const tifinagh = Noto_Sans_Tifinagh({
   variable: "--font-tifinagh",
   subsets: ["tifinagh"],
@@ -23,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="fr"
-      className={`${inter.variable} ${fraunces.variable} ${notoSerif.variable} ${tifinagh.variable} h-full antialiased`}
+      className={`${nunito.variable} ${notoSans.variable} ${tifinagh.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <TifinaghBackground />

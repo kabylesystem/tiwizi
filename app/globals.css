@@ -41,9 +41,9 @@
   --color-bad: var(--bad);
   --color-bad-soft: var(--bad-soft);
 
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-fraunces);
-  --font-kab: var(--font-noto-serif);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-nunito);
+  --font-kab: var(--font-noto-sans);
   --font-tifinagh: var(--font-tifinagh);
 
   --radius: 0.9rem;
@@ -68,10 +68,12 @@ body {
 
 /* Kabyle text (latin) — couvre ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ */
 .kab {
-  font-family: var(--font-kab), "Noto Serif", Georgia, serif;
+  font-family: var(--font-kab), "Noto Sans", system-ui, sans-serif;
 }
 .font-display {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 .font-tifinagh {
   font-family: var(--font-tifinagh), "Noto Sans Tifinagh", sans-serif;
