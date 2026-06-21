@@ -1,27 +1,26 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Awal — design tokens
-   Warm editorial palette, Amazigh-inspired (azure / ochre / clay).
+   Awal — design tokens (langage visuel Tiwizi : or / parchemin / tifinagh)
 --------------------------------------------------------------------------- */
 :root {
-  --paper: #faf6ee;
-  --paper-2: #f3ecde;
-  --card: #ffffff;
-  --ink: #221c14;
-  --muted: #7c715f;
-  --line: #e8dfcd;
-  --line-strong: #d9cdb4;
+  --paper: #fdf8f0;        /* sable clair */
+  --paper-2: #f5e6c8;      /* sable chaud */
+  --card: #fcf6e9;         /* parchemin */
+  --ink: #2a1f14;          /* brun très foncé */
+  --muted: #8b7355;        /* brun doux */
+  --line: #ecdcbb;
+  --line-strong: #dcc290;
 
-  --brand: #1f63b0;       /* Amazigh azure */
-  --brand-deep: #164a85;
-  --brand-soft: #e6eef8;
-  --accent: #cf8a16;      /* ochre / amber */
-  --accent-soft: #f6ecd3;
-  --good: #2f7d5b;
-  --good-soft: #e3f0e8;
-  --bad: #c0492b;         /* clay red (yaz) */
-  --bad-soft: #f6e4de;
+  --brand: #c8963e;        /* or / ocre */
+  --brand-deep: #a67b2e;
+  --brand-soft: #f4e8cd;
+  --accent: #4a9ecf;       /* bleu sahel */
+  --accent-soft: #e2eff7;
+  --good: #5b9a6f;         /* vert */
+  --good-soft: #e3efe7;
+  --bad: #d4735e;          /* terre cuite (cœurs / erreurs) */
+  --bad-soft: #f7e6e0;
 }
 
 @theme inline {
@@ -45,6 +44,7 @@
   --font-sans: var(--font-inter);
   --font-display: var(--font-fraunces);
   --font-kab: var(--font-noto-serif);
+  --font-tifinagh: var(--font-tifinagh);
 
   --radius: 0.9rem;
 }
@@ -61,27 +61,24 @@ body {
   background-color: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  background-image:
+    radial-gradient(circle at 50% -10%, rgba(245, 230, 200, 0.7), transparent 55%);
+  background-attachment: fixed;
 }
 
-/* Kabyle text — guaranteed glyph coverage for ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ */
+/* Kabyle text (latin) — couvre ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ */
 .kab {
   font-family: var(--font-kab), "Noto Serif", Georgia, serif;
 }
-
 .font-display {
   font-family: var(--font-display), Georgia, serif;
 }
-
-/* subtle paper tint via layered radial gradients */
-.grain {
-  background-image:
-    radial-gradient(circle at 20% 18%, rgba(207, 138, 22, 0.05), transparent 38%),
-    radial-gradient(circle at 82% 8%, rgba(31, 99, 176, 0.05), transparent 34%);
+.font-tifinagh {
+  font-family: var(--font-tifinagh), "Noto Sans Tifinagh", sans-serif;
 }
 
 ::selection {
-  background: var(--accent-soft);
+  background: var(--brand-soft);
   color: var(--ink);
 }
 
@@ -89,15 +86,30 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
 }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 @keyframes pop-in {
   from { opacity: 0; transform: translateY(6px) scale(0.99); }
   to   { opacity: 1; transform: none; }
 }
-.animate-pop {
-  animation: pop-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+.animate-pop { animation: pop-in 0.24s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* floating tifinagh doodles */
+@keyframes drift {
+  0%   { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+  50%  { transform: translate(4px, -10px) rotate(calc(var(--r, 0deg) + 3deg)); }
+  100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
 }
+.animate-drift { animation: drift var(--dur, 20s) ease-in-out infinite; }
+
+/* fennec bob */
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+.animate-bob { animation: bob 3s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-pop { animation: none; }
+  .animate-pop, .animate-drift, .animate-bob { animation: none; }
 }
