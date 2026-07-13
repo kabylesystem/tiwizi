@@ -1,4 +1,4 @@
-# Awal — design.md (source de vérité visuelle)
+# Tiwizi — design.md (source de vérité visuelle)
 
 ## Direction
 Éditorial, chaleureux, ancré dans l'identité amazighe — l'inverse du « SaaS IA

@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const WORK = process.env.WORK || "/tmp/awal-src";
+const WORK = process.env.WORK || "/tmp/tiwizi-src";
 const OUT = path.join(process.cwd(), "data");
 const d = JSON.parse(fs.readFileSync(path.join(WORK, "dallet.json"), "utf8"));
 

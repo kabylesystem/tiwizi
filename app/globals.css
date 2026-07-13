@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Awal — design tokens (langage visuel Tiwizi : or / parchemin / tifinagh)
+   Tiwizi — design tokens (langage visuel Tiwizi : or / parchemin / tifinagh)
 --------------------------------------------------------------------------- */
 :root {
   --paper: #fdf8f0;        /* sable clair */

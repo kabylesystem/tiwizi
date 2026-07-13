@@ -26,7 +26,7 @@ export function Logo({ className = "" }: { className?: string }) {
         <Yaz className="h-4 w-4" />
       </span>
       <span className="font-display text-[1.35rem] font-semibold tracking-tight text-ink">
-        Awal
+        Tiwizi
       </span>
     </span>
   );

@@ -129,6 +129,24 @@ export function searchAssimil(q: string, limit = 4): AssimilChunk[] {
   return scored.slice(0, limit).map((x) => _assimil![x.i]);
 }
 
+export type Lite = { id: number; kab: string; fr: string; audio: boolean; w: number };
+export type PatternEntry = {
+  id: string; order: number; family: string; name: string; schema: string;
+  note: string; probe: { q: string; options: string[]; answer: number };
+  contrastsWith: string[]; requires: string[];
+  mask: string; maskFlags: string;
+  counts: { total: number; audio: number; twins: number; corrupts: number };
+  flood: Lite[]; probes: Lite[]; extra: Lite[];
+  corrupts: { id: number; good: string; bad: string; fr: string; audio: boolean; op: string }[];
+  twins: { plain: Lite; marked: Lite }[];
+};
+
+let _patternsIdx: { built: string; patterns: PatternEntry[] } | null = null;
+
+export function patternsIndex() {
+  return (_patternsIdx ??= read<{ built: string; patterns: PatternEntry[] }>("patterns.json"));
+}
+
 export function stats() {
   const all = pairs();
   return {

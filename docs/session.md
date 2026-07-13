@@ -1,42 +1,56 @@
-# Awal — session.md
+# Tiwizi — session.md
 
 ## Objectif
-Le meilleur système pour que **naly** devienne fluent en kabyle. Pratique
-quotidienne ~20 min (plus les bons jours), **multi-format**, contenu humain vérifié.
+Le meilleur système pour que **naly** devienne fluent en kabyle. Minimum **15 min/jour**
+(sans excuse — il en fera souvent plus). La vision pédagogique complète et NON-NÉGOCIABLE
+est dans **`docs/pedagogie.md`** : moteur cognitif pattern-based, anti-Duolingo.
 
-## Décision d'architecture clé
-Les LLM sont faibles en kabyle → on **ancre tout sur des sources humaines**
-(Tatoeba, Dallet). Un tuteur IA viendra *par-dessus* ce corpus, jamais à sa place.
+## Décisions d'architecture clés
+- Les LLM sont faibles en kabyle → **tout le kabyle vient de sources humaines**
+  (Tatoeba, Dallet, Assimil). Le tuteur IA vient *par-dessus* ce corpus, jamais à sa place.
+- **Le pattern est l'unité atomique** (graphe, pas leçons linéaires) ; modèle cognitif
+  par pattern × canal (lecture / oreille / anticipation / production) ; induction avant
+  explication ; l'erreur replanifie l'input. La rétention vit DANS l'app (spacing SM-2
+  par canal) — pas d'export Anki.
 
 ## Données (versionnées dans `data/`)
-- `pairs.json` — 208 292 paires kab↔fr (Tatoeba, CC-BY)
-- `deck.json` — 2 000 phrases débutant (audio, 2–9 mots), triées par difficulté
-- `dict.json` — 12 510 entrées Dallet (MIT)
-- 23 171 phrases ont de l'audio natif (CDN `audio.tatoeba.org`)
-- Pipeline reproductible : `scripts/build-data.sh`
+- `pairs.json` — 208 292 paires kab↔fr (Tatoeba, CC-BY) ; 23 171 avec audio natif
+- `patterns.json` — **graphe de 13 patterns** (négation, ad+verbe, ɣur-, yella/ulac,
+  copule d, acu/anda/amek, bɣ-, -ɣ du je, ɣer/deg) + instances indexées + **jumeaux de
+  transformation minés** (400×2 : « Ččiɣ ṛṛuẓ ⇄ Ur ččiɣ ara rruẓ ») + corruptions
+  mécaniques traçables — `scripts/build-patterns.mjs`
+- `vocab-freq.json` — fréquences lexicales corpus
+- `deck.json` / `dict.json` (Dallet 12 510) / `grammar-kb.json` / `assimil-kb.json`
 
-## Construit (v1)
-- **/learn** — flashcards SRS (SM-2), audio auto, clavier (espace + 1-4), progression locale
-- **/browse** — recherche du corpus, audio, mode « FR caché »
-- **/dictionary** — recherche Dallet, classée (mot kabyle avant les sens)
-- Accueil avec carte « aujourd'hui » (série, à réviser, nouvelles)
-- Design system posé (voir design.md), polish desktop + mobile fait
+## Construit (v10 — phase 1 du moteur cognitif, 2026-07-13)
+- **/session** — LA colonne vertébrale : un bouton, 15 min chrono, composition adaptative
+  réactivation → induction/consolidation → génération, en boucle. Zéro cœurs.
+- `lib/cognitive-model.ts` — état par pattern × canal (SM-2/canal, vitesse EMA, hintLevel,
+  confusions, abstracted), localStorage `tiwizi.cog.v1`
+- `lib/session-engine.ts` — planification des blocs + choix du format par canal
+- Formats (`components/formats/`) : **Induction** (flood à surface variable → probes
+  structurels sur vocab frais → note explicite APRÈS), **ListenMeaning** (récupération
+  oreille/lecture, auto-évaluation), **SoundsRight** (jugement de grammaticalité sur
+  corruption mécanique), **Anticipate** (prédiction avant révélation, masque du pattern),
+  **Generate** (transformation par jumeaux corpus / production banque de mots)
+- APIs : `/api/patterns` (graphe), `/api/pattern-material` (rotation quotidienne seedée)
+- Accueil : CTA « Session du jour — 15 min » ; l'ancien parcours reste accessible
+- Legacy conservé : /lesson (parcours), /practice, /dictionary, /tutor (Idir, crédits du plan)
+- Vérifié : build vert, session déroulée au navigateur (desktop 1280 + mobile 390,
+  0 erreur console), chemins « abstrait » et « pattern mûrit » testés
 
-## Roadmap → fluidité (multi-format)
-Pour viser la production orale, pas seulement la reconnaissance :
-1. **Session quotidienne guidée** (~20 min) qui enchaîne plusieurs formats.
-2. **Formats d'exercice** : écoute→sens · reconstruire la phrase (banque de mots) ·
-   fr→kab (production écrite) · dictée audio · QCM rapide.
-3. **Tuteur IA ancré** (conversation kab, correction) — sur **crédits du plan**, pas l'API.
-4. **Grammaire essentielle** (état d'annexion, conjugaison : aoriste/prétérit/intensif).
-5. Objectifs/streak, choix du volume quotidien.
+## Phase 2 (prochaines briques, dans l'ordre de valeur)
+1. **Contraste** — quand `confusions[X]` monte : paires minimales côte à côte
+   (yella⇄ulac, ɣer⇄deg⇄ɣur- sont déjà encodés dans le graphe)
+2. **Sprint d'automatisation** — fenêtre de réponse qui rétrécit, sevrage du texte
+3. **Idir dirigé par le modèle cognitif** — questions dont la réponse naturelle mobilise
+   un pattern dû + probes d'attribution des confusions
+4. **Production tapée** (hintLevel 0-1 — le fading est déjà dans le modèle) + shadowing
+5. **Dialogues Assimil comme input narratif** ; Common Voice kab (~571 h CC0) pour la
+   variation massive de voix ; alignement forcé pour l'anticipation audio réelle
+6. Micro-notes de contraste dans le dico (ɣer/ɣur…)
 
-## Note honnête sur « fluent en 3-4 mois »
-20 min/jour pendant 3-4 mois ≈ 30-40 h. C'est assez pour une **base solide**
-(comprendre, lire, tenir une conversation simple), pas pour une fluidité totale.
-La fluidité réelle demande de la **production parlée** régulière — d'où le tuteur IA
-+ idéalement parler avec des natifs. L'app maximise le rythme ; le reste, c'est l'oral.
-
-## Sources non encore exploitées (recherche interrompue)
-Common Voice kab (~571 h audio CC0), conjugaison Naït-Zerrad (176 classes, amyag.com),
-chansons avec paroles, Wikipédia kab. À intégrer plus tard.
+## Note honnête sur le rythme
+15 min/jour ≈ 91 h/an : base solide + conversation simple, pas fluidité totale. Le vrai
+levier = empiler du passif (musique kabyle, écoute) + de l'oral réel (famille, Idir).
+L'app maximise la rétention par minute ; le reste, c'est l'exposition et l'oral.

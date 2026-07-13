@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Reproducible data pipeline for Awal.
+# Reproducible data pipeline for Tiwizi.
 # Downloads the human-made Kabyle sources, then builds data/*.json.
 set -euo pipefail
 
-WORK="${WORK:-/tmp/awal-src}"
+WORK="${WORK:-/tmp/tiwizi-src}"
 mkdir -p "$WORK"
 cd "$WORK"
 

@@ -1,13 +1,13 @@
-# Awal — apprendre le kabyle (taqbaylit) pour de vrai
+# Tiwizi — apprendre le kabyle (taqbaylit) pour de vrai
 
-> *Awal* = « la parole, le mot » en kabyle.
+> *Tiwizi* = « l'entraide, le travail collectif du village » en kabyle.
 
 La meilleure façon d'apprendre le kabyle, bâtie sur **du contenu humain vérifié**
 plutôt que sur un kabyle approximatif inventé par une IA.
 
 ## Le principe
 
-Les LLM sont mauvais en kabyle (langue à faibles ressources). Donc Awal ne leur
+Les LLM sont mauvais en kabyle (langue à faibles ressources). Donc Tiwizi ne leur
 fait pas confiance : tout le contenu vient de **vraies sources humaines**.
 
 - **Input compréhensible** — 208 000 phrases kabyle↔français ([Tatoeba](https://tatoeba.org), CC-BY),
@@ -41,11 +41,12 @@ bash scripts/build-data.sh
 ## Structure
 
 ```
-app/            pages (accueil, /learn, /browse, /dictionary) + routes API
-components/     nav, onglets mobile, bouton audio, logo (yaz ⵣ), carte du jour
-lib/            data (chargement+recherche), srs (SM-2), normalize (recherche tolérante)
-data/           deck.json · pairs.json · dict.json
-scripts/        pipeline de données reproductible
+app/            accueil · /session (moteur cognitif) · /lesson · /dictionary · /tutor + API
+components/     formats d'exercice (induction, anticipation, jugement, génération…), nav
+lib/            cognitive-model (pattern × canal) · session-engine · patterns · srs · data
+data/           patterns.json (graphe + jumeaux) · pairs.json · deck.json · dict.json
+scripts/        pipeline reproductible (build-patterns.mjs = mineur de patterns)
+docs/           pedagogie.md (LOI du produit) · session.md · design.md
 ```
 
 ## Sources & licences

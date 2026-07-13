@@ -49,6 +49,12 @@ type GameState = {
 const today = () => new Date().toISOString().slice(0, 10);
 const XP_PER_LEVEL = 500;
 
+// Migration one-shot : la progression vivait sous la clé "awal-game-v1"
+if (typeof window !== "undefined" && !localStorage.getItem("tiwizi-game-v1")) {
+  const legacy = localStorage.getItem("awal-game-v1");
+  if (legacy) localStorage.setItem("tiwizi-game-v1", legacy);
+}
+
 const initialUser: User = {
   name: "naly",
   xp: 0,
@@ -113,7 +119,7 @@ export const useGameStore = create<GameState>()(
         set((s) => ({ user: { ...s.user, settings: { ...s.user.settings, ...st } } })),
     }),
     {
-      name: "awal-game-v1",
+      name: "tiwizi-game-v1",
       onRehydrateStorage: () => (state) => {
         if (state) state.hydrated = true;
       },

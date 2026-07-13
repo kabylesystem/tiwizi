@@ -21,7 +21,7 @@ export default function PracticePage() {
   const firstPattern = kabyleUnits.find((u) => u.kind === "pattern")?.lessons[0]?.id ?? next.id;
 
   const modes = [
-    { id: "review", title: "Révision", desc: "Rejoue une leçon déjà vue", icon: RotateCcw, color: "#C8963E", href: `/lesson?id=${reviewId}`, dur: "5 min", xp: 20 },
+    { id: "review", title: "Session du jour", desc: "Réactivation + patterns + production, composée pour toi", icon: RotateCcw, color: "#C8963E", href: "/session", dur: "15 min", xp: 100 },
     { id: "continue", title: "Continuer", desc: "La prochaine leçon du parcours", icon: Target, color: "#5B9A6F", href: `/lesson?id=${next.id}`, dur: "8 min", xp: 30 },
     { id: "pattern", title: "Patterns", desc: "Entraîne les structures de phrase", icon: BookOpen, color: "#4A9ECF", href: `/lesson?id=${firstPattern}`, dur: "6 min", xp: 25 },
     { id: "random", title: "Aléatoire", desc: "Une leçon au hasard", icon: Shuffle, color: "#D4735E", href: `/lesson?id=${randomId}`, dur: "7 min", xp: 25 },

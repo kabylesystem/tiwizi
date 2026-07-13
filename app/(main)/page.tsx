@@ -55,19 +55,25 @@ export default function LearnPath() {
             </h1>
             <p className="mt-3 max-w-md text-sm text-muted">
               {doneCount === 0
-                ? "Les briques d'abord, les patterns ensuite — la conversation suivra."
+                ? "Des phrases réelles, des patterns que ton cerveau extrait tout seul, et la répétition au bon moment."
                 : `${doneCount}/${allLessons.length} leçons · ${overall}% du parcours`}
             </p>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
-              href={`/lesson?id=${next.id}`}
+              href="/session"
               className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white shadow-[0_8px_20px_rgba(200,150,62,0.3)]"
               style={{ background: "linear-gradient(135deg,#C8963E,#A67B2E)" }}
             >
               <Play className="h-4 w-4 fill-white" />
-              {doneCount === 0 ? "Commencer" : "Continuer"}
+              Session du jour — 15 min
+            </Link>
+            <Link
+              href={`/lesson?id=${next.id}`}
+              className="inline-flex items-center gap-2 rounded-full border border-[rgba(200,150,62,0.35)] px-5 py-3 text-sm font-semibold text-muted"
+            >
+              Parcours
             </Link>
             <span className="flex items-center gap-2 rounded-full bg-[rgba(200,150,62,0.1)] px-4 py-2 text-sm">
               <FennecMascot mood="encouraging" size={30} animated={false} />
