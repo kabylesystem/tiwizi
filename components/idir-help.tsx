@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
+import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 
 /** On-demand contextual help from Idir inside a lesson (coach mode, plan credits). */
 export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?: string }) {
@@ -19,7 +20,7 @@ export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?
       const r = await fetch("/api/tutor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "coach", ask }),
+        body: JSON.stringify({ mode: "coach", ask, cogState: cogSnapshot(loadCog()) }),
       });
       const d = await r.json();
       setReply(d.reply || "…");

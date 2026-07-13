@@ -28,10 +28,11 @@ for (const line of rl("fra_sentences.tsv")) {
   fra.set(line.slice(0, i), rest.slice(j + 1));
 }
 
+// audio is only served by the CDN when it carries a license (else 403)
 const audio = new Set();
 for (const line of rl("sentences_with_audio.csv")) {
-  const i = line.indexOf("\t");
-  if (i >= 0) audio.add(line.slice(0, i));
+  const c = line.split("\t");
+  if (c.length >= 4 && c[3] && c[3] !== "\\N") audio.add(c[0]);
 }
 
 const pairs = new Map();

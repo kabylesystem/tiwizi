@@ -15,6 +15,7 @@ import type { Lite, Twin } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { fold } from "@/lib/normalize";
 import { AudioButton } from "@/components/audio-button";
+import { IdirHelp } from "@/components/idir-help";
 import { Panel, FmtTag, GoldButton } from "./shared";
 
 type Tok = { tok: string; i: number };
@@ -138,6 +139,14 @@ export function Generate({
             {target.audio && (
               <div className="mt-3 flex justify-center">
                 <AudioButton id={target.id} size="sm" autoPlay />
+              </div>
+            )}
+            {!ok && (
+              <div className="mt-1 flex justify-center">
+                <IdirHelp
+                  label="Pourquoi ? Demande à Idir"
+                  ask={`L'élève devait produire « ${target.kab} » (« ${target.fr} »)${twin ? ` à partir de « ${twin.plain.kab} »` : ""} et s'est trompé. Explique la structure en 2 phrases simples.`}
+                />
               </div>
             )}
           </div>

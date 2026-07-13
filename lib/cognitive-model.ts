@@ -42,6 +42,8 @@ export type CogStore = {
   minutesToday: number;
   sessionsDone: number;
   lastSession: string;
+  /** Longueur de flood adaptée à la vitesse d'induction réelle de l'élève (3..8). */
+  floodLen: number;
 };
 
 const KEY = "tiwizi.cog.v1";
@@ -57,11 +59,12 @@ const freshSkill = (): PatternSkill => ({
 });
 
 export function loadCog(): CogStore {
-  const fresh: CogStore = { v: 1, patterns: {}, day: today(), minutesToday: 0, sessionsDone: 0, lastSession: "" };
+  const fresh: CogStore = { v: 1, patterns: {}, day: today(), minutesToday: 0, sessionsDone: 0, lastSession: "", floodLen: 5 };
   if (typeof window === "undefined") return fresh;
   try {
     const s = JSON.parse(localStorage.getItem(KEY) || "null") as CogStore | null;
     if (!s || s.v !== 1) return fresh;
+    s.floodLen ??= 5;
     if (s.day !== today()) {
       s.day = today();
       s.minutesToday = 0;
@@ -147,6 +150,38 @@ export function weakest(s: CogStore, metas: PatternMeta[], n: number): PatternMe
     .filter((m) => s.patterns[m.id]?.abstracted)
     .sort((a, b) => strength(s.patterns[a.id]!) - strength(s.patterns[b.id]!))
     .slice(0, n);
+}
+
+/** Compact snapshot of the learner state, sent to Idir so the tutor KNOWS
+ *  where naly really is (patterns extraits, canaux faibles, confusions, dûs). */
+export type CogSnapshot = {
+  abstracted: string[];
+  learning: string | null; // pattern en cours d'induction (exposé mais pas extrait)
+  due: { id: string; channels: Channel[] }[];
+  weak: { id: string; channel: Channel; lapses: number }[];
+  confusions: { id: string; with: string; n: number }[];
+  sessionsDone: number;
+};
+
+export function cogSnapshot(s: CogStore): CogSnapshot {
+  const now = Date.now();
+  const abstracted: string[] = [];
+  let learning: string | null = null;
+  const due: CogSnapshot["due"] = [];
+  const weak: CogSnapshot["weak"] = [];
+  const confusions: CogSnapshot["confusions"] = [];
+  for (const [pid, sk] of Object.entries(s.patterns)) {
+    if (sk.abstracted) abstracted.push(pid);
+    else if (sk.exposure > 0 && !learning) learning = pid;
+    const dueCh = CHANNELS.filter((c) => sk.channels[c] && sk.channels[c]!.due <= now);
+    if (dueCh.length) due.push({ id: pid, channels: dueCh });
+    for (const c of CHANNELS) {
+      const st = sk.channels[c];
+      if (st && st.lapses >= 2 && st.lapses > st.reps) weak.push({ id: pid, channel: c, lapses: st.lapses });
+    }
+    for (const [w, n] of Object.entries(sk.confusions)) if (n >= 2) confusions.push({ id: pid, with: w, n });
+  }
+  return { abstracted, learning, due: due.slice(0, 6), weak: weak.slice(0, 6), confusions: confusions.slice(0, 4), sessionsDone: s.sessionsDone };
 }
 
 /** The channel of a pattern that most needs work (least reps, most lapses). */

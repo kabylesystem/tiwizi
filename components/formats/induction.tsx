@@ -12,14 +12,41 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, Sparkles } from "lucide-react";
 import type { Lite, PatternMeta } from "@/lib/patterns";
+import { maskSegments } from "@/lib/patterns";
 import { AudioButton } from "@/components/audio-button";
 import { Panel, FmtTag, GoldButton } from "./shared";
+
+/** Input enhancement : la partie STABLE du pattern est surlignée pendant le
+ *  flood (le cerveau voit ce qui se répète, la règle n'est jamais énoncée).
+ *  Les probes, eux, s'affichent SANS surlignage — le test se fait sans aide. */
+function HighlightedKab({ kab, meta }: { kab: string; meta: PatternMeta }) {
+  const segs = maskSegments(kab, meta.mask, meta.maskFlags);
+  return (
+    <p className="kab text-balance text-center text-3xl font-bold leading-relaxed text-ink sm:text-4xl">
+      {segs.map((s, i) =>
+        s.hidden ? (
+          <mark
+            key={i}
+            className="rounded-md px-1"
+            style={{ background: "rgba(200,150,62,0.28)", color: "#7a5a17" }}
+          >
+            {s.text}
+          </mark>
+        ) : (
+          <span key={i}>{s.text}</span>
+        )
+      )}
+    </p>
+  );
+}
 
 export type InductionResult = {
   exposedIds: number[];
   probeOk: number;
   probeTotal: number;
   abstracted: boolean;
+  /** L'élève a sauté le reste du flood (« j'ai capté ») — signal de vitesse. */
+  skippedFlood: boolean;
 };
 
 export function Induction({
@@ -41,10 +68,11 @@ export function Induction({
   const [probeIdx, setProbeIdx] = useState(0);
   const [probeOk, setProbeOk] = useState(0);
   const [probeAnswered, setProbeAnswered] = useState<number | null>(null);
+  const [skippedFlood, setSkippedFlood] = useState(false);
 
   const NEED = 2; // ≥2/3 fresh-vocab probes → abstracted
   const abstracted = probeOk >= NEED;
-  const exposedIds = [...flood.map((f) => f.id), ...probes.slice(0, probeIdx + 1).map((p) => p.id)];
+  const exposedIds = [...flood.slice(0, idx + 1).map((f) => f.id), ...probes.slice(0, probeIdx + 1).map((p) => p.id)];
 
   if (phase === "tease")
     return (
@@ -53,8 +81,9 @@ export function Induction({
         <Eye className="mx-auto h-10 w-10" style={{ color: "#A67B2E" }} />
         <h2 className="mt-3 font-display text-2xl font-bold text-ink">Observe.</h2>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-          Quelque chose se répète dans les phrases qui suivent. Ne cherche pas la règle —
-          écoute, lis, et laisse ton cerveau détecter ce qui reste stable pendant que tout le reste change.
+          Dans les phrases qui suivent, la partie <mark className="rounded px-1" style={{ background: "rgba(200,150,62,0.28)", color: "#7a5a17" }}>surlignée</mark> est
+          ce qui se répète. Écoute, regarde ce qui reste stable pendant que tout le reste change —
+          la règle, ton cerveau va la construire tout seul.
         </p>
         <GoldButton onClick={() => setPhase("flood")}>C&apos;est parti</GoldButton>
       </Panel>
@@ -62,30 +91,44 @@ export function Induction({
 
   if (phase === "flood") {
     const p = flood[idx];
+    // la traduction n'est JAMAIS la tâche : optionnelle, sur demande —
+    // le but est d'écouter/lire et de laisser la structure se détacher
     return (
       <Panel>
         <FmtTag label={`Immersion · ${idx + 1}/${flood.length}`} />
         <div className="flex flex-col items-center gap-4">
           {p.audio && <AudioButton id={p.id} size="lg" autoPlay key={p.id} />}
-          <p className="kab text-balance text-center text-3xl font-bold text-ink sm:text-4xl">{p.kab}</p>
-          {revealed && (
+          <HighlightedKab kab={p.kab} meta={meta} />
+          {revealed ? (
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-lg text-muted">
               {p.fr}
             </motion.p>
+          ) : (
+            <button onClick={() => setRevealed(true)} className="text-sm text-muted underline decoration-dotted underline-offset-4">
+              voir le sens
+            </button>
           )}
         </div>
-        {!revealed ? (
-          <GoldButton onClick={() => setRevealed(true)}>Le sens</GoldButton>
-        ) : (
-          <GoldButton
+        <GoldButton
+          onClick={() => {
+            setRevealed(false);
+            if (idx < flood.length - 1) setIdx((i) => i + 1);
+            else setPhase(probes.length ? "probe" : "result");
+          }}
+        >
+          {idx < flood.length - 1 ? "Suivant" : "Voyons si ton cerveau l'a capté"}
+        </GoldButton>
+        {idx >= 2 && idx < flood.length - 1 && probes.length > 0 && (
+          <button
             onClick={() => {
-              setRevealed(false);
-              if (idx < flood.length - 1) setIdx((i) => i + 1);
-              else setPhase(probes.length ? "probe" : "result");
+              setSkippedFlood(true);
+              setPhase("probe");
             }}
+            className="mt-3 w-full text-center text-sm font-semibold underline decoration-dotted underline-offset-4"
+            style={{ color: "#A67B2E" }}
           >
-            {idx < flood.length - 1 ? "Suivant" : "Voyons si ton cerveau l'a capté"}
-          </GoldButton>
+            J&apos;ai capté — teste-moi
+          </button>
         )}
       </Panel>
     );
@@ -162,7 +205,7 @@ export function Induction({
           <p className="mt-2 text-sm leading-relaxed text-ink">{meta.note}</p>
         </div>
       )}
-      <GoldButton onClick={() => onDone({ exposedIds, probeOk, probeTotal: probes.length, abstracted })}>
+      <GoldButton onClick={() => onDone({ exposedIds, probeOk, probeTotal: probes.length, abstracted, skippedFlood })}>
         Continuer
       </GoldButton>
     </Panel>

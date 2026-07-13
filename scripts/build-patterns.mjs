@@ -224,7 +224,8 @@ function corruptSentence(kab, ops) {
   return null;
 }
 
-// greedy pick maximising fresh content vocabulary (surface variation)
+// greedy pick maximising fresh content vocabulary (surface variation) while
+// staying COMPREHENSIBLE: short sentences, frequent (familiar) vocabulary
 function pickVaried(instances, n, seenTokens) {
   const chosen = [];
   const cands = [...instances];
@@ -233,8 +234,8 @@ function pickVaried(instances, n, seenTokens) {
     for (let i = 0; i < cands.length; i++) {
       const toks = tokens(cands[i].kab);
       const freshCount = toks.filter((t) => !seenTokens.has(t)).length;
-      // fresh vocab is the goal, but induction wants SHORT sentences
-      const score = freshCount - 0.6 * toks.length + (cands[i].audio ? 0.5 : 0);
+      const familiar = toks.filter((t) => (freq.get(t) || 0) >= 80).length / toks.length;
+      const score = freshCount - 0.6 * toks.length + 2 * familiar + (cands[i].audio ? 0.5 : 0);
       if (score > bestScore) { bestScore = score; best = i; }
     }
     const pick = cands.splice(best, 1)[0];

@@ -39,6 +39,21 @@ est dans **`docs/pedagogie.md`** : moteur cognitif pattern-based, anti-Duolingo.
 - Vérifié : build vert, session déroulée au navigateur (desktop 1280 + mobile 390,
   0 erreur console), chemins « abstrait » et « pattern mûrit » testés
 
+### Raffinements issus du premier vrai test de naly (2026-07-13 soir)
+- **Input enhancement** : la partie stable du pattern est SURLIGNÉE pendant le
+  flood (jamais dans les probes) — « ad » ne se noie plus dans la phrase
+- **Traduction jamais forcée** : « voir le sens » optionnel, « Suivant » direct
+- **Induction adaptative** : « J'ai capté — teste-moi » dès la 3ᵉ phrase ;
+  `floodLen` (3..8) s'ajuste à la vitesse réelle (skip réussi → plus court)
+- **Flood compréhensible** : le mineur privilégie le vocabulaire fréquent du corpus
+- **Audio réparé** : les audios Tatoeba SANS licence renvoient 403 → re-filtrage
+  par licence (`scripts/fix-audio-licenses.mjs`) + fallback bouton audio
+- **Idir branché sur le modèle cognitif** : chaque appel (chat + coach) envoie
+  `cogSnapshot` (extraits, en-cours, dûs, faibles, confusions) ; la route le
+  formate en profil, avec consigne de mobiliser les patterns dus et de ne JAMAIS
+  révéler la règle d'un pattern en induction. Bouton « Pourquoi ? Demande à
+  Idir » sur les échecs de jugement/production.
+
 ## Phase 2 (prochaines briques, dans l'ordre de valeur)
 1. **Contraste** — quand `confusions[X]` monte : paires minimales côte à côte
    (yella⇄ulac, ɣer⇄deg⇄ɣur- sont déjà encodés dans le graphe)
@@ -49,6 +64,8 @@ est dans **`docs/pedagogie.md`** : moteur cognitif pattern-based, anti-Duolingo.
 5. **Dialogues Assimil comme input narratif** ; Common Voice kab (~571 h CC0) pour la
    variation massive de voix ; alignement forcé pour l'anticipation audio réelle
 6. Micro-notes de contraste dans le dico (ɣer/ɣur…)
+7. **Vocab explicite** : tap sur n'importe quel mot d'une phrase → fiche Dallet
+   inline + entrée du mot dans le suivi d'exposition (le corpus = cours de vocab)
 
 ## Note honnête sur le rythme
 15 min/jour ≈ 91 h/an : base solide + conversation simple, pas fluidité totale. Le vrai

@@ -112,7 +112,7 @@ export default function SessionPage() {
       if (req.type === "induction") {
         const meta = metasById[req.patternIds[0]];
         const mat = mats[meta.id];
-        b = { type: "induction", meta, flood: mat.flood.slice(0, 6), probes: mat.probes.slice(0, 3) };
+        b = { type: "induction", meta, flood: mat.flood.slice(0, cog.floodLen ?? 5), probes: mat.probes.slice(0, 3) };
         ranRef.current.induction++;
       } else if (req.type === "generate") {
         b = buildGenerateBlock(cog, metasById, mats, 3);
@@ -166,6 +166,10 @@ export default function SessionPage() {
   const onInductionDone = (meta: PatternMeta, r: InductionResult) => {
     const cog = cogRef.current!;
     recordExposure(cog, meta.id, r.exposedIds);
+    // adaptation à la vitesse d'induction réelle : skip réussi → floods plus
+    // courts ; échec des probes → plus d'exposition la prochaine fois
+    if (r.skippedFlood && r.probeOk === r.probeTotal) cog.floodLen = Math.max(3, (cog.floodLen ?? 5) - 1);
+    else if (r.probeOk < 2) cog.floodLen = Math.min(8, (cog.floodLen ?? 5) + 1);
     const sk = skill(cog, meta.id);
     if (r.abstracted && !sk.abstracted) {
       sk.abstracted = true;

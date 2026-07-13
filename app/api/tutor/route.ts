@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { execFile } from "node:child_process";
-import { searchSentences, searchGrammar, searchAssimil } from "@/lib/data";
+import { searchSentences, searchGrammar, searchAssimil, patternsIndex } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
+import type { CogSnapshot } from "@/lib/cognitive-model";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -28,8 +29,33 @@ function buildPrompt(messages: Msg[], grounding: string) {
   return `${grounding}\n\nConversation jusqu'ici :\n${convo}\n\nRéponds maintenant en tant qu'Idir (kabyle simple + traduction française).`;
 }
 
+const CHANNEL_FR: Record<string, string> = {
+  recogText: "reconnaître à l'écrit",
+  recogAudio: "comprendre à l'oreille",
+  predict: "anticiper la forme",
+  produce: "produire",
+};
+
+/** Le profil cognitif mesuré par l'app, formaté pour Idir. */
+function cogGrounding(snap: CogSnapshot | undefined): string {
+  if (!snap) return "";
+  const byId = Object.fromEntries(patternsIndex().patterns.map((p) => [p.id, p]));
+  const name = (id: string) => byId[id]?.name ?? id;
+  const lines: string[] = [];
+  if (snap.abstracted.length) lines.push(`- Patterns déjà EXTRAITS (il les a induits lui-même) : ${snap.abstracted.map(name).join(" · ")}`);
+  if (snap.learning) lines.push(`- Pattern EN COURS d'induction (exposé mais pas encore abstrait — ne pas expliquer la règle à sa place !) : ${name(snap.learning)}`);
+  if (snap.due.length)
+    lines.push(`- À RÉACTIVER aujourd'hui : ${snap.due.map((d) => `${name(d.id)} (${d.channels.map((c) => CHANNEL_FR[c] ?? c).join(", ")})`).join(" · ")}`);
+  if (snap.weak.length)
+    lines.push(`- Points FAIBLES mesurés : ${snap.weak.map((w) => `${name(w.id)} — ${CHANNEL_FR[w.channel] ?? w.channel} (${w.lapses} rechutes)`).join(" · ")}`);
+  if (snap.confusions.length)
+    lines.push(`- CONFUSIONS récurrentes : ${snap.confusions.map((c) => `${name(c.id)} ↔ ${name(c.with)} (${c.n}×)`).join(" · ")}`);
+  if (!lines.length) lines.push("- Élève tout neuf : aucune session encore. Reste sur les bases.");
+  return `\n\nPROFIL COGNITIF DE L'ÉLÈVE (mesuré par l'app — fiable, utilise-le) :\n${lines.join("\n")}\nCONSIGNE : glisse naturellement dans la conversation des occasions d'utiliser les patterns à réactiver/faibles (pose des questions dont la réponse naturelle les mobilise). Ne révèle JAMAIS la règle d'un pattern en cours d'induction — donne des exemples authentiques à la place.`;
+}
+
 export async function POST(req: NextRequest) {
-  let body: { messages?: Msg[]; mode?: string; ask?: string };
+  let body: { messages?: Msg[]; mode?: string; ask?: string; cogState?: CogSnapshot };
   try {
     body = await req.json();
   } catch {
@@ -70,7 +96,7 @@ export async function POST(req: NextRequest) {
   // pronunciation rules only when relevant (keeps prompts lean)
   const pron = PRON_TRIGGER.test(last) ? `\n\n${PRONUNCIATION_REF}` : "";
 
-  const grounding = vocab + bookGrounding + gramGrounding + pron;
+  const grounding = vocab + bookGrounding + gramGrounding + pron + cogGrounding(body.cogState);
   const prompt = coach
     ? `${grounding}\n\nDemande : ${body.ask}`
     : buildPrompt(messages, grounding);
@@ -78,7 +104,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const text = await new Promise<string>((resolve, reject) => {
-      execFile(
+      const child = execFile(
         "claude",
         ["-p", prompt, "--append-system-prompt", system, "--model", "sonnet", "--max-turns", "1"],
         { timeout: 110_000, maxBuffer: 1024 * 1024 },
@@ -87,6 +113,7 @@ export async function POST(req: NextRequest) {
           else resolve(stdout.trim());
         }
       );
+      child.stdin?.end(); // le CLI attend sinon un stdin pendant 3s
     });
     return NextResponse.json({ reply: text });
   } catch (e) {

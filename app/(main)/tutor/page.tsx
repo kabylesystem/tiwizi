@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
+import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -56,7 +57,7 @@ export default function TutorPage() {
       const r = await fetch("/api/tutor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: next, cogState: cogSnapshot(loadCog()) }),
       });
       const d = await r.json();
       setMessages((m) => [...m, { role: "assistant", content: d.reply || "…" }]);

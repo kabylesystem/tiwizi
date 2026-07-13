@@ -11,6 +11,7 @@ import { Check, X } from "lucide-react";
 import type { Corrupt } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { AudioButton } from "@/components/audio-button";
+import { IdirHelp } from "@/components/idir-help";
 import { Panel, FmtTag, GoldButton } from "./shared";
 
 const OP_LABEL: Record<string, string> = {
@@ -76,6 +77,14 @@ export function SoundsRight({
             {corrupt.audio && (
               <div className="mt-3 flex justify-center">
                 <AudioButton id={corrupt.id} size="sm" autoPlay />
+              </div>
+            )}
+            {!ok && (
+              <div className="mt-1 flex justify-center">
+                <IdirHelp
+                  label="Pourquoi ? Demande à Idir"
+                  ask={`Dans l'exercice « ça sonne juste ? », la forme correcte était « ${corrupt.good} » (${corrupt.fr}) et la version altérée « ${corrupt.bad} ». Explique en 2 phrases simples ce qui clochait.`}
+                />
               </div>
             )}
           </div>

@@ -17,6 +17,7 @@ export function AudioButton({
 }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
+  const [dead, setDead] = useState(false); // CDN 403/404 → hide instead of a mute button
 
   const play = useCallback(() => {
     const a = ref.current;
@@ -31,6 +32,8 @@ export function AudioButton({
       return () => clearTimeout(t);
     }
   }, [autoPlay, id, play]);
+
+  if (dead) return null;
 
   const dim =
     size === "lg" ? "h-14 w-14" : size === "sm" ? "h-9 w-9" : "h-11 w-11";
@@ -51,6 +54,7 @@ export function AudioButton({
         onPlay={() => setPlaying(true)}
         onEnded={() => setPlaying(false)}
         onPause={() => setPlaying(false)}
+        onError={() => setDead(true)}
       />
       <svg
         viewBox="0 0 24 24"
