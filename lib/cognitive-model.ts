@@ -63,7 +63,7 @@ export function loadCog(): CogStore {
   if (typeof window === "undefined") return fresh;
   try {
     const s = JSON.parse(localStorage.getItem(KEY) || "null") as CogStore | null;
-    if (!s || s.v !== 1) return fresh;
+    if (!s || s.v !== 1 || typeof s.patterns !== "object" || !s.patterns) return fresh;
     s.floodLen ??= 5;
     if (s.day !== today()) {
       s.day = today();
@@ -76,7 +76,9 @@ export function loadCog(): CogStore {
 }
 
 export function saveCog(s: CogStore) {
-  if (typeof window !== "undefined") localStorage.setItem(KEY, JSON.stringify(s));
+  if (typeof window === "undefined") return;
+  localStorage.setItem(KEY, JSON.stringify(s));
+  window.dispatchEvent(new Event("tiwizi:dirty")); // → réplication disque (StateSync)
 }
 
 export function skill(s: CogStore, patternId: string): PatternSkill {

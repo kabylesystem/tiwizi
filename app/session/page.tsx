@@ -52,6 +52,8 @@ export default function SessionPage() {
   const [running, setRunning] = useState(false);
   const statsRef = useRef({ items: 0, ok: 0, patterns: new Set<string>() });
 
+  const [, bump] = useState(0);
+
   // load graph + cognitive model
   useEffect(() => {
     cogRef.current = loadCog();
@@ -62,6 +64,13 @@ export default function SessionPage() {
         setPhase("intro");
       })
       .catch(() => setPhase("error"));
+    // si la restauration depuis le disque (StateSync) arrive après nous
+    const onPulled = () => {
+      cogRef.current = loadCog();
+      bump((x) => x + 1);
+    };
+    window.addEventListener("tiwizi:pulled", onPulled);
+    return () => window.removeEventListener("tiwizi:pulled", onPulled);
   }, []);
 
   // 15-minute clock (pauses when the tab is hidden)
