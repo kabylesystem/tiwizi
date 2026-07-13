@@ -1,7 +1,7 @@
 // Build the pattern graph + corpus index for the cognitive engine.
 // Reads data/pairs.json, writes data/patterns.json (graph + instances +
 // corruptions + transformation twins) and data/vocab-freq.json.
-// Authored pattern definitions live here — the app only reads the output.
+// Authored pattern definitions live here · the app only reads the output.
 // Rule (docs/pedagogie.md): every Kabyle sentence shown is human corpus;
 // "corrupted" variants are MECHANICAL, traceable edits (drop/displace a
 // particle), never generated text.
@@ -29,7 +29,7 @@ const re = (src, flags = "iu") => new RegExp(src, flags);
 /**
  * Pattern definitions (the authored graph).
  * detect: regex on RAW kab text (case-insensitive, real Berber letters).
- * probe: structural-meaning question — tests whether the STRUCTURE's
+ * probe: structural-meaning question · tests whether the STRUCTURE's
  *        contribution is understood on fresh vocabulary (abstraction), not
  *        whether the user memorised a translation.
  * corrupt: mechanical ill-forming ops, only where reliably wrong:
@@ -46,36 +46,36 @@ const DEFS = [
     corrupt: ["drop:ara", "displace:ara:end"],
     contrastsWith: [],
     requires: [],
-    note: "La négation kabyle encadre le verbe en deux morceaux : « ur » avant, « ara » après — ur zriɣ ara = je ne sais pas. Le verbe change souvent de voyelle au négatif : yeswa → ur yeswi ara.",
+    note: "La négation kabyle encadre le verbe en deux morceaux : « ur » avant, « ara » après · ur zriɣ ara = je ne sais pas. Le verbe change souvent de voyelle au négatif : yeswa → ur yeswi ara.",
     probe: { q: "D'après la structure, l'action…", options: ["s'est faite", "ne s'est PAS faite"], answer: 1 },
   },
   {
     id: "fut-ad", order: 2, family: "temps & mode",
-    name: "ad + verbe — le non-réalisé",
+    name: "ad + verbe · le non-réalisé",
     schema: "ad + VERBE (aoriste)",
     detect: re(`(^|[\\s«"(-])ad\\s+\\S`),
     mask: re(wb("ad"), "giu"),
     corrupt: ["displace:ad:end"],
     contrastsWith: [],
     requires: [],
-    note: "« ad » projette l'action dans le non-réalisé : futur, intention, souhait — ad ruḥeɣ = je partirai / que je parte. C'est la particule la plus fréquente du kabyle.",
+    note: "« ad » projette l'action dans le non-réalisé : futur, intention, souhait · ad ruḥeɣ = je partirai / que je parte. C'est la particule la plus fréquente du kabyle.",
     probe: { q: "D'après la structure, l'action est…", options: ["déjà faite", "à venir / voulue"], answer: 1 },
   },
   {
     id: "have-ghur", order: 3, family: "possession",
-    name: "ɣur-i — avoir, c'est « chez-moi »",
+    name: "ɣur-i · avoir, c'est « chez-moi »",
     schema: "ɣur- + pronom",
     detect: re(`${wb("ɣur-(?:i|ek|em|es|s|k|m|neɣ|wen|kent|sen|sent)")}`),
     mask: re("ɣur-\\p{L}+", "giu"),
     corrupt: [],
     contrastsWith: ["prep-gher"],
     requires: [],
-    note: "Le kabyle n'a pas de verbe « avoir » : on dit « chez-moi » — ɣur-i aqcic = j'ai un garçon (litt. « chez-moi un garçon »). ɣur-ek (chez-toi), ɣur-es (chez-lui/elle)…",
+    note: "Le kabyle n'a pas de verbe « avoir » : on dit « chez-moi » · ɣur-i aqcic = j'ai un garçon (litt. « chez-moi un garçon »). ɣur-ek (chez-toi), ɣur-es (chez-lui/elle)…",
     probe: { q: "La phrase parle de…", options: ["possession (avoir)", "déplacement (aller)"], answer: 0 },
   },
   {
     id: "exist-yella", order: 4, family: "existence",
-    name: "yella / tella — être là",
+    name: "yella / tella · être là",
     schema: "yella (m.) / tella (f.) / llan (pl.)",
     detect: re(wb("yella|tella|llan|llant")),
     mask: re(wb("yella|tella|llan|llant"), "giu"),
@@ -87,7 +87,7 @@ const DEFS = [
   },
   {
     id: "exist-ulac", order: 5, family: "existence",
-    name: "ulac — il n'y a pas",
+    name: "ulac · il n'y a pas",
     schema: "ulac + NOM",
     detect: re(wb("ulac")),
     mask: re(wb("ulac"), "giu"),
@@ -99,7 +99,7 @@ const DEFS = [
   },
   {
     id: "cop-d", order: 6, family: "phrase nominale",
-    name: "d + nom — c'est…",
+    name: "d + nom · c'est…",
     schema: "D + NOM",
     detect: /^[«"(]?D\s+\p{L}{2,}/u,
     mask: /^D\b/gu,
@@ -111,19 +111,19 @@ const DEFS = [
   },
   {
     id: "q-acu", order: 7, family: "interrogation",
-    name: "acu — quoi ?",
+    name: "acu · quoi ?",
     schema: "(d) acu (…) ?",
     detect: re(wb("acu")),
     mask: re(`(?:${wb("d")}\\s+)?${wb("acu")}`, "giu"),
     corrupt: [],
     contrastsWith: ["q-anda", "q-amek"],
     requires: [],
-    note: "« acu » demande « quoi » — souvent « d acu » (c'est quoi ?). Avec le futur : acu ara txedmeḍ ? = que vas-tu faire ?",
+    note: "« acu » demande « quoi » · souvent « d acu » (c'est quoi ?). Avec le futur : acu ara txedmeḍ ? = que vas-tu faire ?",
     probe: { q: "On demande…", options: ["quoi", "où", "comment"], answer: 0 },
   },
   {
     id: "q-anda", order: 8, family: "interrogation",
-    name: "anda — où ?",
+    name: "anda · où ?",
     schema: "anda (…) ?",
     detect: re(wb("anda")),
     mask: re(wb("anda"), "giu"),
@@ -135,19 +135,19 @@ const DEFS = [
   },
   {
     id: "q-amek", order: 9, family: "interrogation",
-    name: "amek — comment ?",
+    name: "amek · comment ?",
     schema: "amek (…) ?",
     detect: re(wb("amek")),
     mask: re(wb("amek"), "giu"),
     corrupt: [],
     contrastsWith: ["q-acu", "q-anda"],
     requires: [],
-    note: "« amek » = comment : amek telliḍ ? = comment vas-tu ? La question kabyle ne change pas l'ordre des mots — le mot interrogatif se pose devant.",
+    note: "« amek » = comment : amek telliḍ ? = comment vas-tu ? La question kabyle ne change pas l'ordre des mots · le mot interrogatif se pose devant.",
     probe: { q: "On demande…", options: ["quoi", "où", "comment"], answer: 2 },
   },
   {
     id: "want-bgh", order: 10, family: "volonté",
-    name: "bɣiɣ / yebɣa — vouloir",
+    name: "bɣiɣ / yebɣa · vouloir",
     schema: "BƔ + (ad + VERBE)",
     detect: re(wb("bɣiɣ|tebɣiḍ|yebɣa|tebɣa|nebɣa|tebɣam|tebɣamt|bɣan|bɣant")),
     mask: re(wb("bɣiɣ|tebɣiḍ|yebɣa|tebɣa|nebɣa|tebɣam|tebɣamt|bɣan|bɣant"), "giu"),
@@ -159,7 +159,7 @@ const DEFS = [
   },
   {
     id: "p1sg-gh", order: 11, family: "conjugaison",
-    name: "-ɣ final — c'est « je »",
+    name: "-ɣ final · c'est « je »",
     schema: "VERBE + -ɣ",
     // 1sg verb endings -eɣ/-iɣ/-uɣ/-aɣ ; (?<!n)eɣ excludes possessive -nneɣ
     detect: re("\\p{L}{2,}(?:(?<!n)eɣ|iɣ|uɣ)(?!\\p{L})"),
@@ -172,7 +172,7 @@ const DEFS = [
   },
   {
     id: "prep-gher", order: 12, family: "prépositions",
-    name: "ɣer — vers, mouvement",
+    name: "ɣer · vers, mouvement",
     schema: "ɣer + LIEU",
     detect: re(wb("ɣer")),
     mask: re(wb("ɣer"), "giu"),
@@ -184,7 +184,7 @@ const DEFS = [
   },
   {
     id: "prep-deg", order: 13, family: "prépositions",
-    name: "deg — dans",
+    name: "deg · dans",
     schema: "deg + LIEU",
     detect: re(wb("deg")),
     mask: re(wb("deg"), "giu"),
@@ -282,6 +282,7 @@ function mineTwins(patternRe, particles, max = 400) {
   const twins = [];
   const usedPlain = new Set();
   const marked = pool.filter((p) => patternRe.test(p.kab) && p.w <= 9);
+  marked.sort((a, b) => (b.audio ? 1 : 0) - (a.audio ? 1 : 0)); // voix native d'abord
   for (const m of marked) {
     if (twins.length >= max) break;
     const toks = strip(tokens(m.kab));
@@ -315,14 +316,15 @@ for (const d of DEFS) {
   const floodPool = shortAudio.length >= 60 ? shortAudio : instances.filter((p) => p.audio);
   const flood = pickVaried(floodPool.slice(0, 600), 40, seen);
   const floodIds = new Set(flood.map((p) => p.id));
-  // probes: fresh vocabulary relative to the flood set (abstraction test)
-  const probe = pickVaried(
-    instances.filter((p) => !floodIds.has(p.id) && p.w <= 7).slice(0, 1200), 24, new Set(seen)
-  );
+  // probes: fresh vocabulary relative to the flood set (abstraction test).
+  // Audio d'abord partout : la voix native EST le produit.
+  const probePool = instances.filter((p) => !floodIds.has(p.id) && p.w <= 7);
+  const probeAudio = probePool.filter((p) => p.audio);
+  const probe = pickVaried((probeAudio.length >= 18 ? probeAudio : probePool).slice(0, 1200), 24, new Set(seen));
   const probeIds = new Set(probe.map((p) => p.id));
-  const extra = pickVaried(
-    instances.filter((p) => !floodIds.has(p.id) && !probeIds.has(p.id)).slice(0, 2000), 60, new Set()
-  );
+  const extraPool = instances.filter((p) => !floodIds.has(p.id) && !probeIds.has(p.id));
+  const extraAudio = extraPool.filter((p) => p.audio);
+  const extra = pickVaried((extraAudio.length >= 45 ? extraAudio : extraPool).slice(0, 2000), 60, new Set());
 
   const corrupts = [];
   if (d.corrupt.length) {
@@ -348,7 +350,7 @@ for (const d of DEFS) {
   console.log(
     `${d.id.padEnd(12)} total=${String(instances.length).padStart(6)} audio=${String(instances.filter((p) => p.audio).length).padStart(6)} twins=${String(twins.length).padStart(4)} corrupts=${corrupts.length}`
   );
-  for (const s of flood.slice(0, 3)) console.log(`   · ${s.kab}  —  ${s.fr}`);
+  for (const s of flood.slice(0, 3)) console.log(`   · ${s.kab}  ·  ${s.fr}`);
 }
 
 fs.writeFileSync(path.join(OUT, "patterns.json"), JSON.stringify({ built: new Date().toISOString().slice(0, 10), patterns: out }));

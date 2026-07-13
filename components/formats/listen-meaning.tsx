@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Récupération en compréhension — audio d'abord (canal oreille) ou texte
+ * Récupération en compréhension · audio d'abord (canal oreille) ou texte
  * (canal lecture). Le sens n'est PAS proposé en QCM : le cerveau doit le
  * reconstruire, puis s'auto-évaluer honnêtement (retrieval, pas devinette).
  */

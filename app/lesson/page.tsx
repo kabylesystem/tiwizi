@@ -604,7 +604,7 @@ function GameOverCard({ onRetry, onHome }: { onRetry: () => void; onHome: () => 
       <Panel className="text-center">
         <FennecMascot mood="sad" size={88} />
         <h2 className="mt-3 font-display text-2xl font-bold" style={{ color: "#D4735E" }}>Plus de cœurs !</h2>
-        <p className="mt-2 text-sm text-muted">Pas grave — recommence, c&apos;est comme ça qu&apos;on apprend.</p>
+        <p className="mt-2 text-sm text-muted">Pas grave · recommence, c&apos;est comme ça qu&apos;on apprend.</p>
         <div className="mt-6 flex gap-3">
           <button onClick={onHome} className="flex-1 rounded-2xl py-3 font-semibold" style={{ background: "rgba(200,150,62,0.15)", color: "#8B7355" }}>
             Retour

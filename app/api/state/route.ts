@@ -5,7 +5,7 @@ import path from "node:path";
 export const dynamic = "force-dynamic";
 
 // Vraie sauvegarde : la progression (modèle cognitif + jeu) est répliquée sur
-// disque — elle survit à un nettoyage du navigateur / changement de navigateur.
+// disque · elle survit à un nettoyage du navigateur / changement de navigateur.
 // data/progress.json est gitignoré ; un backup du jour précédent est conservé.
 const FILE = path.join(process.cwd(), "data", "progress.json");
 const BAK = path.join(process.cwd(), "data", "progress.bak.json");

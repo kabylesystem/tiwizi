@@ -66,7 +66,7 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
         >
           {loading && <span className="block text-xs text-muted">Dallet…</span>}
           {entries && !entries.length && !loading && (
-            <span className="block text-xs text-muted">Pas de fiche exacte — sans doute une forme conjuguée. Cherche la racine au dico.</span>
+            <span className="block text-xs text-muted">Pas de fiche exacte · sans doute une forme conjuguée. Cherche la racine au dico.</span>
           )}
           {entries?.map((e, i) => (
             <span key={i} className="block not-italic">

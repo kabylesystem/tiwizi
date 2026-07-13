@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * La session quotidienne (docs/pedagogie.md §6) — un seul bouton, 15 minutes
+ * La session quotidienne (docs/pedagogie.md §6) · un seul bouton, 15 minutes
  * minimum, composée en direct par le moteur depuis le modèle cognitif :
  * réactivation → induction/consolidation → génération, en boucle tant que le
  * chrono court. Pas de cœurs : l'erreur replanifie, elle ne punit pas.
@@ -294,7 +294,7 @@ function IntroCard({ cog, metas, onStart }: { cog: CogStore; metas: PatternMeta[
           <p className="text-xs text-muted">patterns extraits</p>
         </div>
       </div>
-      <GoldButton onClick={onStart}>Lancer — 15 min</GoldButton>
+      <GoldButton onClick={onStart}>Lancer · 15 min</GoldButton>
     </Panel>
   );
 }
@@ -348,7 +348,7 @@ function RecapCard({
       </div>
       <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted">
         <Flame className="h-4 w-4" style={{ color: "#D4735E" }} />
-        Ce qui a flanché aujourd&apos;hui reviendra plus tôt — c&apos;est le système qui bosse pour toi.
+        Ce qui a flanché aujourd&apos;hui reviendra plus tôt · c&apos;est le système qui bosse pour toi.
       </p>
       <div className="mt-6 flex gap-3">
         <button onClick={onHome} className="flex-1 rounded-2xl py-3.5 font-semibold" style={{ background: "rgba(200,150,62,0.15)", color: "#8B7355" }}>

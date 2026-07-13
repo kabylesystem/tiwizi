@@ -26,7 +26,7 @@ function rotate<T>(arr: T[], seed: number, n: number): T[] {
     taken.add(i);
     out.push(arr[i]);
   }
-  // stride 7 can cycle early on multiples of 7 — top up linearly
+  // stride 7 can cycle early on multiples of 7 · top up linearly
   for (let i = 0; out.length < Math.min(n, arr.length); i = (i + 1) % arr.length) {
     if (!taken.has(i)) {
       taken.add(i);

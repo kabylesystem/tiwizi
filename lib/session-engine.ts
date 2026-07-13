@@ -4,7 +4,7 @@
  * Adaptive session composition (docs/pedagogie.md §4 & §6).
  * The engine decides WHAT the brain works on next from the cognitive model:
  *   réactivation (dues, weakest channel first) → induction OR consolidation
- *   → génération — looping while the 15 minutes run.
+ *   → génération · looping while the 15 minutes run.
  * Each item = one FORMAT targeting one CHANNEL of one PATTERN.
  */
 import type { PatternMeta, PatternMaterial, Lite, Corrupt, Twin } from "./patterns";

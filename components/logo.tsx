@@ -1,5 +1,5 @@
 /**
- * Yaz (ⵣ) — the Tifinagh letter at the heart of Amazigh identity.
+ * Yaz (ⵣ) · the Tifinagh letter at the heart of Amazigh identity.
  * Drawn as an SVG so it renders identically everywhere (no Tifinagh font needed).
  */
 export function Yaz({ className = "" }: { className?: string }) {

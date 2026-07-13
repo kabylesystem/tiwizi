@@ -35,7 +35,7 @@ export default function PracticePage() {
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold text-ink">Pratiquer</h1>
-          <p className="text-sm text-muted"><span className="font-tifinagh text-brand">ⵙⵙⴻⴷ</span> · Ssed — renforce tes acquis</p>
+          <p className="text-sm text-muted"><span className="font-tifinagh text-brand">ⵙⵙⴻⴷ</span> · Ssed · renforce tes acquis</p>
         </div>
       </header>
 
@@ -43,7 +43,7 @@ export default function PracticePage() {
         <FennecMascot mood="encouraging" size={56} />
         <div>
           <p className="font-medium text-ink">Prêt à t&apos;entraîner ?</p>
-          <p className="text-sm text-muted">Choisis un mode — chaque session te rapproche de la conversation.</p>
+          <p className="text-sm text-muted">Choisis un mode · chaque session te rapproche de la conversation.</p>
         </div>
       </motion.div>
 

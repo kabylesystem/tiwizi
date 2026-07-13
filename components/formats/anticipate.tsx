@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Prédiction avant révélation — la partie structurellement critique de la
+ * Prédiction avant révélation · la partie structurellement critique de la
  * phrase est masquée ; le cerveau anticipe la forme, puis la vraie forme est
  * révélée. L'écart prédiction/réalité nourrit la planification (predictive
  * processing / prediction error). [RAISONNABLE]

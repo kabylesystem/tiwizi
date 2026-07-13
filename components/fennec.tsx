@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export type FennecMood = "happy" | "excited" | "thinking" | "encouraging" | "sad";
 
-/** Idir — the fennec fox guide. Drawn as SVG so it needs no assets. */
+/** Idir · the fennec fox guide. Drawn as SVG so it needs no assets. */
 export function FennecMascot({
   mood = "happy",
   size = 72,

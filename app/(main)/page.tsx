@@ -37,7 +37,7 @@ export default function LearnPath() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
-      {/* HERO — full width */}
+      {/* HERO · full width */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -47,7 +47,7 @@ export default function LearnPath() {
           <div>
             <div className="mb-2 flex items-center gap-2">
               <span className="font-tifinagh text-brand">ⴰⵣⵓⵍ</span>
-              <span className="text-xs font-medium text-muted">Azul, naly — bon retour</span>
+              <span className="text-xs font-medium text-muted">Azul, naly · bon retour</span>
             </div>
             <h1 className="font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">
               Construis ton kabyle,
@@ -67,7 +67,7 @@ export default function LearnPath() {
               style={{ background: "linear-gradient(135deg,#C8963E,#A67B2E)" }}
             >
               <Play className="h-4 w-4 fill-white" />
-              Session du jour — 15 min
+              Session du jour · 15 min
             </Link>
             <Link
               href={`/lesson?id=${next.id}`}
@@ -78,7 +78,7 @@ export default function LearnPath() {
             <span className="flex items-center gap-2 rounded-full bg-[rgba(200,150,62,0.1)] px-4 py-2 text-sm">
               <FennecMascot mood="encouraging" size={30} animated={false} />
               <span className="italic text-muted">
-                {doneCount === 0 ? "Azul fellak! Bdu." : "Yelha, kemmel akka!"} — Idir
+                {doneCount === 0 ? "Azul fellak! Bdu." : "Yelha, kemmel akka!"} · Idir
               </span>
             </span>
           </div>
@@ -93,7 +93,7 @@ export default function LearnPath() {
         >
           <AxxamPreview progress={overall} className="h-32 w-32" />
           <p className="mt-2 font-display text-2xl font-bold text-brand">{overall}%</p>
-          <p className="text-xs text-muted">Ta maison kabyle — axxam</p>
+          <p className="text-xs text-muted">Ta maison kabyle · axxam</p>
           <div className="mt-4 flex w-full items-center gap-3 rounded-2xl bg-[rgba(200,150,62,0.08)] p-3">
             <Star className="h-5 w-5 shrink-0 text-brand" />
             <div className="min-w-0">
@@ -101,17 +101,17 @@ export default function LearnPath() {
               <p className="truncate text-sm">
                 <span className="font-tifinagh text-brand">{word.tif}</span>{" "}
                 <span className="font-semibold text-ink">{word.lat}</span>{" "}
-                <span className="text-muted">— {word.fr}</span>
+                <span className="text-muted">· {word.fr}</span>
               </p>
             </div>
           </div>
         </motion.div>
       </section>
 
-      {/* PATH — full-width unit grid */}
+      {/* PATH · full-width unit grid */}
       <div className="mb-5 mt-10 flex items-center gap-2">
         <div className="h-6 w-1.5 rounded-full" style={{ background: "linear-gradient(180deg,#C8963E,#E8B85C)" }} />
-        <h2 className="font-display text-lg font-bold text-ink">Parcours — pièces → patterns → construction</h2>
+        <h2 className="font-display text-lg font-bold text-ink">Parcours · pièces → patterns → construction</h2>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">

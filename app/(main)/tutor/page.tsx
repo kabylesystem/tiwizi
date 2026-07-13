@@ -75,7 +75,7 @@ export default function TutorPage() {
         <div className="sticky top-24 rounded-3xl border border-[rgba(200,150,62,0.18)] bg-[rgba(253,248,240,0.85)] p-6">
           <FennecMascot mood="happy" size={72} />
           <h2 className="mt-3 font-display text-xl font-bold text-ink">Idir</h2>
-          <p className="text-sm text-muted">Ton tuteur kabyle. Il te parle, te corrige, te fait produire — sur tes crédits du plan.</p>
+          <p className="text-sm text-muted">Ton tuteur kabyle. Il te parle, te corrige, te fait produire · sur tes crédits du plan.</p>
           <p className="mt-4 text-[0.7rem] font-bold uppercase tracking-wider text-muted">Sujets</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {TOPICS.map((t) => (

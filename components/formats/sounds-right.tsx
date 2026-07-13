@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Jugement de grammaticalité — « ça sonne juste ? » (intuition implicite).
+ * Jugement de grammaticalité · « ça sonne juste ? » (intuition implicite).
  * La phrase est soit authentique (corpus), soit une corruption MÉCANIQUE
  * traçable (particule retirée/déplacée). Après réponse, on montre toujours
  * la forme authentique + ce qui a été altéré. [HYPOTHÈSE d'entraînement]
@@ -36,7 +36,7 @@ export function SoundsRight({
 
   return (
     <Panel>
-      <FmtTag label="Ça sonne juste ?" sub="Fie-toi à ton oreille interne — pas aux règles." />
+      <FmtTag label="Ça sonne juste ?" sub="Fie-toi à ton oreille interne · pas aux règles." />
       <p className="kab text-balance text-center text-3xl font-bold text-ink sm:text-4xl">{shownSentence}</p>
 
       {answered === null ? (
@@ -70,7 +70,7 @@ export function SoundsRight({
               {ok ? "Ton oreille a raison" : "Pas cette fois"}
             </p>
             <p className="mt-2 text-sm text-muted">
-              {useBad ? <>Phrase modifiée par Tiwizi — {OP_LABEL[corrupt.op] ?? "altérée"}. L&apos;authentique :</> : "Phrase authentique du corpus :"}
+              {useBad ? <>Phrase modifiée par Tiwizi · {OP_LABEL[corrupt.op] ?? "altérée"}. L&apos;authentique :</> : "Phrase authentique du corpus :"}
             </p>
             <p className="kab mt-1 text-xl font-semibold text-ink">{corrupt.good}</p>
             <p className="mt-1 text-sm text-muted">{corrupt.fr}</p>

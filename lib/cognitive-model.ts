@@ -2,8 +2,8 @@
 
 /**
  * The per-user cognitive model (docs/pedagogie.md §3).
- * For every pattern, FOUR separately-scheduled channels — recognising in
- * text, recognising in audio, predicting the form, producing it — because
+ * For every pattern, FOUR separately-scheduled channels · recognising in
+ * text, recognising in audio, predicting the form, producing it · because
  * these are different cognitive states. Spacing per channel reuses the SM-2
  * scheduler from lib/srs.ts. Errors are classified (confused pattern, broken
  * channel, slowness), not just counted. localStorage only.
@@ -85,7 +85,7 @@ export function skill(s: CogStore, patternId: string): PatternSkill {
   return (s.patterns[patternId] ??= freshSkill());
 }
 
-/** Log pure exposure (flood, reveals) — no scheduling, just the input diet. */
+/** Log pure exposure (flood, reveals) · no scheduling, just the input diet. */
 export function recordExposure(s: CogStore, patternId: string, sentenceIds: number[]) {
   const sk = skill(s, patternId);
   sk.exposure += sentenceIds.length;

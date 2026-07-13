@@ -2,11 +2,11 @@
 
 /**
  * Induction d'un pattern (docs/pedagogie.md §4.1-4.3) :
- *  1. FLOOD — instances authentiques à surface variable, aucune règle
+ *  1. FLOOD · instances authentiques à surface variable, aucune règle
  *     affichée : le cerveau détecte la structure stable. [statistical learning]
- *  2. PROBES — phrases à vocabulaire frais + question STRUCTURELLE (« l'action
+ *  2. PROBES · phrases à vocabulaire frais + question STRUCTURELLE (« l'action
  *     s'est faite ou pas ? ») : mémorisation d'exemples ou vraie abstraction ?
- *  3. RÉVÉLATION — la micro-note explicite n'apparaît QU'APRÈS l'abstraction.
+ *  3. RÉVÉLATION · la micro-note explicite n'apparaît QU'APRÈS l'abstraction.
  */
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -21,7 +21,7 @@ export type InductionResult = {
   probeOk: number;
   probeTotal: number;
   abstracted: boolean;
-  /** L'élève a sauté le reste du flood (« j'ai capté ») — signal de vitesse. */
+  /** L'élève a sauté le reste du flood (« j'ai capté ») · signal de vitesse. */
   skippedFlood: boolean;
 };
 
@@ -58,7 +58,7 @@ export function Induction({
         <h2 className="mt-3 font-display text-2xl font-bold text-ink">Observe.</h2>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
           Dans les phrases qui suivent, la partie <mark className="rounded px-1" style={{ background: "rgba(200,150,62,0.28)", color: "#7a5a17" }}>surlignée</mark> est
-          ce qui se répète. Écoute, regarde ce qui reste stable pendant que tout le reste change —
+          ce qui se répète. Écoute, regarde ce qui reste stable pendant que tout le reste change ·
           la règle, ton cerveau va la construire tout seul.
         </p>
         <GoldButton onClick={() => setPhase("flood")}>C&apos;est parti</GoldButton>
@@ -67,7 +67,7 @@ export function Induction({
 
   if (phase === "flood") {
     const p = flood[idx];
-    // la traduction n'est JAMAIS la tâche : optionnelle, sur demande —
+    // la traduction n'est JAMAIS la tâche : optionnelle, sur demande ·
     // le but est d'écouter/lire et de laisser la structure se détacher
     return (
       <Panel>
@@ -105,7 +105,7 @@ export function Induction({
             className="mt-3 w-full text-center text-sm font-semibold underline decoration-dotted underline-offset-4"
             style={{ color: "#A67B2E" }}
           >
-            J&apos;ai capté — teste-moi
+            J&apos;ai capté · teste-moi
           </button>
         )}
       </Panel>
@@ -118,7 +118,7 @@ export function Induction({
     const wasRight = probeAnswered === meta.probe.answer;
     return (
       <Panel>
-        <FmtTag label={`Le test · ${probeIdx + 1}/${probes.length}`} sub="Vocabulaire nouveau — seule la structure peut te guider." />
+        <FmtTag label={`Le test · ${probeIdx + 1}/${probes.length}`} sub="Vocabulaire nouveau · seule la structure peut te guider." />
         <div className="flex flex-col items-center gap-3">
           {p.audio && <AudioButton id={p.id} size="md" autoPlay key={p.id} />}
           <p className="kab text-balance text-center text-2xl font-bold text-ink sm:text-3xl">{p.kab}</p>
@@ -164,7 +164,7 @@ export function Induction({
     );
   }
 
-  // result — the explicit note is revealed ONLY here, after induction
+  // result · the explicit note is revealed ONLY here, after induction
   return (
     <Panel className="text-center">
       <Sparkles className="mx-auto h-10 w-10" style={{ color: abstracted ? "#5B9A6F" : "#C8963E" }} />
@@ -173,12 +173,12 @@ export function Induction({
       </h2>
       <p className="mt-2 text-sm text-muted">
         {probeOk}/{probes.length} sur du vocabulaire jamais vu.
-        {!abstracted && " On remettra une couche d'immersion — c'est comme ça que ça pousse."}
+        {!abstracted && " On remettra une couche d'immersion · c'est comme ça que ça pousse."}
       </p>
       {abstracted && (
         <div className="mt-5 rounded-2xl p-4 text-left" style={{ background: "rgba(74,158,207,0.09)", border: "1px solid rgba(74,158,207,0.25)" }}>
           <p className="text-[0.65rem] font-bold uppercase tracking-widest" style={{ color: "#1f63b0" }}>
-            Maintenant que tu l&apos;as senti — {meta.schema}
+            Maintenant que tu l&apos;as senti · {meta.schema}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-ink">{meta.note}</p>
         </div>

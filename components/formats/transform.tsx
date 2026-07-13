@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * Génération — deux visages :
+ * Génération · deux visages :
  *  · Transform : appliquer une transformation de structure à une phrase
  *    authentique (jumeaux minés du corpus : « Ččiɣ ṛṛuẓ » → « Ur ččiɣ ara
- *    rruẓ »). Manipulation active de la structure. [SOLIDE — generation]
+ *    rruẓ »). Manipulation active de la structure. [SOLIDE · generation]
  *  · Produce : reconstruire la phrase kabyle qui porte une intention donnée.
- * La banque de mots vient de la CIBLE authentique — on produit du corpus,
+ * La banque de mots vient de la CIBLE authentique · on produit du corpus,
  * jamais du kabyle inventé.
  */
 import { useMemo, useState } from "react";
@@ -71,7 +71,7 @@ export function Generate({
           <p className="kab text-2xl font-semibold text-ink">{twin.plain.kab}</p>
           <p className="mt-1 text-sm text-muted">{twin.plain.fr}</p>
           <p className="mt-3 text-sm font-bold" style={{ color: "#A67B2E" }}>
-            {instruction ?? "Transforme la structure"} — sens visé : « {twin.marked.fr} »
+            {instruction ?? "Transforme la structure"} · sens visé : « {twin.marked.fr} »
           </p>
         </div>
       ) : (
@@ -133,7 +133,7 @@ export function Generate({
             }}
           >
             <p className="text-lg font-bold" style={{ color: ok ? "#5B9A6F" : "#D4735E" }}>
-              {ok ? "Yelha !" : "Presque — la forme authentique :"}
+              {ok ? "Yelha !" : "Presque · la forme authentique :"}
             </p>
             <p className="kab mt-1 text-xl font-semibold text-ink">{target.kab}</p>
             {target.audio && (

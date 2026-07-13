@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * « À toi » — production LIBRE : une situation (choisie parmi les patterns
+ * « À toi » · production LIBRE : une situation (choisie parmi les patterns
  * connus/dus), l'élève écrit SA phrase, Idir (ancré corpus + profil cognitif)
- * corrige avec prudence. C'est la génération active en contexte — le sommet
+ * corrige avec prudence. C'est la génération active en contexte · le sommet
  * de la pyramide (docs/pedagogie.md §5). L'auto-évaluation après correction
  * nourrit le canal production.
  */
@@ -15,9 +15,9 @@ import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 import { FennecMascot } from "@/components/fennec";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "./shared";
 
-/** La consigne-situation par pattern — une intention, pas une traduction. */
+/** La consigne-situation par pattern · une intention, pas une traduction. */
 export const SITUATION: Record<string, string> = {
-  "neg-ur-ara": "Dis que tu n'as PAS fait quelque chose (n'importe quoi — ta phrase à toi).",
+  "neg-ur-ara": "Dis que tu n'as PAS fait quelque chose (n'importe quoi · ta phrase à toi).",
   "fut-ad": "Dis une chose que tu feras demain.",
   "have-ghur": "Dis ce que tu as (ou ce que quelqu'un a).",
   "exist-yella": "Dis qu'il y a quelque chose, quelque part.",
@@ -58,9 +58,9 @@ export function FreeProduce({
         }),
       });
       const d = await r.json();
-      setReply(d.reply || "Idir n'a pas pu répondre — réessaie.");
+      setReply(d.reply || "Idir n'a pas pu répondre · réessaie.");
     } catch {
-      setReply("Idir n'a pas pu répondre — réessaie.");
+      setReply("Idir n'a pas pu répondre · réessaie.");
     } finally {
       setBusy(false);
     }
@@ -68,10 +68,10 @@ export function FreeProduce({
 
   return (
     <Panel>
-      <FmtTag label="À toi" sub="Ta phrase, tes mots — Idir te corrige." />
+      <FmtTag label="À toi" sub="Ta phrase, tes mots · Idir te corrige." />
       <p className="text-center text-lg font-semibold text-ink">{SITUATION[meta.id] ?? meta.name}</p>
       <p className="mt-1 text-center text-xs text-muted">
-        Utilise ce que tu connais — une phrase courte et vraie vaut mieux qu'une phrase ambitieuse et fausse.
+        Utilise ce que tu connais · une phrase courte et vraie vaut mieux qu'une phrase ambitieuse et fausse.
       </p>
 
       <textarea

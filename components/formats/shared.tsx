@@ -58,7 +58,7 @@ export function FmtTag({ label, sub }: { label: string; sub?: string }) {
   );
 }
 
-/** Anki-style honest self-assessment — feeds the channel's spacing. */
+/** Anki-style honest self-assessment · feeds the channel's spacing. */
 export function SelfGrade({ onGrade, prompt = "Tu l'avais ?" }: { onGrade: (g: Grade) => void; prompt?: string }) {
   const opts: { g: Grade; label: string; c: string }[] = [
     { g: 0, label: "Perdu", c: "#D4735E" },

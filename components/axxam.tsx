@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Axxam — a traditional Kabyle house that "builds itself" as you progress.
+ * Axxam · a traditional Kabyle house that "builds itself" as you progress.
  * Revealed bottom-up via a clip whose height tracks `progress` (0..100).
  */
 export function AxxamPreview({
@@ -45,7 +45,7 @@ export function AxxamPreview({
   );
 
   return (
-    <svg viewBox="0 0 100 100" className={className} aria-label={`Axxam — ${Math.round(p)}%`}>
+    <svg viewBox="0 0 100 100" className={className} aria-label={`Axxam · ${Math.round(p)}%`}>
       <defs>
         <clipPath id={id}>
           <rect x="0" y={clipY} width="100" height={revealH + 0.5} />

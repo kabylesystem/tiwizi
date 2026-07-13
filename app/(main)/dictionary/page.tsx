@@ -36,7 +36,7 @@ export default function DictionaryPage() {
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold text-ink">Dictionnaire</h1>
-          <p className="text-sm text-muted"><span className="font-tifinagh text-brand">ⴰⵎⴰⵡⴰⵍ</span> · le Dallet — 12 510 mots, sens & exemples</p>
+          <p className="text-sm text-muted"><span className="font-tifinagh text-brand">ⴰⵎⴰⵡⴰⵍ</span> · le Dallet · 12 510 mots, sens & exemples</p>
         </div>
       </header>
 
@@ -81,13 +81,13 @@ export default function DictionaryPage() {
                     <div className="min-w-0">
                       <p className="text-[0.95rem] text-ink">
                         {m.fr.join(" · ")}
-                        {m.note && <span className="text-muted"> — {m.note}</span>}
+                        {m.note && <span className="text-muted"> · {m.note}</span>}
                       </p>
                       {m.ex.length > 0 && (
                         <ul className="mt-1.5 space-y-1 border-l-2 border-[rgba(200,150,62,0.25)] pl-3">
                           {m.ex.slice(0, 3).map((x, k) => (
                             <li key={k} className="text-sm">
-                              <span className="kab text-ink">{x.kab}</span> <span className="text-muted">— {x.fr}</span>
+                              <span className="kab text-ink">{x.kab}</span> <span className="text-muted">· {x.fr}</span>
                             </li>
                           ))}
                         </ul>

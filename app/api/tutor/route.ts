@@ -13,7 +13,7 @@ const COACH = `Tu es Idir, un fennec, tuteur de kabyle bienveillant. Réponds en
 
 const CORRECT = `Tu es Idir, correcteur de kabyle bienveillant et PRUDENT. L'élève débutant a écrit SA PROPRE phrase kabyle. Ta réponse, en 4 lignes MAX :
 1. Verdict honnête : correcte / presque / à revoir.
-2. La forme corrigée en kabyle (orthographe latine ɣ ɛ ḥ ṣ ṭ ḍ ẓ) — reste au PLUS PRÈS de sa phrase, corrige seulement ce qui est faux.
+2. La forme corrigée en kabyle (orthographe latine ɣ ɛ ḥ ṣ ṭ ḍ ẓ) · reste au PLUS PRÈS de sa phrase, corrige seulement ce qui est faux.
 3. UNE phrase d'explication (la structure, pas un cours).
 RÈGLES DURES : appuie-toi sur les phrases vérifiées du corpus fournies (elles montrent l'usage réel) ; si tu n'es pas SÛR d'un mot ou d'une forme, dis-le honnêtement (« je ne suis pas certain de X ») plutôt que d'inventer ; félicite ce qui est juste. JAMAIS de kabyle inventé exotique.`;
 
@@ -49,15 +49,15 @@ function cogGrounding(snap: CogSnapshot | undefined): string {
   const name = (id: string) => byId[id]?.name ?? id;
   const lines: string[] = [];
   if (snap.abstracted.length) lines.push(`- Patterns déjà EXTRAITS (il les a induits lui-même) : ${snap.abstracted.map(name).join(" · ")}`);
-  if (snap.learning) lines.push(`- Pattern EN COURS d'induction (exposé mais pas encore abstrait — ne pas expliquer la règle à sa place !) : ${name(snap.learning)}`);
+  if (snap.learning) lines.push(`- Pattern EN COURS d'induction (exposé mais pas encore abstrait · ne pas expliquer la règle à sa place !) : ${name(snap.learning)}`);
   if (snap.due.length)
     lines.push(`- À RÉACTIVER aujourd'hui : ${snap.due.map((d) => `${name(d.id)} (${d.channels.map((c) => CHANNEL_FR[c] ?? c).join(", ")})`).join(" · ")}`);
   if (snap.weak.length)
-    lines.push(`- Points FAIBLES mesurés : ${snap.weak.map((w) => `${name(w.id)} — ${CHANNEL_FR[w.channel] ?? w.channel} (${w.lapses} rechutes)`).join(" · ")}`);
+    lines.push(`- Points FAIBLES mesurés : ${snap.weak.map((w) => `${name(w.id)} · ${CHANNEL_FR[w.channel] ?? w.channel} (${w.lapses} rechutes)`).join(" · ")}`);
   if (snap.confusions.length)
     lines.push(`- CONFUSIONS récurrentes : ${snap.confusions.map((c) => `${name(c.id)} ↔ ${name(c.with)} (${c.n}×)`).join(" · ")}`);
   if (!lines.length) lines.push("- Élève tout neuf : aucune session encore. Reste sur les bases.");
-  return `\n\nPROFIL COGNITIF DE L'ÉLÈVE (mesuré par l'app — fiable, utilise-le) :\n${lines.join("\n")}\nCONSIGNE : glisse naturellement dans la conversation des occasions d'utiliser les patterns à réactiver/faibles (pose des questions dont la réponse naturelle les mobilise). Ne révèle JAMAIS la règle d'un pattern en cours d'induction — donne des exemples authentiques à la place.`;
+  return `\n\nPROFIL COGNITIF DE L'ÉLÈVE (mesuré par l'app · fiable, utilise-le) :\n${lines.join("\n")}\nCONSIGNE : glisse naturellement dans la conversation des occasions d'utiliser les patterns à réactiver/faibles (pose des questions dont la réponse naturelle les mobilise). Ne révèle JAMAIS la règle d'un pattern en cours d'induction · donne des exemples authentiques à la place.`;
 }
 
 export async function POST(req: NextRequest) {
