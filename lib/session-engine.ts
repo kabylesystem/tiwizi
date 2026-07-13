@@ -15,7 +15,7 @@ import {
 
 export const SESSION_MINUTES = 15;
 
-export type Fmt = "listen-meaning" | "read-meaning" | "sounds-right" | "anticipate" | "transform" | "produce";
+export type Fmt = "listen-meaning" | "read-meaning" | "sounds-right" | "anticipate" | "transform" | "produce" | "free-produce";
 
 export type ReactItem = {
   patternId: string;
@@ -174,12 +174,15 @@ export function buildGenerateBlock(
   const items: ReactItem[] = [];
   const used = new Set<number>();
   let salt = new Date().getDate() + 3;
-  for (const pid of Object.keys(materials)) {
-    if (items.length >= n) break;
+  const pids = Object.keys(materials);
+  for (const pid of pids) {
+    if (items.length >= n - 1) break;
     const seen = new Set(skill(cog, pid).seenIds);
     const item = itemFor(pid, "produce", metasById[pid], materials[pid], used, seen, salt++);
     if (item) items.push(item);
   }
+  // le sommet : production LIBRE (sa propre phrase, corrigée par Idir)
+  if (pids.length) items.push({ patternId: pids[pids.length - 1], channel: "produce", fmt: "free-produce" });
   return { type: "generate", items };
 }
 

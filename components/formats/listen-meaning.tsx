@@ -9,6 +9,7 @@ import { useState } from "react";
 import type { Lite } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { AudioButton } from "@/components/audio-button";
+import { KabTap } from "@/components/kab-tap";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "./shared";
 
 export function ListenMeaning({
@@ -32,9 +33,7 @@ export function ListenMeaning({
 
       <div className="flex flex-col items-center gap-4">
         {audioFirst && pair.audio && <AudioButton id={pair.id} size="lg" autoPlay />}
-        {(!audioFirst || revealed) && (
-          <p className="kab text-balance text-center text-3xl font-bold text-ink sm:text-4xl">{pair.kab}</p>
-        )}
+        {(!audioFirst || revealed) && <KabTap kab={pair.kab} />}
         {!audioFirst && pair.audio && revealed && <AudioButton id={pair.id} size="md" />}
         {revealed && <p className="text-center text-lg text-muted">{pair.fr}</p>}
       </div>

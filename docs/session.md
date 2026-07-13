@@ -64,8 +64,11 @@ est dans **`docs/pedagogie.md`** : moteur cognitif pattern-based, anti-Duolingo.
 5. **Dialogues Assimil comme input narratif** ; Common Voice kab (~571 h CC0) pour la
    variation massive de voix ; alignement forcé pour l'anticipation audio réelle
 6. Micro-notes de contraste dans le dico (ɣer/ɣur…)
-7. **Vocab explicite** : tap sur n'importe quel mot d'une phrase → fiche Dallet
-   inline + entrée du mot dans le suivi d'exposition (le corpus = cours de vocab)
+7. ~~Vocab explicite~~ ✅ FAIT (v13) : tap sur un mot → fiche Dallet inline
+   (immersion + révisions), lexique personnel `tiwizi.vocab.v1` synchronisé
+8. ~~Production libre~~ ✅ FAIT (v13) : bloc « À toi » en fin de génération —
+   situation par pattern, l'élève écrit SA phrase, Idir (mode `correct`,
+   ancré corpus + profil) corrige avec prudence, auto-évaluation → canal produce
 
 ## Note honnête sur le rythme
 15 min/jour ≈ 91 h/an : base solide + conversation simple, pas fluidité totale. Le vrai

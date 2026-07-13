@@ -11,6 +11,12 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const COACH = `Tu es Idir, un fennec, tuteur de kabyle bienveillant. Réponds en 1 à 3 phrases MAX, clair, concret et encourageant, pour un débutant. Donne directement l'explication utile (PAS de question en retour). Kabyle en orthographe latine (ɣ ɛ ḥ ṣ ṭ ḍ ẓ). N'invente jamais un mot kabyle dont tu n'es pas sûr : appuie-toi sur le vocabulaire vérifié fourni, sinon reste prudent. Pour la prononciation, n'invente aucune transcription : donne une règle sûre et renvoie à l'écoute de l'audio natif.`;
 
+const CORRECT = `Tu es Idir, correcteur de kabyle bienveillant et PRUDENT. L'élève débutant a écrit SA PROPRE phrase kabyle. Ta réponse, en 4 lignes MAX :
+1. Verdict honnête : correcte / presque / à revoir.
+2. La forme corrigée en kabyle (orthographe latine ɣ ɛ ḥ ṣ ṭ ḍ ẓ) — reste au PLUS PRÈS de sa phrase, corrige seulement ce qui est faux.
+3. UNE phrase d'explication (la structure, pas un cours).
+RÈGLES DURES : appuie-toi sur les phrases vérifiées du corpus fournies (elles montrent l'usage réel) ; si tu n'es pas SÛR d'un mot ou d'une forme, dis-le honnêtement (« je ne suis pas certain de X ») plutôt que d'inventer ; félicite ce qui est juste. JAMAIS de kabyle inventé exotique.`;
+
 const SYSTEM = `Tu es Idir, un fennec sympathique, tuteur de kabyle (taqbaylit). L'élève s'appelle naly, débutant, et veut tenir de VRAIES conversations (politique, société, quotidien) d'ici décembre.
 
 RÈGLES STRICTES :
@@ -63,12 +69,13 @@ export async function POST(req: NextRequest) {
   }
 
   const coach = body.mode === "coach";
+  const correct = body.mode === "correct";
   const messages = (body.messages || []).slice(-12);
-  if (!coach && !messages.length) return NextResponse.json({ error: "no messages" }, { status: 400 });
-  if (coach && !body.ask) return NextResponse.json({ error: "no ask" }, { status: 400 });
+  if (!coach && !correct && !messages.length) return NextResponse.json({ error: "no messages" }, { status: 400 });
+  if ((coach || correct) && !body.ask) return NextResponse.json({ error: "no ask" }, { status: 400 });
 
   // grounding: real verified phrases related to the topic
-  const last = coach ? body.ask! : [...messages].reverse().find((m) => m.role === "user")?.content || "";
+  const last = coach || correct ? body.ask! : [...messages].reverse().find((m) => m.role === "user")?.content || "";
   const refs = searchSentences(last, 8)
     .slice(0, 8)
     .map((p) => `- ${p.kab} = ${p.fr}`)
@@ -97,10 +104,9 @@ export async function POST(req: NextRequest) {
   const pron = PRON_TRIGGER.test(last) ? `\n\n${PRONUNCIATION_REF}` : "";
 
   const grounding = vocab + bookGrounding + gramGrounding + pron + cogGrounding(body.cogState);
-  const prompt = coach
-    ? `${grounding}\n\nDemande : ${body.ask}`
-    : buildPrompt(messages, grounding);
-  const system = coach ? COACH : SYSTEM;
+  const prompt =
+    coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
+  const system = correct ? CORRECT : coach ? COACH : SYSTEM;
 
   try {
     const text = await new Promise<string>((resolve, reject) => {

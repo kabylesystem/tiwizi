@@ -12,33 +12,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, Sparkles } from "lucide-react";
 import type { Lite, PatternMeta } from "@/lib/patterns";
-import { maskSegments } from "@/lib/patterns";
 import { AudioButton } from "@/components/audio-button";
+import { KabTap } from "@/components/kab-tap";
 import { Panel, FmtTag, GoldButton } from "./shared";
-
-/** Input enhancement : la partie STABLE du pattern est surlignée pendant le
- *  flood (le cerveau voit ce qui se répète, la règle n'est jamais énoncée).
- *  Les probes, eux, s'affichent SANS surlignage — le test se fait sans aide. */
-function HighlightedKab({ kab, meta }: { kab: string; meta: PatternMeta }) {
-  const segs = maskSegments(kab, meta.mask, meta.maskFlags);
-  return (
-    <p className="kab text-balance text-center text-3xl font-bold leading-relaxed text-ink sm:text-4xl">
-      {segs.map((s, i) =>
-        s.hidden ? (
-          <mark
-            key={i}
-            className="rounded-md px-1"
-            style={{ background: "rgba(200,150,62,0.28)", color: "#7a5a17" }}
-          >
-            {s.text}
-          </mark>
-        ) : (
-          <span key={i}>{s.text}</span>
-        )
-      )}
-    </p>
-  );
-}
 
 export type InductionResult = {
   exposedIds: number[];
@@ -98,7 +74,9 @@ export function Induction({
         <FmtTag label={`Immersion · ${idx + 1}/${flood.length}`} />
         <div className="flex flex-col items-center gap-4">
           {p.audio && <AudioButton id={p.id} size="lg" autoPlay key={p.id} />}
-          <HighlightedKab kab={p.kab} meta={meta} />
+          {/* pattern surligné (input enhancement) + chaque mot tappable → Dallet.
+              Les probes restent SANS surlignage ni tap : le test se fait sans aide. */}
+          <KabTap kab={p.kab} mask={meta.mask} maskFlags={meta.maskFlags} />
           {revealed ? (
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-lg text-muted">
               {p.fr}

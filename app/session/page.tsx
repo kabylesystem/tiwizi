@@ -22,6 +22,7 @@ import {
 import { useGameStore } from "@/lib/store/game-store";
 import { useSound } from "@/lib/sound-engine";
 import { Induction, type InductionResult } from "@/components/formats/induction";
+import { FreeProduce } from "@/components/formats/free-produce";
 import { ListenMeaning } from "@/components/formats/listen-meaning";
 import { SoundsRight } from "@/components/formats/sounds-right";
 import { Anticipate } from "@/components/formats/anticipate";
@@ -308,6 +309,8 @@ function ItemRunner({
   onDone: (item: ReactItem, grade: 0 | 1 | 2 | 3, ms: number) => void;
 }) {
   const meta = metasById[item.patternId];
+  if (item.fmt === "free-produce")
+    return <FreeProduce meta={meta} onDone={(g, ms) => onDone(item, g, ms)} />;
   if (item.fmt === "sounds-right" && item.corrupt)
     return <SoundsRight corrupt={item.corrupt} useBad={!!item.useBad} onDone={(g, ms) => onDone(item, g, ms)} />;
   if (item.fmt === "anticipate" && item.pair)
