@@ -1,62 +1,55 @@
-# Tiwizi — apprendre le kabyle (taqbaylit) pour de vrai
+# tiwizi
 
-> *Tiwizi* = « l'entraide, le travail collectif du village » en kabyle.
+Learning Kabyle (taqbaylit) for real, built on **verified human content** rather than the approximate Kabyle a language model invents.
 
-La meilleure façon d'apprendre le kabyle, bâtie sur **du contenu humain vérifié**
-plutôt que sur un kabyle approximatif inventé par une IA.
+> *tiwizi* is the Kabyle word for collective work done for the common good, the way a village helps one of its own build a house.
 
-## Le principe
+## The principle
 
-Les LLM sont mauvais en kabyle (langue à faibles ressources). Donc Tiwizi ne leur
-fait pas confiance : tout le contenu vient de **vraies sources humaines**.
+Language models are bad at Kabyle: it is a low-resource language, they barely saw it in training, and they hallucinate it confidently. So tiwizi does not trust them with a single sentence. Every piece of content comes from real human sources.
 
-- **Input compréhensible** — 208 000 phrases kabyle↔français ([Tatoeba](https://tatoeba.org), CC-BY),
-  dont 23 000 avec **audio de voix natives** (streamé depuis le CDN Tatoeba).
-- **Répétition espacée** — un moteur SM-2 planifie tes révisions (progression locale, `localStorage`).
-- **Dictionnaire** — le **Dallet** numérisé ([DigitizedDallet](https://github.com/sferhah/DigitizedDallet), MIT) :
-  12 500 entrées, sens, racines, exemples.
+- **208,000 real sentences** from [Tatoeba](https://tatoeba.org) (CC-BY), with audio.
+- **The Dallet dictionary**, digitized: 12,500 entries with meanings, roots and examples ([DigitizedDallet](https://github.com/sferhah/DigitizedDallet), MIT).
+- **Spaced repetition**: an SM-2 engine schedules your reviews, progress kept locally.
+- **A cognitive session engine**: exercises built around patterns (induction, anticipation, judgment, generation) rather than flashcard drills.
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind 4. Données servies
-en local depuis `data/*.json`, recherche côté serveur (routes API).
+Next.js 16 (App Router), React 19, TypeScript, Tailwind 4. Data is served locally from `data/*.json`, search runs server-side through API routes.
 
-## Lancer
+## Run it
 
 ```bash
 pnpm install
 pnpm dev            # http://localhost:3000
 ```
 
-> En sandbox/inotify limité : `WATCHPACK_POLLING=true pnpm exec next dev`.
+## Rebuild the data
 
-## Reconstruire les données
-
-Les JSON sont versionnés dans `data/`. Pour les régénérer depuis les sources :
+The JSON files are versioned in `data/`. To regenerate them from the sources:
 
 ```bash
 bash scripts/build-data.sh
 ```
 
-## Structure
+## Layout
 
 ```
-app/            accueil · /session (moteur cognitif) · /lesson · /dictionary · /tutor + API
-components/     formats d'exercice (induction, anticipation, jugement, génération…), nav
-lib/            cognitive-model (pattern × canal) · session-engine · patterns · srs · data
-data/           patterns.json (graphe + jumeaux) · pairs.json · deck.json · dict.json
-scripts/        pipeline reproductible (build-patterns.mjs = mineur de patterns)
-docs/           pedagogie.md (LOI du produit) · session.md · design.md
+app/            home, /session (cognitive engine), /lesson, /dictionary, /tutor, API
+components/     exercise formats, navigation
+lib/            cognitive-model, session-engine, patterns, srs, data
+data/           patterns.json, pairs.json, deck.json, dict.json
+scripts/        reproducible pipeline (build-patterns.mjs mines the patterns)
+docs/           pedagogy, session and design notes
 ```
 
-## Sources & licences
+## Sources and licences
 
-| Source | Contenu | Licence |
+| Source | Content | Licence |
 |--------|---------|---------|
-| Tatoeba | phrases + audio | CC-BY 2.0 FR |
-| DigitizedDallet | dictionnaire | MIT |
+| Tatoeba | sentences and audio | CC-BY 2.0 FR |
+| DigitizedDallet | dictionary | MIT |
 
-## Suite
+A language that survived by stubbornness deserves tools that do not lie about it.
 
-Voir [`docs/session.md`](docs/session.md). Prochaine grande étape : un **tuteur IA
-ancré** sur ce corpus (et tournant sur les crédits du plan, pas l'API).
+More on [nabtiylan.com](https://nabtiylan.com/projects/tiwizi).
