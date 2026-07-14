@@ -282,7 +282,7 @@ function IntroCard({ cog, metas, onStart }: { cog: CogStore; metas: PatternMeta[
       <h1 className="mt-2 font-display text-3xl font-bold text-ink">La session du jour</h1>
       <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
         15 minutes. Le moteur enchaîne tout seul : ce que ton cerveau doit retrouver aujourd&apos;hui,
-        {next ? <> puis un pattern nouveau (<b>{next.name}</b>),</> : " puis de la consolidation,"} puis de la production.
+        {next ? " puis un pattern nouveau (tu le découvriras par toi-même, c'est le principe)," : " puis de la consolidation,"} puis de la production.
       </p>
       <div className="mx-auto mt-5 grid max-w-sm grid-cols-2 gap-3 text-sm">
         <div className="rounded-2xl p-3" style={{ background: "rgba(200,150,62,0.1)" }}>

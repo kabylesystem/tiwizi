@@ -4,6 +4,14 @@ Learning Kabyle (taqbaylit) for real, built on **verified human content** rather
 
 > *tiwizi* is the Kabyle word for collective work done for the common good, the way a village helps one of its own build a house.
 
+![tiwizi, the learning path](docs/screenshots/learn.png)
+
+*The path: pieces, then patterns, then construction. Every unit unlocks the next.*
+
+![Idir, the tutor](docs/screenshots/tutor.png)
+
+*Idir, the tutor: he speaks to you, corrects you, and makes you produce Kabyle.*
+
 ## The principle
 
 Language models are bad at Kabyle: it is a low-resource language, they barely saw it in training, and they hallucinate it confidently. So tiwizi does not trust them with a single sentence. Every piece of content comes from real human sources.
