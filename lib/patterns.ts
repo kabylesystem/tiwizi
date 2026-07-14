@@ -15,8 +15,13 @@ export type PatternMeta = {
   requires: string[];
   mask: string; // regex source (unicode word boundaries)
   maskFlags: string;
+  /** bonne réponse du probe pour une phrase PIÈGE (pattern concurrent / neutre) */
+  foilAnswer: number;
   counts: { total: number; audio: number; twins: number; corrupts: number };
 };
+
+/** Un item de probe : phrase réelle ou piège, avec SA bonne réponse. */
+export type ProbeItem = { pair: Lite; answer: number; foil: boolean };
 
 export type Lite = { id: number; kab: string; fr: string; audio: boolean; w: number };
 export type Corrupt = { id: number; good: string; bad: string; fr: string; audio: boolean; op: string };
@@ -26,6 +31,7 @@ export type PatternMaterial = {
   flood: Lite[];
   probes: Lite[];
   extra: Lite[];
+  foils: Lite[];
   corrupts: Corrupt[];
   twins: Twin[];
 };

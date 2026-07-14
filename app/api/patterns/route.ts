@@ -18,6 +18,7 @@ export async function GET() {
     requires: p.requires,
     mask: p.mask,
     maskFlags: p.maskFlags,
+    foilAnswer: p.foilAnswer,
     counts: p.counts,
   }));
   return NextResponse.json({ built, patterns: metas });

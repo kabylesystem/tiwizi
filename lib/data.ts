@@ -135,8 +135,9 @@ export type PatternEntry = {
   note: string; probe: { q: string; options: string[]; answer: number };
   contrastsWith: string[]; requires: string[];
   mask: string; maskFlags: string;
+  foilAnswer: number;
   counts: { total: number; audio: number; twins: number; corrupts: number };
-  flood: Lite[]; probes: Lite[]; extra: Lite[];
+  flood: Lite[]; probes: Lite[]; extra: Lite[]; foils: Lite[];
   corrupts: { id: number; good: string; bad: string; fr: string; audio: boolean; op: string }[];
   twins: { plain: Lite; marked: Lite }[];
 };

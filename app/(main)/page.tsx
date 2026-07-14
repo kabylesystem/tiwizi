@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { Check, Lock, Play, Star, ChevronRight } from "lucide-react";
 import { kabyleUnits, type Unit } from "@/lib/data/kabyle-content";
 import { useGameStore } from "@/lib/store/game-store";
+import { loadCog, type CogStore, CHANNELS, CHANNEL_LABEL } from "@/lib/cognitive-model";
+import { vocabCount } from "@/lib/vocab";
 import { FennecMascot } from "@/components/fennec";
 import { AxxamPreview } from "@/components/axxam";
 import { cn } from "@/lib/utils";
@@ -20,16 +22,37 @@ const WORDS = [
   { tif: "ⴰⵎⴷⴰⵏ", lat: "Amdan", fr: "Être humain" },
 ];
 
+type HomeMeta = { id: string; order: number; family: string; name: string; schema: string };
+
 export default function LearnPath() {
   const store = useGameStore();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [metas, setMetas] = useState<HomeMeta[]>([]);
+  const [cog, setCog] = useState<CogStore | null>(null);
+  useEffect(() => {
+    setMounted(true);
+    setCog(loadCog());
+    fetch("/api/patterns")
+      .then((r) => r.json())
+      .then((d) => setMetas(d.patterns))
+      .catch(() => {});
+    const onPulled = () => setCog(loadCog());
+    window.addEventListener("tiwizi:pulled", onPulled);
+    return () => window.removeEventListener("tiwizi:pulled", onPulled);
+  }, []);
   const completedLessons = mounted ? store.completedLessons : [];
   const allLessons = kabyleUnits.flatMap((u) => u.lessons);
   const doneCount = allLessons.filter((l) => completedLessons.includes(l.id)).length;
-  const overall = Math.round((doneCount / allLessons.length) * 100);
   const next = allLessons.find((l) => !completedLessons.includes(l.id)) ?? allLessons[0];
   const word = WORDS[new Date().getDay() % WORDS.length];
+
+  // la VRAIE progression : le moteur cognitif (patterns), pas les leçons legacy
+  const nAbstracted = cog ? Object.values(cog.patterns).filter((p) => p.abstracted).length : 0;
+  const nStarted = cog ? Object.values(cog.patterns).filter((p) => p.exposure > 0 && !p.abstracted).length : 0;
+  const nWords = mounted ? vocabCount() : 0;
+  const overall = metas.length
+    ? Math.round(((nAbstracted + nStarted * 0.3) / metas.length) * 100)
+    : 0;
 
   // a unit is unlocked once the previous unit is fully complete
   const unitDone = (u: Unit) => u.lessons.every((l) => completedLessons.includes(l.id));
@@ -54,9 +77,9 @@ export default function LearnPath() {
               <br /> pièce par pièce.
             </h1>
             <p className="mt-3 max-w-md text-sm text-muted">
-              {doneCount === 0
+              {nAbstracted === 0 && nStarted === 0
                 ? "Des phrases réelles, des patterns que ton cerveau extrait tout seul, et la répétition au bon moment."
-                : `${doneCount}/${allLessons.length} leçons · ${overall}% du parcours`}
+                : `${nAbstracted} pattern${nAbstracted > 1 ? "s" : ""} extrait${nAbstracted > 1 ? "s" : ""}${nStarted ? ` · ${nStarted} en cours` : ""}${nWords ? ` · ${nWords} mots explorés` : ""}`}
             </p>
           </div>
 
@@ -108,10 +131,18 @@ export default function LearnPath() {
         </motion.div>
       </section>
 
-      {/* PATH · full-width unit grid */}
+      {/* LE SYSTÈME · l'état réel du moteur cognitif, pattern par pattern */}
       <div className="mb-5 mt-10 flex items-center gap-2">
         <div className="h-6 w-1.5 rounded-full" style={{ background: "linear-gradient(180deg,#C8963E,#E8B85C)" }} />
-        <h2 className="font-display text-lg font-bold text-ink">Parcours · pièces → patterns → construction</h2>
+        <h2 className="font-display text-lg font-bold text-ink">Le système que ton cerveau extrait</h2>
+        <span className="text-xs text-muted">{nAbstracted}/{metas.length || 13} patterns</span>
+      </div>
+      <PatternBoard metas={metas} cog={cog} />
+
+      {/* legacy : l'ancien parcours de leçons (avant le moteur cognitif) */}
+      <div className="mb-5 mt-10 flex items-center gap-2 opacity-80">
+        <div className="h-6 w-1.5 rounded-full" style={{ background: "rgba(200,150,62,0.35)" }} />
+        <h2 className="font-display text-base font-bold text-muted">Parcours classique (l&apos;ancienne méthode, pour le vocab)</h2>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -133,6 +164,69 @@ export default function LearnPath() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/** L'état réel du moteur : extrait / en cours / à découvrir, canal par canal.
+ *  Les noms des patterns non découverts sont CACHÉS (ils contiennent la règle). */
+function PatternBoard({ metas, cog }: { metas: HomeMeta[]; cog: CogStore | null }) {
+  if (!metas.length)
+    return <p className="text-sm text-muted">Chargement du graphe…</p>;
+  const ordered = [...metas].sort((a, b) => a.order - b.order);
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+      {ordered.map((m, i) => {
+        const sk = cog?.patterns[m.id];
+        const state: "done" | "learning" | "todo" = sk?.abstracted ? "done" : (sk?.exposure ?? 0) > 0 ? "learning" : "todo";
+        return (
+          <motion.div
+            key={m.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: Math.min(i * 0.03, 0.3) }}
+            className="rounded-2xl border p-4"
+            style={{
+              borderColor: state === "done" ? "rgba(91,154,111,0.35)" : state === "learning" ? "rgba(200,150,62,0.35)" : "rgba(200,150,62,0.15)",
+              background: state === "done" ? "rgba(91,154,111,0.07)" : "rgba(253,248,240,0.85)",
+              opacity: state === "todo" ? 0.65 : 1,
+            }}
+          >
+            <div className="flex items-center justify-between gap-2">
+              <p className="truncate text-sm font-bold text-ink">
+                {state === "todo" ? (
+                  <span className="text-muted">ⵣ à découvrir</span>
+                ) : state === "learning" ? (
+                  <span style={{ color: "#A67B2E" }}>en cours de découverte…</span>
+                ) : (
+                  m.name
+                )}
+              </p>
+              {state === "done" && <Check className="h-4 w-4 shrink-0" style={{ color: "#5B9A6F" }} />}
+              {state === "todo" && <Lock className="h-3.5 w-3.5 shrink-0 text-muted" />}
+            </div>
+            <p className="mt-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
+              {state === "todo" ? "· · ·" : m.family}
+            </p>
+            <div className="mt-3 flex gap-1.5">
+              {CHANNELS.map((ch) => {
+                const st = sk?.channels[ch];
+                const strength = st ? Math.min(1, (st.reps - st.lapses * 0.5) / 5) : 0;
+                return (
+                  <div key={ch} className="flex-1" title={CHANNEL_LABEL[ch]}>
+                    <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "rgba(200,150,62,0.12)" }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${Math.max(0, strength) * 100}%`, background: strength >= 0.8 ? "#5B9A6F" : "#C8963E" }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        );
+      })}
     </div>
   );
 }

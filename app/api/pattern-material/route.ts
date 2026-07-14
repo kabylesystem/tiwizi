@@ -47,6 +47,7 @@ export async function GET(req: NextRequest) {
     flood: rotate(entry.flood, h, 8),
     probes: rotate(entry.probes, h >> 3, 6),
     extra: rotate(entry.extra, h >> 5, 12),
+    foils: rotate(entry.foils ?? [], h >> 11, 4),
     corrupts: rotate(entry.corrupts, h >> 7, 6),
     twins: rotate(entry.twins, h >> 9, 8),
   });

@@ -7,7 +7,7 @@
  *   → génération · looping while the 15 minutes run.
  * Each item = one FORMAT targeting one CHANNEL of one PATTERN.
  */
-import type { PatternMeta, PatternMaterial, Lite, Corrupt, Twin } from "./patterns";
+import type { PatternMeta, PatternMaterial, Lite, Corrupt, Twin, ProbeItem } from "./patterns";
 import {
   type CogStore, type Channel, type Due,
   dues, nextInduction, weakest, weakestChannel, skill,
@@ -29,7 +29,7 @@ export type ReactItem = {
 
 export type Block =
   | { type: "react"; items: ReactItem[] }
-  | { type: "induction"; meta: PatternMeta; flood: Lite[]; probes: Lite[] }
+  | { type: "induction"; meta: PatternMeta; flood: Lite[]; probes: ProbeItem[] }
   | { type: "generate"; items: ReactItem[] };
 
 export type BlockRequest = { type: Block["type"]; patternIds: string[] };

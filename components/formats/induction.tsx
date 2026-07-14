@@ -11,7 +11,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, Sparkles } from "lucide-react";
-import type { Lite, PatternMeta } from "@/lib/patterns";
+import type { Lite, PatternMeta, ProbeItem } from "@/lib/patterns";
 import { AudioButton } from "@/components/audio-button";
 import { KabTap } from "@/components/kab-tap";
 import { Panel, FmtTag, GoldButton } from "./shared";
@@ -34,7 +34,7 @@ export function Induction({
 }: {
   meta: PatternMeta;
   flood: Lite[];
-  probes: Lite[];
+  probes: ProbeItem[];
   alreadyAbstracted: boolean;
   onDone: (r: InductionResult) => void;
 }) {
@@ -48,7 +48,7 @@ export function Induction({
 
   const NEED = 2; // ≥2/3 fresh-vocab probes → abstracted
   const abstracted = probeOk >= NEED;
-  const exposedIds = [...flood.slice(0, idx + 1).map((f) => f.id), ...probes.slice(0, probeIdx + 1).map((p) => p.id)];
+  const exposedIds = [...flood.slice(0, idx + 1).map((f) => f.id), ...probes.slice(0, probeIdx + 1).map((p) => p.pair.id)];
 
   if (phase === "tease")
     return (
@@ -113,21 +113,27 @@ export function Induction({
   }
 
   if (phase === "probe") {
-    const p = probes[probeIdx];
+    const item = probes[probeIdx];
+    const p = item.pair;
     const done = probeAnswered !== null;
-    const wasRight = probeAnswered === meta.probe.answer;
     return (
       <Panel>
         <FmtTag label={`Le test · ${probeIdx + 1}/${probes.length}`} sub="Vocabulaire nouveau · seule la structure peut te guider." />
         <div className="flex flex-col items-center gap-3">
           {p.audio && <AudioButton id={p.id} size="md" autoPlay key={p.id} />}
-          <p className="kab text-balance text-center text-2xl font-bold text-ink sm:text-3xl">{p.kab}</p>
-          {done && <p className="text-sm text-muted">{p.fr}</p>}
+          {/* la phrase devient tappable et traduite APRÈS la réponse
+              (avant, la traduction française donnerait la réponse) */}
+          {done ? (
+            <KabTap kab={p.kab} className="kab text-balance text-center text-2xl font-bold leading-relaxed text-ink sm:text-3xl" />
+          ) : (
+            <p className="kab text-balance text-center text-2xl font-bold text-ink sm:text-3xl">{p.kab}</p>
+          )}
+          {done && <p className="text-base text-muted">{p.fr}</p>}
         </div>
         <p className="mt-6 text-center text-sm font-semibold text-ink">{meta.probe.q}</p>
         <div className={`mt-3 grid gap-2 ${meta.probe.options.length > 2 ? "grid-cols-3" : "grid-cols-2"}`}>
           {meta.probe.options.map((opt, i) => {
-            const isAns = done && i === meta.probe.answer;
+            const isAns = done && i === item.answer;
             const isWrong = done && probeAnswered === i && !isAns;
             return (
               <button
@@ -135,7 +141,7 @@ export function Induction({
                 disabled={done}
                 onClick={() => {
                   setProbeAnswered(i);
-                  if (i === meta.probe.answer) setProbeOk((n) => n + 1);
+                  if (i === item.answer) setProbeOk((n) => n + 1);
                 }}
                 className="rounded-xl border-2 px-3 py-3 text-sm font-semibold"
                 style={{

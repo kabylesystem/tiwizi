@@ -46,6 +46,7 @@ const DEFS = [
     corrupt: ["drop:ara", "displace:ara:end"],
     contrastsWith: [],
     requires: [],
+    foilFrom: null, foilAnswer: 0,
     note: "La négation kabyle encadre le verbe en deux morceaux : « ur » avant, « ara » après · ur zriɣ ara = je ne sais pas. Le verbe change souvent de voyelle au négatif : yeswa → ur yeswi ara.",
     probe: { q: "D'après la structure, l'action…", options: ["s'est faite", "ne s'est PAS faite"], answer: 1 },
   },
@@ -58,6 +59,7 @@ const DEFS = [
     corrupt: ["displace:ad:end"],
     contrastsWith: [],
     requires: [],
+    foilFrom: null, foilAnswer: 0,
     note: "« ad » projette l'action dans le non-réalisé : futur, intention, souhait · ad ruḥeɣ = je partirai / que je parte. C'est la particule la plus fréquente du kabyle.",
     probe: { q: "D'après la structure, l'action est…", options: ["déjà faite", "à venir / voulue"], answer: 1 },
   },
@@ -70,6 +72,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["prep-gher"],
     requires: [],
+    foilFrom: "prep-gher", foilAnswer: 1,
     note: "Le kabyle n'a pas de verbe « avoir » : on dit « chez-moi » · ɣur-i aqcic = j'ai un garçon (litt. « chez-moi un garçon »). ɣur-ek (chez-toi), ɣur-es (chez-lui/elle)…",
     probe: { q: "La phrase parle de…", options: ["possession (avoir)", "déplacement (aller)"], answer: 0 },
   },
@@ -82,6 +85,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["exist-ulac"],
     requires: [],
+    foilFrom: "exist-ulac", foilAnswer: 1,
     note: "« yella » (masculin), « tella » (féminin), « llan/llant » (pluriel) : exister, se trouver, il y a. Son contraire absolu tient en un mot : « ulac ».",
     probe: { q: "D'après la structure, ça…", options: ["existe / est là", "n'existe pas"], answer: 0 },
   },
@@ -94,6 +98,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["exist-yella"],
     requires: ["exist-yella"],
+    foilFrom: "exist-yella", foilAnswer: 0,
     note: "« ulac » nie l'existence en un seul mot : ulac aman = il n'y a pas d'eau. Ulac aɣilif = pas de souci !",
     probe: { q: "D'après la structure, ça…", options: ["existe / est là", "n'existe pas"], answer: 1 },
   },
@@ -106,6 +111,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: [],
     requires: [],
+    foilFrom: null, foilAnswer: 1,
     note: "« d » devant un nom, c'est le verbe « être » du présent : D argaz = c'est un homme. D tidet = c'est vrai. (Ailleurs, le même « d » peut vouloir dire « et/avec ».)",
     probe: { q: "La phrase…", options: ["dit ce que c'est (identité)", "raconte une action"], answer: 0 },
   },
@@ -118,6 +124,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["q-anda", "q-amek"],
     requires: [],
+    foilFrom: "q-anda", foilAnswer: 1,
     note: "« acu » demande « quoi » · souvent « d acu » (c'est quoi ?). Avec le futur : acu ara txedmeḍ ? = que vas-tu faire ?",
     probe: { q: "On demande…", options: ["quoi", "où", "comment"], answer: 0 },
   },
@@ -130,6 +137,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["q-acu", "q-amek"],
     requires: [],
+    foilFrom: "q-acu", foilAnswer: 0,
     note: "« anda » = où : anda telliḍ ? = où es-tu ? (Et « ansi » = d'où.)",
     probe: { q: "On demande…", options: ["quoi", "où", "comment"], answer: 1 },
   },
@@ -142,6 +150,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["q-acu", "q-anda"],
     requires: [],
+    foilFrom: "q-acu", foilAnswer: 0,
     note: "« amek » = comment : amek telliḍ ? = comment vas-tu ? La question kabyle ne change pas l'ordre des mots · le mot interrogatif se pose devant.",
     probe: { q: "On demande…", options: ["quoi", "où", "comment"], answer: 2 },
   },
@@ -154,6 +163,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: [],
     requires: ["fut-ad"],
+    foilFrom: null, foilAnswer: 1,
     note: "La racine BƔ = vouloir : bɣiɣ (je veux), yebɣa (il veut), tebɣa (elle veut)… Ce qu'on veut FAIRE passe par « ad » : bɣiɣ ad ruḥeɣ = je veux partir.",
     probe: { q: "La phrase exprime…", options: ["un désir / une volonté", "un fait accompli"], answer: 0 },
   },
@@ -167,8 +177,9 @@ const DEFS = [
     corrupt: [],
     contrastsWith: [],
     requires: [],
+    foilFrom: null, foilAnswer: 1,
     note: "Un verbe qui finit par « -ɣ », c'est « je » : zriɣ = je sais, bɣiɣ = je veux, ruḥeɣ = je suis parti. Une seule lettre porte toute la personne.",
-    probe: { q: "Qui fait l'action ?", options: ["moi (je)", "lui / elle"], answer: 0 },
+    probe: { q: "Qui fait l'action ?", options: ["moi (je)", "quelqu'un d'autre"], answer: 0 },
   },
   {
     id: "prep-gher", order: 12, family: "prépositions",
@@ -179,6 +190,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["prep-deg", "have-ghur"],
     requires: [],
+    foilFrom: "prep-deg", foilAnswer: 1,
     note: "« ɣer » marque la direction : ɣer uxxam = vers la maison. À distinguer de « ɣur- » (chez → possession) et de « deg » (dans → position).",
     probe: { q: "« ɣer » indique…", options: ["un mouvement vers", "une position dans"], answer: 0 },
   },
@@ -191,6 +203,7 @@ const DEFS = [
     corrupt: [],
     contrastsWith: ["prep-gher"],
     requires: [],
+    foilFrom: "prep-gher", foilAnswer: 0,
     note: "« deg » situe à l'intérieur : deg uxxam = dans la maison. (À l'oral il se réduit souvent à « g ».)",
     probe: { q: "« deg » indique…", options: ["un mouvement vers", "une position dans"], answer: 1 },
   },
@@ -305,6 +318,9 @@ function mineTwins(patternRe, particles, max = 400) {
   return twins;
 }
 
+// sentences matching NO pattern at all: neutral foils (affirmative, simple)
+const neutralPool = pool.filter((p) => p.audio && p.w <= 7 && DEFS.every((d) => !d.detect.test(p.kab)));
+
 // --- build each pattern's index ---
 const out = [];
 for (const d of DEFS) {
@@ -335,6 +351,16 @@ for (const d of DEFS) {
     }
   }
 
+  // probe foils: sentences where the RIGHT answer is the other option
+  let foilCands;
+  if (d.foilFrom) {
+    const src = DEFS.find((x) => x.id === d.foilFrom);
+    foilCands = pool.filter((p) => p.audio && p.w <= 7 && src.detect.test(p.kab) && !d.detect.test(p.kab));
+  } else {
+    foilCands = neutralPool.filter((p) => !d.detect.test(p.kab));
+  }
+  const foils = pickVaried(foilCands.slice(0, 800), 12, new Set());
+
   const twins = d.id === "neg-ur-ara" ? mineTwins(d.detect, ["ur", "ara"])
     : d.id === "fut-ad" ? mineTwins(d.detect, ["ad"])
     : [];
@@ -342,13 +368,13 @@ for (const d of DEFS) {
   out.push({
     id: d.id, order: d.order, family: d.family, name: d.name, schema: d.schema,
     note: d.note, probe: d.probe, contrastsWith: d.contrastsWith, requires: d.requires,
-    mask: d.mask.source, maskFlags: d.mask.flags,
+    mask: d.mask.source, maskFlags: d.mask.flags, foilAnswer: d.foilAnswer,
     counts: { total: instances.length, audio: instances.filter((p) => p.audio).length, twins: twins.length, corrupts: corrupts.length },
     flood: flood.map(lite), probes: probe.map(lite), extra: extra.map(lite),
-    corrupts, twins,
+    foils: foils.map(lite), corrupts, twins,
   });
   console.log(
-    `${d.id.padEnd(12)} total=${String(instances.length).padStart(6)} audio=${String(instances.filter((p) => p.audio).length).padStart(6)} twins=${String(twins.length).padStart(4)} corrupts=${corrupts.length}`
+    `${d.id.padEnd(12)} total=${String(instances.length).padStart(6)} audio=${String(instances.filter((p) => p.audio).length).padStart(6)} twins=${String(twins.length).padStart(4)} corrupts=${corrupts.length} foils=${foils.length}`
   );
   for (const s of flood.slice(0, 3)) console.log(`   · ${s.kab}  ·  ${s.fr}`);
 }

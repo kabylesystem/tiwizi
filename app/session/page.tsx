@@ -122,7 +122,13 @@ export default function SessionPage() {
       if (req.type === "induction") {
         const meta = metasById[req.patternIds[0]];
         const mat = mats[meta.id];
-        b = { type: "induction", meta, flood: mat.flood.slice(0, cog.floodLen ?? 5), probes: mat.probes.slice(0, 3) };
+        // 2 vraies + 1 piège à position imprévisible : réussir le 1er probe
+        // ne donne plus les 2 suivants gratuitement
+        const probes = mat.probes.slice(0, 2).map((p) => ({ pair: p, answer: meta.probe.answer, foil: false }));
+        const foil = mat.foils?.[0];
+        if (foil) probes.splice(Math.floor(Math.random() * 3), 0, { pair: foil, answer: meta.foilAnswer, foil: true });
+        else probes.push({ pair: mat.probes[2], answer: meta.probe.answer, foil: false });
+        b = { type: "induction", meta, flood: mat.flood.slice(0, cog.floodLen ?? 5), probes };
         ranRef.current.induction++;
       } else if (req.type === "generate") {
         b = buildGenerateBlock(cog, metasById, mats, 3);
