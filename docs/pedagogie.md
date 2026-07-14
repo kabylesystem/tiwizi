@@ -181,6 +181,16 @@ l'erreur est un signal qui replanifie.
 - **Common Voice kab, chansons, Wikipédia kab** : sources d'input v2 pour la
   variation massive de voix — pas encore branchées.
 
+## 7 bis. Provenance (garantie backend, pas décoration UI)
+
+Chaque contenu kabyle a une source humaine traçable, consignée dans
+**`docs/sources.md`** (registre : intégré / candidats / règles d'entrée).
+Pas de citations dans l'UI pendant l'entraînement (choix de naly) : la
+garantie est STRUCTURELLE. Le seul contenu « de tête » (notes de patterns,
+schémas, probes) est audité par croisement contre grammar-kb + Assimil +
+Dallet avant d'entrer dans l'app. Les sources communautaires non éditorées
+(Glosbe…) ne servent qu'au recoupement, jamais de source primaire.
+
 ## 8. Données & fichiers (cible)
 
 ```
