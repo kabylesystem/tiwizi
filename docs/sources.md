@@ -34,7 +34,7 @@ audit avant d'entrer dans l'app.
 |---|---|---|
 | [amyag.com](https://www.amyag.com/) (Naït-Zerrad, *Manuel de conjugaison kabyle*, 6000 verbes / 176 classes) | conjugueur : valider les formes verbales des exercices de transformation, futurs patterns de conjugaison | LA référence conjugaison ; déjà notée dans session.md |
 | Mozilla Common Voice kab (~571 h, CC0) | variation massive de voix natives, sprints d'écoute, ASR un jour | dataset énorme, licence idéale |
-| [Glosbe kab-fr](https://fr.glosbe.com/kab/fr) | dico communautaire + phrases alignées | ⚠️ corpus parallèles hétérogènes : à n'utiliser QUE comme recoupement, jamais source primaire |
+| [Glosbe kab-fr](https://fr.glosbe.com/kab/fr) | dico communautaire (traductions validées par la commu, souvent les mêmes contributeurs que Tatoeba) + audio commu | ✅ bon pour le VOCABULAIRE MODERNE absent du Dallet 1982 (tilelli, néologismes Amawal) · l'app fait un lien de secours quand le Dallet n'a pas le mot · ⚠️ leurs exemples AUTO-ALIGNÉS restent du recoupement uniquement |
 | [dictionnaire-kabyle.com](https://www.dictionnaire-kabyle.com/) (DIKAB) | dico avec exemples de son propre corpus | recoupement du Dallet (mots récents) |
 | [Lexilogos kabyle](https://www.lexilogos.com/kabyle_dictionnaire.htm) | hub de dictionnaires/grammaires académiques numérisés | porte d'entrée vers les PDF académiques |
 | Centre de Recherche Berbère (INALCO) | grammaires/notices académiques PDF | académique |

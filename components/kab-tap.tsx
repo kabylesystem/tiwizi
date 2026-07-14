@@ -66,7 +66,18 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
         >
           {loading && <span className="block text-xs text-muted">Dallet…</span>}
           {entries && !entries.length && !loading && (
-            <span className="block text-xs text-muted">Pas de fiche exacte · sans doute une forme conjuguée. Cherche la racine au dico.</span>
+            <span className="block text-xs text-muted">
+              Pas de fiche Dallet · sans doute une forme conjuguée.{" "}
+              <a
+                href={`https://fr.glosbe.com/kab/fr/${encodeURIComponent(clean)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold underline decoration-dotted"
+                style={{ color: "#1f63b0" }}
+              >
+                Voir sur Glosbe ↗
+              </a>
+            </span>
           )}
           {entries?.map((e, i) => (
             <span key={i} className="block not-italic">
