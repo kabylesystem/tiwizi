@@ -74,9 +74,9 @@ export function SoundsRight({
             </p>
             <p className="kab mt-1 text-xl font-semibold text-ink">{corrupt.good}</p>
             <p className="mt-1 text-sm text-muted">{corrupt.fr}</p>
-            {corrupt.audio && (
+            {(
               <div className="mt-3 flex justify-center">
-                <AudioButton id={corrupt.id} size="sm" autoPlay />
+                <AudioButton id={corrupt.id} synthetic={!corrupt.audio} size="sm" autoPlay />
               </div>
             )}
             {!ok && (

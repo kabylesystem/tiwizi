@@ -73,7 +73,7 @@ export function Induction({
       <Panel>
         <FmtTag label={`Immersion · ${idx + 1}/${flood.length}`} />
         <div className="flex flex-col items-center gap-4">
-          {p.audio && <AudioButton id={p.id} size="lg" autoPlay key={p.id} />}
+          <AudioButton id={p.id} synthetic={!p.audio} size="lg" autoPlay key={p.id} />
           {/* pattern surligné (input enhancement) + chaque mot tappable → Dallet.
               Les probes restent SANS surlignage ni tap : le test se fait sans aide. */}
           <KabTap kab={p.kab} mask={meta.mask} maskFlags={meta.maskFlags} />
@@ -120,7 +120,7 @@ export function Induction({
       <Panel>
         <FmtTag label={`Le test · ${probeIdx + 1}/${probes.length}`} sub="Vocabulaire nouveau · seule la structure peut te guider." />
         <div className="flex flex-col items-center gap-3">
-          {p.audio && <AudioButton id={p.id} size="md" autoPlay key={p.id} />}
+          <AudioButton id={p.id} synthetic={!p.audio} size="md" autoPlay key={p.id} />
           {/* la phrase devient tappable et traduite APRÈS la réponse
               (avant, la traduction française donnerait la réponse) */}
           {done ? (

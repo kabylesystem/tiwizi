@@ -68,7 +68,10 @@ export function Generate({
 
       {twin ? (
         <div className="mb-5 rounded-2xl p-4 text-center" style={{ background: "rgba(255,255,255,0.55)" }}>
-          <p className="kab text-2xl font-semibold text-ink">{twin.plain.kab}</p>
+          <div className="flex items-center justify-center gap-3">
+            <AudioButton id={twin.plain.id} synthetic={!twin.plain.audio} size="sm" />
+            <p className="kab text-2xl font-semibold text-ink">{twin.plain.kab}</p>
+          </div>
           <p className="mt-1 text-sm text-muted">{twin.plain.fr}</p>
           <p className="mt-3 text-sm font-bold" style={{ color: "#A67B2E" }}>
             {instruction ?? "Transforme la structure"} · sens visé : « {twin.marked.fr} »
@@ -136,9 +139,9 @@ export function Generate({
               {ok ? "Yelha !" : "Presque · la forme authentique :"}
             </p>
             <p className="kab mt-1 text-xl font-semibold text-ink">{target.kab}</p>
-            {target.audio && (
+            {(
               <div className="mt-3 flex justify-center">
-                <AudioButton id={target.id} size="sm" autoPlay />
+                <AudioButton id={target.id} synthetic={!target.audio} size="sm" autoPlay />
               </div>
             )}
             {!ok && (

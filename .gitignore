@@ -46,3 +46,6 @@ next-env.d.ts
 # progression locale (sauvegarde disque, pas versionnée)
 /data/progress.json
 /data/progress.bak.json
+
+# audio TTS généré (reproductible via scripts/build-tts.py)
+/public/tts/

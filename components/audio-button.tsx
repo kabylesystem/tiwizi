@@ -6,18 +6,26 @@ export function audioUrl(id: number) {
   return `https://audio.tatoeba.org/sentences/kab/${id}.mp3`;
 }
 
+/** Voix synthétique locale (MMS kabyle) pour les phrases sans audio natif. */
+export function ttsUrl(id: number) {
+  return `/tts/${id}.mp3`;
+}
+
 export function AudioButton({
   id,
   autoPlay = false,
   size = "md",
+  synthetic = false,
 }: {
   id: number;
   autoPlay?: boolean;
   size?: "sm" | "md" | "lg";
+  /** true = voix synthétique (bouton azur + tooltip) ; false = voix native */
+  synthetic?: boolean;
 }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [dead, setDead] = useState(false); // CDN 403/404 → hide instead of a mute button
+  const [dead, setDead] = useState(false); // fichier absent / CDN 403 → on s'efface
 
   const play = useCallback(() => {
     const a = ref.current;
@@ -44,12 +52,17 @@ export function AudioButton({
     <button
       type="button"
       onClick={play}
-      aria-label="Écouter la prononciation"
-      className={`group grid ${dim} place-items-center rounded-full border border-line-strong bg-card text-brand shadow-sm transition-all hover:border-brand hover:bg-brand-soft active:scale-95`}
+      aria-label={synthetic ? "Écouter (voix synthétique)" : "Écouter la prononciation (voix native)"}
+      title={synthetic ? "Voix synthétique (IA, MMS) : le texte est humain, la voix non" : "Voix native (Tatoeba)"}
+      className={`group grid ${dim} place-items-center rounded-full border bg-card shadow-sm transition-all active:scale-95 ${
+        synthetic
+          ? "border-[rgba(31,99,176,0.35)] text-[#1f63b0] hover:bg-[rgba(31,99,176,0.08)]"
+          : "border-line-strong text-brand hover:border-brand hover:bg-brand-soft"
+      }`}
     >
       <audio
         ref={ref}
-        src={audioUrl(id)}
+        src={synthetic ? ttsUrl(id) : audioUrl(id)}
         preload="none"
         onPlay={() => setPlaying(true)}
         onEnded={() => setPlaying(false)}
