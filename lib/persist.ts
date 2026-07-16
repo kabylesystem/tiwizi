@@ -5,7 +5,7 @@
  * travail ; le disque est la sauvegarde de vérité (survit à un nettoyage du
  * navigateur, partagée entre navigateurs de la machine).
  */
-const KEYS = ["tiwizi.cog.v1", "tiwizi-game-v1", "tiwizi.srs.v1", "tiwizi.vocab.v1"];
+const KEYS = ["tiwizi.cog.v1", "tiwizi-game-v1", "tiwizi.srs.v1", "tiwizi.vocab.v1", "tiwizi.session.v1"];
 const SYNC_AT = "tiwizi.syncedAt";
 
 /** Au démarrage : si le disque est plus récent que notre dernière sync, on restaure. */

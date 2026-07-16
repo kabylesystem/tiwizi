@@ -35,6 +35,32 @@ const BLOCK_LABEL: Record<Block["type"], string> = {
   generate: "Génération",
 };
 
+// Snapshot de session en cours : si la fenêtre meurt (crash, oom, fausse
+// manip), on reprend au même chrono et à la même progression de blocs.
+const SNAP_KEY = "tiwizi.session.v1";
+type Snap = {
+  day: string;
+  ts: number;
+  elapsed: number;
+  ran: { react: number; induction: number; generate: number };
+  stats: { items: number; ok: number; patterns: string[] };
+};
+
+function loadSnap(): Snap | null {
+  try {
+    const s = JSON.parse(localStorage.getItem(SNAP_KEY) || "null") as Snap | null;
+    if (!s) return null;
+    const fresh = Date.now() - s.ts < 3 * 3600_000;
+    const today = s.day === new Date().toISOString().slice(0, 10);
+    if (fresh && today && s.elapsed >= 20 && s.elapsed < SESSION_MINUTES * 60) return s;
+  } catch {}
+  return null;
+}
+
+function clearSnap() {
+  localStorage.removeItem(SNAP_KEY);
+}
+
 export default function SessionPage() {
   const router = useRouter();
   const gameStore = useGameStore();
@@ -109,11 +135,28 @@ export default function SessionPage() {
     );
   }, []);
 
+  const persistSnap = useCallback((elapsedSec: number) => {
+    const snap: Snap = {
+      day: new Date().toISOString().slice(0, 10),
+      ts: Date.now(),
+      elapsed: elapsedSec,
+      ran: { ...ranRef.current },
+      stats: {
+        items: statsRef.current.items,
+        ok: statsRef.current.ok,
+        patterns: [...statsRef.current.patterns],
+      },
+    };
+    localStorage.setItem(SNAP_KEY, JSON.stringify(snap));
+    window.dispatchEvent(new Event("tiwizi:dirty"));
+  }, []);
+
   const advance = useCallback(
-    async (ignoreClock = false) => {
+    async (ignoreClock = false, elapsedSecOverride?: number) => {
+      const sec = elapsedSecOverride ?? elapsed;
       const cog = cogRef.current!;
-      const req = planNextBlock(cog, metas!, ranRef.current, ignoreClock ? 0 : elapsed / 60);
-      if (!req || (!ignoreClock && elapsed >= SESSION_MINUTES * 60)) {
+      const req = planNextBlock(cog, metas!, ranRef.current, ignoreClock ? 0 : sec / 60);
+      if (!req || (!ignoreClock && sec >= SESSION_MINUTES * 60)) {
         finishSession();
         return;
       }
@@ -151,9 +194,10 @@ export default function SessionPage() {
       setItemIdx(0);
       setBlock(b);
       setPhase("block");
+      persistSnap(sec);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metas, metasById, elapsed, ensureMaterials]
+    [metas, metasById, elapsed, ensureMaterials, persistSnap]
   );
 
   const finishSession = useCallback(() => {
@@ -164,6 +208,7 @@ export default function SessionPage() {
     saveCog(cog);
     gameStore.incrementStreak();
     gameStore.addXP(statsRef.current.items * 10);
+    clearSnap();
     setRunning(false);
     setPhase("recap");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,6 +223,7 @@ export default function SessionPage() {
     statsRef.current.items++;
     if (grade >= 2) statsRef.current.ok++;
     statsRef.current.patterns.add(item.patternId);
+    persistSnap(elapsed);
     const items = (block as Extract<Block, { type: "react" | "generate" }>).items;
     if (itemIdx < items.length - 1) setItemIdx((i) => i + 1);
     else advance();
@@ -247,7 +293,25 @@ export default function SessionPage() {
             </Panel>
           )}
 
-          {phase === "intro" && metas && <IntroCard cog={cogRef.current!} metas={metas} onStart={() => { setRunning(true); advance(); }} />}
+          {phase === "intro" && metas && (
+            <IntroCard
+              cog={cogRef.current!}
+              metas={metas}
+              snap={typeof window !== "undefined" ? loadSnap() : null}
+              onStart={() => {
+                clearSnap();
+                setRunning(true);
+                advance();
+              }}
+              onResume={(s) => {
+                ranRef.current = { ...s.ran };
+                statsRef.current = { items: s.stats.items, ok: s.stats.ok, patterns: new Set(s.stats.patterns) };
+                setElapsed(s.elapsed);
+                setRunning(true);
+                advance(false, s.elapsed);
+              }}
+            />
+          )}
 
           {phase === "block" && block && block.type === "induction" && (
             <Induction
@@ -276,7 +340,42 @@ export default function SessionPage() {
   );
 }
 
-function IntroCard({ cog, metas, onStart }: { cog: CogStore; metas: PatternMeta[]; onStart: () => void }) {
+function IntroCard({
+  cog,
+  metas,
+  snap,
+  onStart,
+  onResume,
+}: {
+  cog: CogStore;
+  metas: PatternMeta[];
+  snap: Snap | null;
+  onStart: () => void;
+  onResume: (s: Snap) => void;
+}) {
+  if (snap) {
+    const left = Math.max(0, SESSION_MINUTES * 60 - snap.elapsed);
+    const mm = Math.floor(left / 60);
+    const ss = String(left % 60).padStart(2, "0");
+    return (
+      <Panel className="text-center">
+        <FennecMascot mood="encouraging" size={88} />
+        <h1 className="mt-2 font-display text-3xl font-bold text-ink">On reprend ?</h1>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
+          Ta session d&apos;aujourd&apos;hui s&apos;est interrompue : il te restait{" "}
+          <b>{mm}:{ss}</b> et {snap.stats.items} récupérations étaient déjà comptées. Rien n&apos;est perdu.
+        </p>
+        <GoldButton onClick={() => onResume(snap)}>Reprendre où j&apos;en étais · {mm}:{ss}</GoldButton>
+        <button onClick={onStart} className="mt-3 w-full text-center text-sm text-muted underline decoration-dotted underline-offset-4">
+          non, repartir sur une session complète
+        </button>
+      </Panel>
+    );
+  }
+  return <IntroFresh cog={cog} metas={metas} onStart={onStart} />;
+}
+
+function IntroFresh({ cog, metas, onStart }: { cog: CogStore; metas: PatternMeta[]; onStart: () => void }) {
   const now = Date.now();
   let due = 0;
   for (const sk of Object.values(cog.patterns))
