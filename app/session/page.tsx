@@ -55,9 +55,8 @@ export default function SessionPage() {
 
   const [, bump] = useState(0);
 
-  // load graph + cognitive model
-  useEffect(() => {
-    cogRef.current = loadCog();
+  const loadGraph = useCallback(() => {
+    setPhase("loading");
     fetch("/api/patterns")
       .then((r) => r.json())
       .then((d) => {
@@ -65,6 +64,12 @@ export default function SessionPage() {
         setPhase("intro");
       })
       .catch(() => setPhase("error"));
+  }, []);
+
+  // load graph + cognitive model
+  useEffect(() => {
+    cogRef.current = loadCog();
+    loadGraph();
     // si la restauration depuis le disque (StateSync) arrive après nous
     const onPulled = () => {
       cogRef.current = loadCog();
@@ -242,7 +247,8 @@ export default function SessionPage() {
 
           {phase === "error" && (
             <Panel className="text-center">
-              <p className="text-muted">Impossible de charger les patterns. Relance l&apos;app.</p>
+              <p className="text-muted">Le serveur n&apos;a pas répondu (il redémarrait peut-être).</p>
+              <GoldButton onClick={loadGraph}>Réessayer</GoldButton>
             </Panel>
           )}
 
