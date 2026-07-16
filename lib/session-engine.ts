@@ -90,7 +90,10 @@ function itemFor(
   const pool = [...mat.extra, ...mat.probes, ...mat.flood];
 
   if (channel === "produce") {
-    const twin = mat.twins[salt % Math.max(1, mat.twins.length)];
+    // natif Tatoeba d'abord · synthétique en dernier recours
+    const natTwins = mat.twins.filter((t) => t.marked.audio);
+    const twinPool = natTwins.length ? natTwins : mat.twins;
+    const twin = twinPool[salt % Math.max(1, twinPool.length)];
     if (twin && !used.has(twin.marked.id)) {
       used.add(twin.marked.id);
       return { patternId, channel, fmt: "transform", twin };

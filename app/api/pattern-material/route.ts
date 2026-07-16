@@ -51,6 +51,12 @@ export async function GET(req: NextRequest) {
     extra: rotate(entry.extra, h >> 5, 12),
     foils: rotate(entry.foils ?? [], h >> 11, 4),
     corrupts: rotate(entry.corrupts, h >> 7, 6),
-    twins: rotate(entry.twins, h >> 9, 8),
+    // priorité voix native (demande naly) : jumeaux avec audio Tatoeba d'abord
+    twins: (() => {
+      const nat = entry.twins.filter((t) => t.marked.audio);
+      const rest = entry.twins.filter((t) => !t.marked.audio);
+      const out = rotate(nat, h >> 9, 8);
+      return out.length >= 8 ? out : [...out, ...rotate(rest, h >> 9, 8 - out.length)];
+    })(),
   });
 }

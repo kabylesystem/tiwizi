@@ -40,12 +40,13 @@ export function SoundsRight({
       <div className="mb-4 flex justify-center">
         {/* voix synthétique des DEUX côtés (bonne et trafiquée) : parité de
             voix, aucun indice · le jugement peut se faire à l'oreille */}
+        {/* pas d'autoplay : le jugement se fait au texte, la voix (synthétique,
+            parité oblige) est disponible au clic · le natif joue à la révélation */}
         <AudioButton
           id={corrupt.id}
           synthetic
           src={`/tts/sr-${corrupt.id}-${useBad ? "bad" : "good"}.mp3`}
           size="md"
-          autoPlay
         />
       </div>
       <p className="kab text-balance text-center text-3xl font-bold text-ink sm:text-4xl">{shownSentence}</p>
