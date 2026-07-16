@@ -41,6 +41,7 @@ const DEFS = [
     id: "neg-ur-ara", order: 1, family: "négation",
     name: "La négation ur … ara",
     schema: "ur + VERBE + ara",
+    frHint: /(\bne\b|\bn'|\bpas\b|jamais|\brien\b|personne|aucun)/i,
     detect: re(`${wb("ur")}[^.!?]{0,40}${wb("ara")}`),
     mask: re(wb("ur|ara"), "giu"),
     corrupt: ["drop:ara", "displace:ara:end"],
@@ -54,6 +55,7 @@ const DEFS = [
     id: "fut-ad", order: 2, family: "temps & mode",
     name: "ad + verbe · le non-réalisé",
     schema: "ad + VERBE (aoriste)",
+    frHint: /(rai\b|ras\b|ra\b|rons\b|rez\b|ront\b|\bvais\b|\bva\b|\bvas\b|allons|\bvont\b|demain|veu[xt]|voudr|il faut|\bdois\b|devr|que je|qu'il|qu'elle|espère|laisse[z-]|puisse)/i,
     detect: re(`(^|[\\s«"(-])ad\\s+\\S`),
     mask: re(wb("ad"), "giu"),
     corrupt: ["displace:ad:end"],
@@ -67,7 +69,7 @@ const DEFS = [
     id: "have-ghur", order: 3, family: "possession",
     name: "ɣur-i · avoir, c'est « chez-moi »",
     schema: "ɣur- + pronom",
-    frHint: /(j'ai|tu as|il a|elle a|nous avons|vous avez|ils ont|elles ont|possèd|\bj'aurai)/i,
+    frHint: /(\b(ai|as|a|avons|avez|ont) (un|une|des|d'|de la|du|le|la|les|mon|ma|mes|ton|ta|tes|son|sa|ses|beaucoup|assez|plein|raison|tort|besoin|peur|faim|soif|froid|chaud|sommeil|l'air|mal)\b|possèd|appartien)/i,
     detect: re(`${wb("ɣur-(?:i|ek|em|es|s|k|m|neɣ|wen|kent|sen|sent)")}`),
     mask: re("ɣur-\\p{L}+", "giu"),
     corrupt: [],
@@ -81,7 +83,7 @@ const DEFS = [
     id: "exist-yella", order: 4, family: "existence",
     name: "yella / tella · être là",
     schema: "yella (m.) / tella (f.) / llan (pl.)",
-    frHint: /(il y a|y a-t-il|se trouv|est |sont |était|reste|présent)/i,
+    frHint: /(il y a|il y avait|y a-t-il|y avait-il|se trouv|existe|était|étaient|est là|sont là|reste|présent)/i,
     detect: re(wb("yella|tella|llan|llant")),
     mask: re(wb("yella|tella|llan|llant"), "giu"),
     corrupt: [],
@@ -123,6 +125,7 @@ const DEFS = [
     id: "q-acu", order: 7, family: "interrogation",
     name: "acu · quoi ?",
     schema: "(d) acu (…) ?",
+    frHint: /(quoi|qu'est-ce|^qu[e']|\bquel(le)?\b|que (fai|dis|veu|pens|s'est))/i,
     detect: re(wb("acu")),
     mask: re(`(?:${wb("d")}\\s+)?${wb("acu")}`, "giu"),
     corrupt: [],
@@ -136,6 +139,7 @@ const DEFS = [
     id: "q-anda", order: 8, family: "interrogation",
     name: "anda · où ?",
     schema: "anda (…) ?",
+    frHint: /(\boù\b|d'où|quelque part|nulle part|n'importe où|partout|endroit|laquelle|lequel)/i,
     detect: re(wb("anda")),
     mask: re(wb("anda"), "giu"),
     corrupt: [],
@@ -149,6 +153,7 @@ const DEFS = [
     id: "q-amek", order: 9, family: "interrogation",
     name: "amek · comment ?",
     schema: "amek (…) ?",
+    frHint: /(comment)/i,
     detect: re(wb("amek")),
     mask: re(wb("amek"), "giu"),
     corrupt: [],
@@ -162,6 +167,7 @@ const DEFS = [
     id: "want-bgh", order: 10, family: "volonté",
     name: "bɣiɣ / yebɣa · vouloir",
     schema: "BƔ + (ad + VERBE)",
+    frHint: /(veu[xt]|voul|envie|aimerais?|souhait|tiens à)/i,
     detect: re(wb("bɣiɣ|tebɣiḍ|yebɣa|tebɣa|nebɣa|tebɣam|tebɣamt|bɣan|bɣant")),
     mask: re(wb("bɣiɣ|tebɣiḍ|yebɣa|tebɣa|nebɣa|tebɣam|tebɣamt|bɣan|bɣant"), "giu"),
     corrupt: [],
@@ -176,6 +182,7 @@ const DEFS = [
     name: "-ɣ final · c'est « je »",
     schema: "VERBE + -ɣ",
     // 1sg verb endings -eɣ/-iɣ/-uɣ/-aɣ ; (?<!n)eɣ excludes possessive -nneɣ
+    frHint: /(\bje\b|\bj'|\bmoi\b|\bme\b|\bm')/i,
     detect: re("\\p{L}{2,}(?:(?<!n)eɣ|iɣ|uɣ)(?!\\p{L})"),
     mask: re("(?<=\\p{L}{2})(?:eɣ|iɣ|uɣ)(?!\\p{L})", "giu"),
     corrupt: [],
@@ -189,6 +196,7 @@ const DEFS = [
     id: "prep-gher", order: 12, family: "prépositions",
     name: "ɣer · vers, mouvement",
     schema: "ɣer + LIEU",
+    frHint: /(\bvers\b|\bchez\b|\bau\b|\baux\b|à la |à l'|jusqu')/i,
     detect: re(wb("ɣer")),
     mask: re(wb("ɣer"), "giu"),
     corrupt: [],
@@ -202,6 +210,7 @@ const DEFS = [
     id: "prep-deg", order: 13, family: "prépositions",
     name: "deg · dans",
     schema: "deg + LIEU",
+    frHint: /(\bdans\b|dedans|à l'intérieur)/i,
     detect: re(wb("deg")),
     mask: re(wb("deg"), "giu"),
     corrupt: [],
@@ -337,8 +346,11 @@ for (const d of DEFS) {
   // patterns opaques en traduction (yella → "il pleut" ne montre rien) :
   // l'induction préfère les phrases dont le FRANÇAIS montre le pattern
   if (d.frHint) {
-    const transparent = floodPool.filter((p) => d.frHint.test(p.fr));
-    if (transparent.length >= 25) floodPool = transparent;
+    // vivier élargi : tout l'audio (w<=9), la transparence prime sur la brièveté
+    const wide = instances.filter((p) => p.audio);
+    const transparent = wide.filter((p) => d.frHint.test(p.fr));
+    if (transparent.length >= 12) floodPool = transparent;
+    else console.log(`  ⚠ ${d.id}: seulement ${transparent.length} phrases transparentes, flood NON filtré`);
   }
   const flood = pickVaried(floodPool.slice(0, 600), 40, seen);
   const floodIds = new Set(flood.map((p) => p.id));
