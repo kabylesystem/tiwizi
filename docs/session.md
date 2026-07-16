@@ -54,6 +54,24 @@ est dans **`docs/pedagogie.md`** : moteur cognitif pattern-based, anti-Duolingo.
   révéler la règle d'un pattern en induction. Bouton « Pourquoi ? Demande à
   Idir » sur les échecs de jugement/production.
 
+### v11-v17 (nuit du 14 au 16/07 · durcissement + écosystème quotidien)
+- **Mes cartes** : deck personnel à SRS propre, alimenté AUTOMATIQUEMENT par les
+  convs Idir (mots kabyles vérifiés multi-sources : Dallet + grammaire de naly ;
+  mot inventé par le LLM = rejeté). Tap sur n'importe quel mot → fiche → carte.
+- **Session quotidienne complète** : réactivation → Mes cartes (dues) →
+  induction → génération finissant par l'écriture « À toi » (avec SES mots).
+- **Rédaction** (page) : consignes = pattern dû + cartes dues, corrigées par Idir.
+- **Reprise après crash** : snapshot continu, écran « On reprend ? ».
+- **Fiabilité** : service Restart=always + plafond RAM (searchSentences allégé
+  ~500 Mo), earlyoom n'exécute plus Brave, seed de rotation corrigé (bug daté),
+  garde anti-navigateurs-de-test sur la sync (incident données restauré depuis
+  backup), conv Idir persistante, zéro bruitage (design.md), TTS partout
+  (natif doré / synthétique azur, y compris variantes « ça sonne juste ? »).
+- **SRS vérifié E2E dans l'app** : Bien → intervalle 1j→3j ; Perdu → rechute,
+  facilité 2.5→2.3, retour en session. (Test Playwright, 0 erreur console.)
+- Idir : profil cognitif injecté, correcteur prudent, latence ≈ démarrage CLI
+  (~15 s, incompressible sans daemon/streaming · piste phase 3).
+
 ## Phase 2 (prochaines briques, dans l'ordre de valeur)
 1. **Contraste** — quand `confusions[X]` monte : paires minimales côte à côte
    (yella⇄ulac, ɣer⇄deg⇄ɣur- sont déjà encodés dans le graphe)
