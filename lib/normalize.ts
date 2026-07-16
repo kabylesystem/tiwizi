@@ -26,3 +26,18 @@ export function fold(s: string): string {
   out = out.replace(/[ɣɛḥṣṭḍẓṛčǧžɵ]/g, (ch) => MAP[ch] ?? ch);
   return out;
 }
+
+/**
+ * Nettoie une glose du Dallet numérisé pour un affichage COMPACT (1 ligne) :
+ * <br /> → séparateur, ** retirés, ''mot'' → mot, cruft "root:…" retiré.
+ */
+export function cleanGloss(s: string): string {
+  return (s || "")
+    .replace(/<br\s*\/?>/gi, " · ")
+    .replace(/\*\*/g, "")
+    .replace(/,?\s*root:[^),]*/gi, "")
+    .replace(/''/g, "'")
+    .replace(/\s*·\s*(·\s*)+/g, " · ")
+    .replace(/\s+/g, " ")
+    .trim();
+}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchDict, searchGrammar } from "@/lib/data";
-import { fold } from "@/lib/normalize";
+import { fold, cleanGloss } from "@/lib/normalize";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     if (fold(e.w) === fw || (e.forms || []).some((f) => fold(f) === fw)) {
       return NextResponse.json({
         kab: e.w,
-        fr: e.m[0]?.fr.slice(0, 3).join(" · ") ?? "",
+        fr: cleanGloss(e.m[0]?.fr.slice(0, 3).join(" · ") ?? ""),
         root: e.root || undefined,
         source: "Dallet",
       });

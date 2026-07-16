@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { maskSegments } from "@/lib/patterns";
 import { recordLookup } from "@/lib/vocab";
 import { addCard, hasCard } from "@/lib/cards";
+import { Gloss } from "@/components/gloss";
 
 type DictEntry = { w: string; root: string; m: { fr: string[] }[] };
 
@@ -62,7 +63,7 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
       </span>
       {open && (
         <span
-          className="absolute left-1/2 top-full z-40 mt-2 block w-64 -translate-x-1/2 rounded-2xl p-3 text-left shadow-xl"
+          className="absolute left-1/2 top-full z-40 mt-2 block max-h-80 w-80 max-w-[88vw] -translate-x-1/2 overflow-y-auto rounded-2xl p-3 text-left shadow-xl sm:w-96"
           style={{ background: "#FFFCF5", border: "1.5px solid rgba(200,150,62,0.35)" }}
         >
           {loading && <span className="block text-xs text-muted">Dallet…</span>}
@@ -84,7 +85,7 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
             <span key={i} className="block not-italic">
               <span className="kab text-base font-bold text-ink">{e.w}</span>
               {e.root && <span className="ml-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">√{e.root}</span>}
-              <span className="block text-sm leading-snug text-muted">{e.m[0]?.fr.slice(0, 3).join(" · ")}</span>
+              <Gloss text={e.m[0]?.fr.slice(0, 3).join("<br />") ?? ""} className="mt-0.5 text-sm text-muted" />
               <CardButton entry={e} />
             </span>
           ))}

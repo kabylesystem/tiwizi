@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Gloss } from "@/components/gloss";
 import { Search, BookOpen } from "lucide-react";
 import { tifinagh } from "@/lib/tifinagh";
 
@@ -79,10 +80,10 @@ export default function DictionaryPage() {
                   <li key={j} className="flex gap-2.5">
                     <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brand-soft text-[0.7rem] font-bold text-brand">{j + 1}</span>
                     <div className="min-w-0">
-                      <p className="text-[0.95rem] text-ink">
-                        {m.fr.join(" · ")}
+                      <div className="text-[0.95rem] text-ink">
+                        <Gloss text={m.fr.join("<br />")} />
                         {m.note && <span className="text-muted"> · {m.note}</span>}
-                      </p>
+                      </div>
                       {m.ex.length > 0 && (
                         <ul className="mt-1.5 space-y-1 border-l-2 border-[rgba(200,150,62,0.25)] pl-3">
                           {m.ex.slice(0, 3).map((x, k) => (
