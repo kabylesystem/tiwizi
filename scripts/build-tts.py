@@ -18,16 +18,21 @@ OUT = "public/tts"
 os.makedirs(OUT, exist_ok=True)
 
 d = json.load(open("data/patterns.json"))
-targets: dict[int, str] = {}
+targets: dict[str, str] = {}
 for p in d["patterns"]:
     for t in p["twins"]:
         for side in (t["plain"], t["marked"]):
             if not side["audio"]:
-                targets[side["id"]] = side["kab"]
+                targets[str(side["id"])] = side["kab"]
     for arr in (p["flood"], p["probes"], p["extra"], p.get("foils", [])):
         for x in arr:
             if not x["audio"]:
-                targets[x["id"]] = x["kab"]
+                targets[str(x["id"])] = x["kab"]
+    # « ça sonne juste ? » : les DEUX variantes en synthétique (parité de voix,
+    # sinon le type de voix trahirait la réponse)
+    for c in p.get("corrupts", []):
+        targets[f"sr-{c['id']}-good"] = c["good"]
+        targets[f"sr-{c['id']}-bad"] = c["bad"]
 
 todo = {i: t for i, t in targets.items() if not os.path.exists(f"{OUT}/{i}.mp3")}
 print(f"{len(targets)} phrases sans audio natif, {len(todo)} à générer")

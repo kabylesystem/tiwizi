@@ -37,6 +37,17 @@ export function SoundsRight({
   return (
     <Panel>
       <FmtTag label="Ça sonne juste ?" sub="Fie-toi à ton oreille interne · pas aux règles." />
+      <div className="mb-4 flex justify-center">
+        {/* voix synthétique des DEUX côtés (bonne et trafiquée) : parité de
+            voix, aucun indice · le jugement peut se faire à l'oreille */}
+        <AudioButton
+          id={corrupt.id}
+          synthetic
+          src={`/tts/sr-${corrupt.id}-${useBad ? "bad" : "good"}.mp3`}
+          size="md"
+          autoPlay
+        />
+      </div>
       <p className="kab text-balance text-center text-3xl font-bold text-ink sm:text-4xl">{shownSentence}</p>
 
       {answered === null ? (

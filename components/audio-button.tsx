@@ -16,23 +16,42 @@ export function AudioButton({
   autoPlay = false,
   size = "md",
   synthetic = false,
+  src,
 }: {
   id: number;
   autoPlay?: boolean;
   size?: "sm" | "md" | "lg";
   /** true = voix synthétique (bouton azur + tooltip) ; false = voix native */
   synthetic?: boolean;
+  /** URL explicite (ex : TTS d'une variante corrompue) · prime sur id */
+  src?: string;
 }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [dead, setDead] = useState(false); // fichier absent / CDN 403 → on s'efface
 
+  // Audio HORS DOM (new Audio()) : les extensions type Video Speed Controller
+  // s'accrochent aux <audio> insérés dans la page · ici il n'y en a plus.
+  const url = src ?? (synthetic ? ttsUrl(id) : audioUrl(id));
+  const ensure = useCallback(() => {
+    if (!ref.current || ref.current.src !== new URL(url, location.href).href) {
+      ref.current?.pause();
+      const a = new Audio(url);
+      a.preload = "none";
+      a.onplay = () => setPlaying(true);
+      a.onended = () => setPlaying(false);
+      a.onpause = () => setPlaying(false);
+      a.onerror = () => setDead(true);
+      ref.current = a;
+    }
+    return ref.current;
+  }, [url]);
+
   const play = useCallback(() => {
-    const a = ref.current;
-    if (!a) return;
+    const a = ensure();
     a.currentTime = 0;
     a.play().catch(() => {});
-  }, []);
+  }, [ensure]);
 
   useEffect(() => {
     if (autoPlay) {
@@ -40,6 +59,8 @@ export function AudioButton({
       return () => clearTimeout(t);
     }
   }, [autoPlay, id, play]);
+
+  useEffect(() => () => ref.current?.pause(), []);
 
   if (dead) return null;
 
@@ -60,15 +81,6 @@ export function AudioButton({
           : "border-line-strong text-brand hover:border-brand hover:bg-brand-soft"
       }`}
     >
-      <audio
-        ref={ref}
-        src={synthetic ? ttsUrl(id) : audioUrl(id)}
-        preload="none"
-        onPlay={() => setPlaying(true)}
-        onEnded={() => setPlaying(false)}
-        onPause={() => setPlaying(false)}
-        onError={() => setDead(true)}
-      />
       <svg
         viewBox="0 0 24 24"
         className={`${icon} ${playing ? "animate-pulse" : ""}`}
