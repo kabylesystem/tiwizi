@@ -34,16 +34,14 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // 2) grammaire de naly · le mot est LA réponse kabyle d'une fiche
+  // 2) grammaire de naly · le mot est le MOT-VEDETTE de la réponse d'une
+  // fiche vocab (q = sens français). Filtres anti-glose-foireuse :
+  // le mot doit OUVRIR la réponse, et q ne doit pas être une question.
   for (const g of searchGrammar(w, 10)) {
     const aToks = tokens(g.a);
-    // fiche courte dont le kabyle contient exactement le mot (évite les phrases longues)
-    if (aToks.includes(fw) && aToks.length <= 6) {
-      return NextResponse.json({
-        kab: w,
-        fr: g.q.replace(/\s*\(.*\)$/u, ""),
-        source: "grammaire (cours)",
-      });
+    const q = g.q.replace(/\s*\(.*\)$/u, "").trim();
+    if (aToks[0] === fw && !q.endsWith("?") && q.length <= 45) {
+      return NextResponse.json({ kab: w, fr: q, source: "grammaire (cours)" });
     }
   }
 

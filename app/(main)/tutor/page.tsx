@@ -39,8 +39,19 @@ function Rich({ text }: { text: string }) {
   );
 }
 
+const CHAT_KEY = "tiwizi.chat.v1";
+
+function loadChat(): Msg[] {
+  if (typeof window === "undefined") return [{ role: "assistant", content: GREETING }];
+  try {
+    const m = JSON.parse(localStorage.getItem(CHAT_KEY) || "null") as Msg[] | null;
+    if (Array.isArray(m) && m.length) return m;
+  } catch {}
+  return [{ role: "assistant", content: GREETING }];
+}
+
 export default function TutorPage() {
-  const [messages, setMessages] = useState<Msg[]>([{ role: "assistant", content: GREETING }]);
+  const [messages, setMessages] = useState<Msg[]>(loadChat);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [autoCards, setAutoCards] = useState(0);
@@ -49,6 +60,19 @@ export default function TutorPage() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, busy]);
+
+  // la conversation SURVIT aux rechargements (+ réplication disque)
+  useEffect(() => {
+    if (messages.length > 1) {
+      localStorage.setItem(CHAT_KEY, JSON.stringify(messages.slice(-60)));
+      window.dispatchEvent(new Event("tiwizi:dirty"));
+    }
+  }, [messages]);
+
+  const resetChat = () => {
+    localStorage.removeItem(CHAT_KEY);
+    setMessages([{ role: "assistant", content: GREETING }]);
+  };
 
   const send = async (text: string) => {
     const t = text.trim();
@@ -81,6 +105,9 @@ export default function TutorPage() {
           <FennecMascot mood="happy" size={72} />
           <h2 className="mt-3 font-display text-xl font-bold text-ink">Idir</h2>
           <p className="text-sm text-muted">Ton tuteur kabyle. Il te parle, te corrige, te fait produire · sur tes crédits du plan.</p>
+          <button onClick={resetChat} className="mt-3 text-xs text-muted underline decoration-dotted underline-offset-4">
+            nouvelle conversation
+          </button>
           <p className="mt-4 text-[0.7rem] font-bold uppercase tracking-wider text-muted">Sujets</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {autoCards > 0 && (

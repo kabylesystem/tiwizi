@@ -5,7 +5,7 @@
  * travail ; le disque est la sauvegarde de vérité (survit à un nettoyage du
  * navigateur, partagée entre navigateurs de la machine).
  */
-const KEYS = ["tiwizi.cog.v1", "tiwizi-game-v1", "tiwizi.srs.v1", "tiwizi.vocab.v1", "tiwizi.session.v1", "tiwizi.cards.v1"];
+const KEYS = ["tiwizi.cog.v1", "tiwizi-game-v1", "tiwizi.srs.v1", "tiwizi.vocab.v1", "tiwizi.session.v1", "tiwizi.cards.v1", "tiwizi.chat.v1"];
 const SYNC_AT = "tiwizi.syncedAt";
 
 // Les navigateurs de TEST (Playwright → navigator.webdriver) ne doivent JAMAIS
