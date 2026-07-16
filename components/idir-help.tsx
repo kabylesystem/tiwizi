@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 import { autoCardsFromReply } from "@/lib/auto-cards";
+import { IdirText } from "@/components/idir-text";
 
 /** On-demand contextual help from Idir inside a lesson (coach mode, plan credits). */
 export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?: string }) {
@@ -62,7 +63,7 @@ export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?
             ) : failed ? (
               "Idir n'a pas réussi cette fois · reclique sur le bouton pour réessayer."
             ) : (
-              reply
+              reply && <IdirText text={reply} />
             )}
           </p>
         </div>

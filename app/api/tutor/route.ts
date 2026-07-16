@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { execFile } from "node:child_process";
+import { askClaude } from "@/lib/claude-pool";
 import { searchSentences, searchGrammar, searchAssimil, patternsIndex } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 import type { CogSnapshot } from "@/lib/cognitive-model";
@@ -15,6 +15,7 @@ const CORRECT = `Tu es Idir, correcteur de kabyle bienveillant et PRUDENT. L'él
 1. Verdict honnête : correcte / presque / à revoir.
 2. La forme corrigée en kabyle (orthographe latine ɣ ɛ ḥ ṣ ṭ ḍ ẓ) · reste au PLUS PRÈS de sa phrase, corrige seulement ce qui est faux.
 3. UNE phrase d'explication (la structure, pas un cours).
+0. AVANT tout, ta TOUTE PREMIÈRE ligne doit être exactement « NIVEAU:x » où x est ton jugement de la phrase : 0 = à revoir entièrement · 1 = plusieurs fautes mais la structure est là · 2 = bien, une petite faute · 3 = parfaite. Rien d'autre sur cette ligne.
 RÈGLES DURES : appuie-toi sur les phrases vérifiées du corpus fournies (elles montrent l'usage réel) ; si tu n'es pas SÛR d'un mot ou d'une forme, dis-le honnêtement (« je ne suis pas certain de X ») plutôt que d'inventer ; félicite ce qui est juste. JAMAIS de kabyle inventé exotique.`;
 
 const SYSTEM = `Tu es Idir, un fennec sympathique, tuteur de kabyle (taqbaylit). L'élève s'appelle naly, débutant, et veut tenir de VRAIES conversations (politique, société, quotidien) d'ici décembre.
@@ -107,22 +108,10 @@ export async function POST(req: NextRequest) {
   const prompt =
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;
-  // chat/coach : latence d'abord (haiku) · correction : précision d'abord (sonnet)
-  const model = "sonnet"; // mesuré : la latence vient du CLI, pas du modèle · on garde le meilleur kabyle
 
   try {
-    const text = await new Promise<string>((resolve, reject) => {
-      const child = execFile(
-        "claude",
-        ["-p", prompt, "--append-system-prompt", system, "--model", model, "--max-turns", "1"],
-        { timeout: 110_000, maxBuffer: 1024 * 1024 },
-        (err, stdout, stderr) => {
-          if (err) reject(new Error(stderr || err.message));
-          else resolve(stdout.trim());
-        }
-      );
-      child.stdin?.end(); // le CLI attend sinon un stdin pendant 3s
-    });
+    // processus pré-chauffé : ~3-5 s au lieu de 13-15 s (boot CLI payé en avance)
+    const text = await askClaude(`${system}\n\n---\n\n${prompt}`);
     return NextResponse.json({ reply: text });
   } catch (e) {
     return NextResponse.json(

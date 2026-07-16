@@ -67,6 +67,7 @@ const DEFS = [
     id: "have-ghur", order: 3, family: "possession",
     name: "ɣur-i · avoir, c'est « chez-moi »",
     schema: "ɣur- + pronom",
+    frHint: /(j'ai|tu as|il a|elle a|nous avons|vous avez|ils ont|elles ont|possèd|\bj'aurai)/i,
     detect: re(`${wb("ɣur-(?:i|ek|em|es|s|k|m|neɣ|wen|kent|sen|sent)")}`),
     mask: re("ɣur-\\p{L}+", "giu"),
     corrupt: [],
@@ -80,6 +81,7 @@ const DEFS = [
     id: "exist-yella", order: 4, family: "existence",
     name: "yella / tella · être là",
     schema: "yella (m.) / tella (f.) / llan (pl.)",
+    frHint: /(il y a|y a-t-il|se trouv|est |sont |était|reste|présent)/i,
     detect: re(wb("yella|tella|llan|llant")),
     mask: re(wb("yella|tella|llan|llant"), "giu"),
     corrupt: [],
@@ -93,6 +95,7 @@ const DEFS = [
     id: "exist-ulac", order: 5, family: "existence",
     name: "ulac · il n'y a pas",
     schema: "ulac + NOM",
+    frHint: /(pas de|n'y a|n'est pas|aucun|rien|absent|manque|sans)/i,
     detect: re(wb("ulac")),
     mask: re(wb("ulac"), "giu"),
     corrupt: [],
@@ -106,6 +109,7 @@ const DEFS = [
     id: "cop-d", order: 6, family: "phrase nominale",
     name: "d + nom · c'est…",
     schema: "D + NOM",
+    frHint: /(c'est|ce sont|c'était|est un|est une|est le|est la|est mon|est ma)/i,
     detect: /^[«"(]?D\s+\p{L}{2,}/u,
     mask: /^D\b/gu,
     corrupt: [],
@@ -329,7 +333,13 @@ for (const d of DEFS) {
 
   const seen = new Set();
   const shortAudio = instances.filter((p) => p.audio && p.w <= 6);
-  const floodPool = shortAudio.length >= 60 ? shortAudio : instances.filter((p) => p.audio);
+  let floodPool = shortAudio.length >= 60 ? shortAudio : instances.filter((p) => p.audio);
+  // patterns opaques en traduction (yella → "il pleut" ne montre rien) :
+  // l'induction préfère les phrases dont le FRANÇAIS montre le pattern
+  if (d.frHint) {
+    const transparent = floodPool.filter((p) => d.frHint.test(p.fr));
+    if (transparent.length >= 25) floodPool = transparent;
+  }
   const flood = pickVaried(floodPool.slice(0, 600), 40, seen);
   const floodIds = new Set(flood.map((p) => p.id));
   // probes: fresh vocabulary relative to the flood set (abstraction test).

@@ -59,7 +59,16 @@ export function FmtTag({ label, sub }: { label: string; sub?: string }) {
 }
 
 /** Anki-style honest self-assessment · feeds the channel's spacing. */
-export function SelfGrade({ onGrade, prompt = "Tu l'avais ?" }: { onGrade: (g: Grade) => void; prompt?: string }) {
+export function SelfGrade({
+  onGrade,
+  prompt = "Tu l'avais ?",
+  suggested,
+}: {
+  onGrade: (g: Grade) => void;
+  prompt?: string;
+  /** verdict proposé par Idir (mode correction) · l'humain confirme */
+  suggested?: Grade;
+}) {
   const opts: { g: Grade; label: string; c: string }[] = [
     { g: 0, label: "Perdu", c: "#D4735E" },
     { g: 1, label: "Difficile", c: "#C8963E" },
@@ -70,16 +79,29 @@ export function SelfGrade({ onGrade, prompt = "Tu l'avais ?" }: { onGrade: (g: G
     <div className="mt-6">
       <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wider text-muted">{prompt}</p>
       <div className="grid grid-cols-4 gap-2">
-        {opts.map((o) => (
-          <button
-            key={o.g}
-            onClick={() => onGrade(o.g)}
-            className="rounded-xl border-2 py-3 text-sm font-bold transition-transform active:scale-95"
-            style={{ borderColor: `${o.c}55`, background: `${o.c}14`, color: o.c }}
-          >
-            {o.label}
-          </button>
-        ))}
+        {opts.map((o) => {
+          const isSuggested = suggested === o.g;
+          return (
+            <button
+              key={o.g}
+              onClick={() => onGrade(o.g)}
+              className="relative rounded-xl border-2 py-3 text-sm font-bold transition-transform active:scale-95"
+              style={{
+                borderColor: isSuggested ? o.c : `${o.c}55`,
+                background: isSuggested ? `${o.c}26` : `${o.c}14`,
+                color: o.c,
+                boxShadow: isSuggested ? `0 0 0 3px ${o.c}33` : undefined,
+              }}
+            >
+              {o.label}
+              {isSuggested && (
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-1.5 text-[0.55rem] font-bold uppercase tracking-wider text-white" style={{ background: o.c }}>
+                  avis d'Idir
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

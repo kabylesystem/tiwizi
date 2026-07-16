@@ -5,7 +5,7 @@ import { Send } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 import { autoCardsFromReply } from "@/lib/auto-cards";
-import { KabTapInline } from "@/components/kab-tap";
+import { IdirText } from "@/components/idir-text";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -22,22 +22,6 @@ const TOPICS = [
   "Parler politique",
 ];
 
-function Rich({ text }: { text: string }) {
-  // **gras** = kabyle (convention d'Idir) → chaque mot devient tappable
-  // (fiche Dallet + « + ma carte »)
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return (
-    <span className="whitespace-pre-wrap">
-      {parts.map((p, i) =>
-        p.startsWith("**") && p.endsWith("**") ? (
-          <KabTapInline key={i} text={p.slice(2, -2)} />
-        ) : (
-          <span key={i}>{p}</span>
-        )
-      )}
-    </span>
-  );
-}
 
 const CHAT_KEY = "tiwizi.chat.v1";
 
@@ -138,7 +122,7 @@ export default function TutorPage() {
                     : "rounded-bl-sm border border-[rgba(200,150,62,0.18)] bg-card text-ink"
                 }`}
               >
-                <Rich text={m.content} />
+                <IdirText text={m.content} />
               </div>
             </div>
           ))}

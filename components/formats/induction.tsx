@@ -56,6 +56,7 @@ export function Induction({
         <FmtTag label={alreadyAbstracted ? "Consolidation" : "Nouveau pattern"} />
         <Eye className="mx-auto h-10 w-10" style={{ color: "#A67B2E" }} />
         <h2 className="mt-3 font-display text-2xl font-bold text-ink">Observe.</h2>
+        <p className="mt-1 text-xs font-bold uppercase tracking-widest" style={{ color: "#A67B2E" }}>famille : {meta.family}</p>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
           Dans les phrases qui suivent, la partie <mark className="rounded px-1" style={{ background: "rgba(200,150,62,0.28)", color: "#7a5a17" }}>surlignée</mark> est
           ce qui se répète. Écoute, regarde ce qui reste stable pendant que tout le reste change ·

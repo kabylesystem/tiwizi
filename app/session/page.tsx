@@ -159,7 +159,9 @@ export default function SessionPage() {
       const sec = elapsedSecOverride ?? elapsed;
       const cog = cogRef.current!;
       const req = planNextBlock(cog, metas!, ranRef.current, ignoreClock ? 0 : sec / 60);
-      if (!req || (!ignoreClock && sec >= SESSION_MINUTES * 60)) {
+      // le chrono ne coupe JAMAIS le programme du jour : seuls les blocs
+      // bonus (gérés dans planNextBlock) s'arrêtent après 15:00
+      if (!req) {
         finishSession();
         return;
       }
@@ -344,14 +346,26 @@ export default function SessionPage() {
             />
           )}
 
-          {phase === "block" && block && block.type !== "induction" && block.type !== "cards" && (
+          {phase === "block" && block && block.type !== "induction" && block.type !== "cards" && (() => {
+            const it = block.items[itemIdx];
+            const m = metasById[it.patternId];
+            const known = cogRef.current?.patterns[it.patternId]?.abstracted;
+            return (
+              <div>
+                {known && m && (
+                  <p className="mb-2 text-center text-xs text-muted">
+                    pattern travaillé : <b className="text-ink">{m.name}</b> · {m.family} · <span className="kab">{m.schema}</span>
+                  </p>
+                )}
             <ItemRunner
               key={`${block.type}-${ranRef.current.react}-${ranRef.current.generate}-${itemIdx}`}
               item={block.items[itemIdx]}
               metasById={metasById}
               onDone={onItemDone}
             />
-          )}
+              </div>
+            );
+          })()}
 
           {phase === "recap" && <RecapCard stats={statsRef.current} elapsed={elapsed} onMore={() => { setRunning(true); advance(true); }} onHome={() => router.push("/")} />}
         </div>

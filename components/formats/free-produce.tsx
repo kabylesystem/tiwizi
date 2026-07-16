@@ -15,6 +15,7 @@ import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 import { allCards, gradeCard, type MyCard } from "@/lib/cards";
 import { autoCardsFromReply } from "@/lib/auto-cards";
 import { FennecMascot } from "@/components/fennec";
+import { IdirText } from "@/components/idir-text";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "./shared";
 
 /** La consigne-situation par pattern · une intention, pas une traduction. */
@@ -44,6 +45,7 @@ export function FreeProduce({
   const [text, setText] = useState("");
   const [myCards] = useState<MyCard[]>(() => (typeof window !== "undefined" ? allCards().slice(0, 2) : []));
   const [reply, setReply] = useState<string | null>(null);
+  const [suggested, setSuggested] = useState<Grade | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [t0] = useState(() => Date.now());
 
@@ -61,7 +63,13 @@ export function FreeProduce({
         }),
       });
       const d = await r.json();
-      setReply(d.reply || "Idir n'a pas pu répondre · réessaie.");
+      let rep = d.reply || "Idir n'a pas pu répondre · réessaie.";
+      const lvl = rep.match(/^\s*NIVEAU\s*:\s*([0-3])\s*\n?/i);
+      if (lvl) {
+        setSuggested(Number(lvl[1]) as Grade);
+        rep = rep.replace(lvl[0], "").trim();
+      }
+      setReply(rep);
       if (d.reply) autoCardsFromReply(d.reply);
     } catch {
       setReply("Idir n'a pas pu répondre · réessaie.");
@@ -109,10 +117,11 @@ export function FreeProduce({
         <>
           <div className="mt-4 flex items-start gap-2.5 rounded-2xl border p-3" style={{ borderColor: "rgba(74,158,207,0.25)", background: "rgba(74,158,207,0.06)" }}>
             <FennecMascot mood="happy" size={34} animated={false} />
-            <p className="flex-1 whitespace-pre-wrap text-sm leading-relaxed text-ink">{reply}</p>
+            <p className="flex-1 text-sm leading-relaxed text-ink"><IdirText text={reply} /></p>
           </div>
           <SelfGrade
             prompt="Honnêtement, ta phrase était…"
+            suggested={suggested}
             onGrade={(g) => {
               for (const c of myCards) if (text.toLowerCase().includes(c.kab.toLowerCase())) gradeCard(c.k, g);
               onDone(g, Date.now() - t0);
