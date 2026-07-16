@@ -97,6 +97,9 @@ export default function SessionPage() {
           fetch(`/api/pattern-material?p=${id}&seed=${seed}`)
             .then((r) => r.json())
             .then((m) => {
+              // ceinture + bretelles : jamais de null dans les pools
+              for (const k of ["flood", "probes", "extra", "foils", "corrupts", "twins"])
+                if (Array.isArray(m[k])) m[k] = m[k].filter(Boolean);
               materialsRef.current[id] = m;
             })
         )

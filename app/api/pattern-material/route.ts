@@ -19,7 +19,9 @@ function rotate<T>(arr: T[], seed: number, n: number): T[] {
   if (!arr.length) return [];
   const out: T[] = [];
   const taken = new Set<number>();
-  const start = seed % arr.length;
+  // >>> 0 : les seeds dérivés par décalage (h >> 3…) peuvent être négatifs,
+  // et un index négatif produirait des undefined → null en JSON (bug du 14/07)
+  const start = (seed >>> 0) % arr.length;
   for (let k = 0; out.length < Math.min(n, arr.length) && k < arr.length; k++) {
     const i = (start + k * 7) % arr.length;
     if (taken.has(i)) continue;
