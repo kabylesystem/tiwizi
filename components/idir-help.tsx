@@ -10,10 +10,12 @@ export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?
   const [reply, setReply] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const run = async () => {
     if (loading) return;
     if (reply) { setOpen((o) => !o); return; }
+    setFailed(false);
     setLoading(true);
     setOpen(true);
     try {
@@ -23,9 +25,10 @@ export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?
         body: JSON.stringify({ mode: "coach", ask, cogState: cogSnapshot(loadCog()) }),
       });
       const d = await r.json();
-      setReply(d.reply || "…");
+      if (d.reply) setReply(d.reply);
+      else setFailed(true); // reply reste null → le prochain clic RÉESSAIE
     } catch {
-      setReply("Idir n'a pas pu répondre, réessaie.");
+      setFailed(true);
     } finally {
       setLoading(false);
     }
@@ -52,6 +55,8 @@ export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?
                   <span key={i} className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#4A9ECF]" style={{ animationDelay: `${i * 0.15}s` }} />
                 ))}
               </span>
+            ) : failed ? (
+              "Idir n'a pas réussi cette fois · reclique sur le bouton pour réessayer."
             ) : (
               reply
             )}
