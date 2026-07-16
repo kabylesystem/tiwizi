@@ -22,6 +22,7 @@ import {
 import { useGameStore } from "@/lib/store/game-store";
 import { dueCards, gradeCard, type MyCard } from "@/lib/cards";
 import { Induction, type InductionResult } from "@/components/formats/induction";
+import { SceneBlock } from "@/components/formats/scene";
 import { FreeProduce } from "@/components/formats/free-produce";
 import { ListenMeaning } from "@/components/formats/listen-meaning";
 import { SoundsRight } from "@/components/formats/sounds-right";
@@ -36,6 +37,7 @@ const BLOCK_LABEL: Record<Block["type"], string> = {
   induction: "Pattern",
   generate: "Génération",
   cards: "Mes cartes",
+  scene: "La scène du jour",
 };
 
 // Snapshot de session en cours : si la fenêtre meurt (crash, oom, fausse
@@ -45,7 +47,7 @@ type Snap = {
   day: string;
   ts: number;
   elapsed: number;
-  ran: { react: number; induction: number; generate: number; cards: number };
+  ran: { react: number; induction: number; generate: number; cards: number; scene: number };
   stats: { items: number; ok: number; patterns: string[] };
 };
 
@@ -71,7 +73,7 @@ export default function SessionPage() {
   const cogRef = useRef<CogStore | null>(null);
   const [metas, setMetas] = useState<PatternMeta[] | null>(null);
   const materialsRef = useRef<Record<string, PatternMaterial>>({});
-  const ranRef = useRef({ react: 0, induction: 0, generate: 0, cards: 0 });
+  const ranRef = useRef({ react: 0, induction: 0, generate: 0, cards: 0, scene: 0 });
 
   const [phase, setPhase] = useState<"loading" | "intro" | "block" | "recap" | "error">("loading");
   const [block, setBlock] = useState<Block | null>(null);
@@ -158,7 +160,10 @@ export default function SessionPage() {
     async (ignoreClock = false, elapsedSecOverride?: number) => {
       const sec = elapsedSecOverride ?? elapsed;
       const cog = cogRef.current!;
-      const req = planNextBlock(cog, metas!, ranRef.current, ignoreClock ? 0 : sec / 60);
+      let req = planNextBlock(cog, metas!, ranRef.current, ignoreClock ? 0 : sec / 60);
+      // outil de dev : /session?demo=scene force la scène en premier bloc
+      if (ranRef.current.scene === 0 && typeof location !== "undefined" && new URLSearchParams(location.search).get("demo") === "scene")
+        req = { type: "scene", patternIds: [] };
       // le chrono ne coupe JAMAIS le programme du jour : seuls les blocs
       // bonus (gérés dans planNextBlock) s'arrêtent après 15:00
       if (!req) {
@@ -184,6 +189,11 @@ export default function SessionPage() {
         else probes.push({ pair: mat.probes[2], answer: meta.probe.answer, foil: false });
         b = { type: "induction", meta, flood: mat.flood.slice(0, cog.floodLen ?? 5), probes };
         ranRef.current.induction++;
+      } else if (req.type === "scene") {
+        const seed = new Date().toISOString().slice(0, 10);
+        const r = await fetch(`/api/scene?n=${cog.scenesDone ?? 0}&seed=${seed}`).then((x) => x.json());
+        b = { type: "scene", sceneId: r.id, title: r.title, book: r.book, lines: (r.lines ?? []).filter(Boolean) };
+        ranRef.current.scene++;
       } else if (req.type === "cards") {
         b = { type: "cards", cards: dueCards().slice(0, 6) };
         ranRef.current.cards++;
@@ -195,7 +205,10 @@ export default function SessionPage() {
         ranRef.current.react++;
       }
       const empty =
-        (b.type === "react" || b.type === "generate") ? b.items.length === 0 : b.type === "cards" ? b.cards.length === 0 : false;
+        (b.type === "react" || b.type === "generate") ? b.items.length === 0
+        : b.type === "cards" ? b.cards.length === 0
+        : b.type === "scene" ? b.lines.length === 0
+        : false;
       if (empty) {
         finishSession();
         return;
@@ -313,7 +326,7 @@ export default function SessionPage() {
                 advance();
               }}
               onResume={(s) => {
-                ranRef.current = { ...s.ran, cards: s.ran.cards ?? 0 };
+                ranRef.current = { ...s.ran, cards: s.ran.cards ?? 0, scene: s.ran.scene ?? 0 };
                 statsRef.current = { items: s.stats.items, ok: s.stats.ok, patterns: new Set(s.stats.patterns) };
                 setElapsed(s.elapsed);
                 setRunning(true);
@@ -333,6 +346,22 @@ export default function SessionPage() {
             />
           )}
 
+          {phase === "block" && block && block.type === "scene" && (
+            <SceneBlock
+              key={block.sceneId + ranRef.current.scene}
+              title={block.title}
+              lines={block.lines}
+              onDone={(ids) => {
+                const cog = cogRef.current!;
+                cog.scenesDone = (cog.scenesDone ?? 0) + 1;
+                saveCog(cog);
+                statsRef.current.items += ids.length;
+                statsRef.current.ok += ids.length;
+                advance();
+              }}
+            />
+          )}
+
           {phase === "block" && block && block.type === "cards" && (
             <CardsBlock
               key={"cards" + ranRef.current.cards}
@@ -346,7 +375,7 @@ export default function SessionPage() {
             />
           )}
 
-          {phase === "block" && block && block.type !== "induction" && block.type !== "cards" && (() => {
+          {phase === "block" && block && (block.type === "react" || block.type === "generate") && (() => {
             const it = block.items[itemIdx];
             const m = metasById[it.patternId];
             const known = cogRef.current?.patterns[it.patternId]?.abstracted;

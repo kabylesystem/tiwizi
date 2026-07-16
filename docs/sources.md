@@ -13,7 +13,7 @@
 | Tatoeba (exports officiels) | 208 292 phrases kab↔fr, phrases des patterns, jumeaux | CC-BY 2.0 FR | phrases écrites par des contributeurs natifs ; qualité communautaire, très bonne sur le kabyle (communauté active) |
 | Audio Tatoeba (CDN) | 22 621 voix NATIVES (licence vérifiée, sinon 403) | CC (par audio) | natif |
 | Dallet, *Dictionnaire kabyle-français* (1982), via DigitizedDallet | dico 12 510 entrées, fiches tap-sur-mot | MIT (numérisation) | LA référence lexicographique du kabyle |
-| Assimil « Le Kabyle de poche » (OCR des 112 pages du livre de naly) | grounding d'Idir, prononciation | usage perso | éditorial, révisé |
+| Assimil « Le Kabyle de poche » (OCR des 112 pages du livre de naly) | grounding d'Idir, prononciation, ET la PROGRESSION des « scènes du jour » (12 thèmes dans l'ordre du livre, habillés de phrases natives du corpus) | usage perso | éditorial, révisé · ⚠️ l'orthographe kabyle de l'OCR est abîmée → on n'affiche JAMAIS le kabyle brut du scan, seulement sa structure/ses thèmes |
 | Boulifa, *Une première année de langue kabyle* (pp. 12-15) | règles de prononciation (`lib/pronunciation.ts`) | domaine public | académique (1897/1910) |
 | Decks Anki de naly (grammaire compilée de ses cours) | `grammar-kb.json` (761 fiches), grounding Idir | perso | compilé de sources de cours réelles |
 | Meta MMS `facebook/mms-tts-kab` | voix SYNTHÉTIQUE des phrases sans audio natif (bouton azur) | CC-BY-NC 4.0 | entraîné sur du kabyle réel ; approuvé à l'écoute par naly (2026-07-14) ; ne remplace jamais une voix native disponible |

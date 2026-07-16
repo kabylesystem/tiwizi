@@ -149,6 +149,12 @@ export function patternsIndex() {
   return (_patternsIdx ??= read<{ built: string; patterns: PatternEntry[] }>("patterns.json"));
 }
 
+export type Scene = { id: string; title: string; book: string; lines: Lite[] };
+let _scenes: { built: string; scenes: Scene[] } | null = null;
+export function scenesIndex() {
+  return (_scenes ??= read<{ built: string; scenes: Scene[] }>("scenes.json"));
+}
+
 export function stats() {
   const all = pairs();
   return {

@@ -44,6 +44,8 @@ export type CogStore = {
   lastSession: string;
   /** Longueur de flood adaptée à la vitesse d'induction réelle de l'élève (3..8). */
   floodLen: number;
+  /** Progression dans les scènes du livre (ordre du Kabyle de poche). */
+  scenesDone?: number;
 };
 
 const KEY = "tiwizi.cog.v1";

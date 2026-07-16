@@ -32,7 +32,8 @@ export type Block =
   | { type: "react"; items: ReactItem[] }
   | { type: "induction"; meta: PatternMeta; flood: Lite[]; probes: ProbeItem[] }
   | { type: "generate"; items: ReactItem[] }
-  | { type: "cards"; cards: MyCard[] };
+  | { type: "cards"; cards: MyCard[] }
+  | { type: "scene"; sceneId: string; title: string; book: string; lines: Lite[] };
 
 export type BlockRequest = { type: Block["type"]; patternIds: string[] };
 
@@ -40,7 +41,7 @@ export type BlockRequest = { type: Block["type"]; patternIds: string[] };
 export function planNextBlock(
   cog: CogStore,
   metas: PatternMeta[],
-  ran: { react: number; induction: number; generate: number; cards: number },
+  ran: { react: number; induction: number; generate: number; cards: number; scene: number },
   elapsedMin: number
 ): BlockRequest | null {
   const due = dues(cog);
@@ -64,6 +65,9 @@ export function planNextBlock(
     if (producible.length)
       return { type: "generate", patternIds: producible.slice(-2).map((m) => m.id) };
   }
+
+  // la scène du jour (progression du livre) fait partie du programme
+  if (ran.scene === 0) return { type: "scene", patternIds: [] };
 
   // time left → keep going: next induction, else more reactivation
   if (elapsedMin < SESSION_MINUTES) {

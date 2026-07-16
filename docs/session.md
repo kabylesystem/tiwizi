@@ -80,6 +80,14 @@ possessifs (-iw/-is…), mačči (vs ur…ara), ɣef, s (instrumental), préposi
 Assimil, chaque flood relu à la main (kab + fr transparents), 100% audio.
 Support `exclude` ajouté au mineur (ara-rel exclut ur).
 
+### La scène du jour (2026-07-16) · l'Assimil exploité
+Le programme quotidien se termine par une SCÈNE : thème suivant la progression
+du livre (salutations → route → café → marché… 12 scènes en boucle), répliques
+100% natives du corpus (l'OCR du livre abîme le kabyle → jamais affiché brut).
+Input narratif pur : audio natif, mots tappables, sens optionnel, zéro test.
+`scripts/build-assimil-scenes.mjs` → `data/scenes.json` · `/api/scene` ·
+dev : `/session?demo=scene`.
+
 ## Phase 2 (prochaines briques, dans l'ordre de valeur)
 1. **Contraste** — quand `confusions[X]` monte : paires minimales côte à côte
    (yella⇄ulac, ɣer⇄deg⇄ɣur- sont déjà encodés dans le graphe)
