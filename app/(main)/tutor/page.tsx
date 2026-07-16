@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
+import { autoCardsFromReply } from "@/lib/auto-cards";
 import { KabTapInline } from "@/components/kab-tap";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -42,6 +43,7 @@ export default function TutorPage() {
   const [messages, setMessages] = useState<Msg[]>([{ role: "assistant", content: GREETING }]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [autoCards, setAutoCards] = useState(0);
   const endRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export default function TutorPage() {
       });
       const d = await r.json();
       setMessages((m) => [...m, { role: "assistant", content: d.reply || "…" }]);
+      if (d.reply) autoCardsFromReply(d.reply).then((n) => n && setAutoCards((t) => t + n));
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "Ulac aqeddic (problème de connexion). Réessaie." }]);
     } finally {
@@ -80,6 +83,11 @@ export default function TutorPage() {
           <p className="text-sm text-muted">Ton tuteur kabyle. Il te parle, te corrige, te fait produire · sur tes crédits du plan.</p>
           <p className="mt-4 text-[0.7rem] font-bold uppercase tracking-wider text-muted">Sujets</p>
           <div className="mt-2 flex flex-wrap gap-2">
+            {autoCards > 0 && (
+              <span className="rounded-full border border-[rgba(31,99,176,0.35)] bg-[rgba(31,99,176,0.07)] px-3 py-1.5 text-xs font-bold text-[#1f63b0]">
+                🃏 +{autoCards} carte{autoCards > 1 ? "s" : ""} (Dallet)
+              </span>
+            )}
             {TOPICS.map((t) => (
               <button key={t} onClick={() => send(`Apprends-moi : ${t.toLowerCase()}`)} disabled={busy}
                 className="rounded-full border border-line-strong bg-card px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-brand hover:bg-brand-soft disabled:opacity-50">

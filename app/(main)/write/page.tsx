@@ -12,6 +12,7 @@ import { PenLine, RefreshCw } from "lucide-react";
 import type { PatternMeta } from "@/lib/patterns";
 import { cogSnapshot, loadCog, recordEvent, saveCog, dues } from "@/lib/cognitive-model";
 import { allCards, gradeCard, type MyCard } from "@/lib/cards";
+import { autoCardsFromReply } from "@/lib/auto-cards";
 import type { Grade } from "@/lib/srs";
 import { FennecMascot } from "@/components/fennec";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "@/components/formats/shared";
@@ -73,6 +74,7 @@ export default function WritePage() {
       });
       const d = await r.json();
       setReply(d.reply || "Idir n'a pas pu répondre · réessaie.");
+      if (d.reply) autoCardsFromReply(d.reply);
     } catch {
       setReply("Idir n'a pas pu répondre · réessaie.");
     } finally {

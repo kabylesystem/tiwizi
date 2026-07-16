@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
+import { autoCardsFromReply } from "@/lib/auto-cards";
 
 /** On-demand contextual help from Idir inside a lesson (coach mode, plan credits). */
 export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?: string }) {
@@ -25,7 +26,10 @@ export function IdirHelp({ ask, label = "Idir explique" }: { ask: string; label?
         body: JSON.stringify({ mode: "coach", ask, cogState: cogSnapshot(loadCog()) }),
       });
       const d = await r.json();
-      if (d.reply) setReply(d.reply);
+      if (d.reply) {
+        setReply(d.reply);
+        autoCardsFromReply(d.reply);
+      }
       else setFailed(true); // reply reste null → le prochain clic RÉESSAIE
     } catch {
       setFailed(true);

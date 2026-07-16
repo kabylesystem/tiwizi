@@ -12,6 +12,8 @@ import { PenLine } from "lucide-react";
 import type { PatternMeta } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
+import { allCards, gradeCard, type MyCard } from "@/lib/cards";
+import { autoCardsFromReply } from "@/lib/auto-cards";
 import { FennecMascot } from "@/components/fennec";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "./shared";
 
@@ -40,6 +42,7 @@ export function FreeProduce({
   onDone: (g: Grade, ms: number) => void;
 }) {
   const [text, setText] = useState("");
+  const [myCards] = useState<MyCard[]>(() => (typeof window !== "undefined" ? allCards().slice(0, 2) : []));
   const [reply, setReply] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [t0] = useState(() => Date.now());
@@ -53,12 +56,13 @@ export function FreeProduce({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "correct",
-          ask: `Situation donnée à l'élève : « ${SITUATION[meta.id] ?? meta.name} » (structure attendue : ${meta.schema}). Sa phrase kabyle : « ${text.trim()} »`,
+          ask: `Situation donnée à l'élève : « ${SITUATION[meta.id] ?? meta.name} » (structure attendue : ${meta.schema}).${myCards.length ? ` Mots à placer si possible (fiches Dallet) : ${myCards.map((c) => `${c.kab} (${c.fr})`).join(", ")}.` : ""} Sa phrase kabyle : « ${text.trim()} »`,
           cogState: cogSnapshot(loadCog()),
         }),
       });
       const d = await r.json();
       setReply(d.reply || "Idir n'a pas pu répondre · réessaie.");
+      if (d.reply) autoCardsFromReply(d.reply);
     } catch {
       setReply("Idir n'a pas pu répondre · réessaie.");
     } finally {
@@ -73,6 +77,17 @@ export function FreeProduce({
       <p className="mt-1 text-center text-xs text-muted">
         Utilise ce que tu connais · une phrase courte et vraie vaut mieux qu'une phrase ambitieuse et fausse.
       </p>
+      {myCards.length > 0 && (
+        <p className="mt-2 text-center text-sm text-muted">
+          Si tu peux, place :{" "}
+          {myCards.map((c, i) => (
+            <span key={c.k}>
+              <b className="kab text-ink">{c.kab}</b> <span className="text-xs">({c.fr})</span>
+              {i < myCards.length - 1 ? " · " : ""}
+            </span>
+          ))}
+        </p>
+      )}
 
       <textarea
         value={text}
@@ -96,7 +111,13 @@ export function FreeProduce({
             <FennecMascot mood="happy" size={34} animated={false} />
             <p className="flex-1 whitespace-pre-wrap text-sm leading-relaxed text-ink">{reply}</p>
           </div>
-          <SelfGrade prompt="Honnêtement, ta phrase était…" onGrade={(g) => onDone(g, Date.now() - t0)} />
+          <SelfGrade
+            prompt="Honnêtement, ta phrase était…"
+            onGrade={(g) => {
+              for (const c of myCards) if (text.toLowerCase().includes(c.kab.toLowerCase())) gradeCard(c.k, g);
+              onDone(g, Date.now() - t0);
+            }}
+          />
         </>
       )}
     </Panel>

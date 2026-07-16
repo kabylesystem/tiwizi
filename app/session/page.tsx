@@ -20,19 +20,22 @@ import {
   SESSION_MINUTES, type Block, type ReactItem,
 } from "@/lib/session-engine";
 import { useGameStore } from "@/lib/store/game-store";
+import { dueCards, gradeCard, type MyCard } from "@/lib/cards";
 import { Induction, type InductionResult } from "@/components/formats/induction";
 import { FreeProduce } from "@/components/formats/free-produce";
 import { ListenMeaning } from "@/components/formats/listen-meaning";
 import { SoundsRight } from "@/components/formats/sounds-right";
 import { Anticipate } from "@/components/formats/anticipate";
 import { Generate } from "@/components/formats/transform";
-import { Panel, FmtTag, GoldButton, CREAM } from "@/components/formats/shared";
+import { Panel, FmtTag, GoldButton, SelfGrade, CREAM } from "@/components/formats/shared";
+import type { Grade } from "@/lib/srs";
 import { FennecMascot } from "@/components/fennec";
 
 const BLOCK_LABEL: Record<Block["type"], string> = {
   react: "Réactivation",
   induction: "Pattern",
   generate: "Génération",
+  cards: "Mes cartes",
 };
 
 // Snapshot de session en cours : si la fenêtre meurt (crash, oom, fausse
@@ -42,7 +45,7 @@ type Snap = {
   day: string;
   ts: number;
   elapsed: number;
-  ran: { react: number; induction: number; generate: number };
+  ran: { react: number; induction: number; generate: number; cards: number };
   stats: { items: number; ok: number; patterns: string[] };
 };
 
@@ -68,7 +71,7 @@ export default function SessionPage() {
   const cogRef = useRef<CogStore | null>(null);
   const [metas, setMetas] = useState<PatternMeta[] | null>(null);
   const materialsRef = useRef<Record<string, PatternMaterial>>({});
-  const ranRef = useRef({ react: 0, induction: 0, generate: 0 });
+  const ranRef = useRef({ react: 0, induction: 0, generate: 0, cards: 0 });
 
   const [phase, setPhase] = useState<"loading" | "intro" | "block" | "recap" | "error">("loading");
   const [block, setBlock] = useState<Block | null>(null);
@@ -179,6 +182,9 @@ export default function SessionPage() {
         else probes.push({ pair: mat.probes[2], answer: meta.probe.answer, foil: false });
         b = { type: "induction", meta, flood: mat.flood.slice(0, cog.floodLen ?? 5), probes };
         ranRef.current.induction++;
+      } else if (req.type === "cards") {
+        b = { type: "cards", cards: dueCards().slice(0, 6) };
+        ranRef.current.cards++;
       } else if (req.type === "generate") {
         b = buildGenerateBlock(cog, metasById, mats, 3);
         ranRef.current.generate++;
@@ -186,7 +192,8 @@ export default function SessionPage() {
         b = buildReactBlock(cog, metasById, mats, 8);
         ranRef.current.react++;
       }
-      const empty = b.type !== "induction" && b.items.length === 0;
+      const empty =
+        (b.type === "react" || b.type === "generate") ? b.items.length === 0 : b.type === "cards" ? b.cards.length === 0 : false;
       if (empty) {
         finishSession();
         return;
@@ -304,7 +311,7 @@ export default function SessionPage() {
                 advance();
               }}
               onResume={(s) => {
-                ranRef.current = { ...s.ran };
+                ranRef.current = { ...s.ran, cards: s.ran.cards ?? 0 };
                 statsRef.current = { items: s.stats.items, ok: s.stats.ok, patterns: new Set(s.stats.patterns) };
                 setElapsed(s.elapsed);
                 setRunning(true);
@@ -324,7 +331,20 @@ export default function SessionPage() {
             />
           )}
 
-          {phase === "block" && block && block.type !== "induction" && (
+          {phase === "block" && block && block.type === "cards" && (
+            <CardsBlock
+              key={"cards" + ranRef.current.cards}
+              cards={block.cards}
+              onCard={(k, g) => {
+                gradeCard(k, g);
+                statsRef.current.items++;
+                if (g >= 2) statsRef.current.ok++;
+              }}
+              onDone={() => advance()}
+            />
+          )}
+
+          {phase === "block" && block && block.type !== "induction" && block.type !== "cards" && (
             <ItemRunner
               key={`${block.type}-${ranRef.current.react}-${ranRef.current.generate}-${itemIdx}`}
               item={block.items[itemIdx]}
@@ -429,6 +449,41 @@ function ItemRunner({
   if (item.pair)
     return <ListenMeaning pair={item.pair} audioFirst={item.fmt === "listen-meaning"} onDone={(g, ms) => onDone(item, g, ms)} />;
   return null;
+}
+
+function CardsBlock({
+  cards,
+  onCard,
+  onDone,
+}: {
+  cards: MyCard[];
+  onCard: (k: string, g: Grade) => void;
+  onDone: () => void;
+}) {
+  const [i, setI] = useState(0);
+  const [rev, setRev] = useState(false);
+  const c = cards[i];
+  return (
+    <Panel>
+      <FmtTag label={`Ta carte · ${i + 1}/${cards.length}`} sub="Ton deck à toi · reconstruis le sens." />
+      <p className="kab text-balance text-center text-4xl font-bold text-ink">{c.kab}</p>
+      {rev && c.root && <p className="mt-1 text-center text-xs font-bold uppercase tracking-wider text-muted">√{c.root}</p>}
+      {rev && <p className="mt-3 text-center text-lg text-muted">{c.fr}</p>}
+      {!rev ? (
+        <GoldButton onClick={() => setRev(true)}>Révéler</GoldButton>
+      ) : (
+        <SelfGrade
+          prompt="Tu l'avais ?"
+          onGrade={(g) => {
+            onCard(c.k, g);
+            setRev(false);
+            if (i < cards.length - 1) setI(i + 1);
+            else onDone();
+          }}
+        />
+      )}
+    </Panel>
+  );
 }
 
 function RecapCard({

@@ -11,9 +11,10 @@ import { fold } from "./normalize";
 
 export type MyCard = {
   k: string; // clé foldée
-  kab: string; // forme Dallet
-  fr: string; // sens (Dallet, 3 premiers)
+  kab: string;
+  fr: string; // sens, toujours issu d'une source humaine
   root?: string;
+  source?: string; // Dallet · grammaire (cours) · …
   addedAt: string;
   state: CardState;
 };
@@ -36,21 +37,32 @@ function save(s: CardStore) {
   window.dispatchEvent(new Event("tiwizi:dirty"));
 }
 
-/** Ajoute une carte depuis une fiche Dallet. Retourne false si déjà là. */
-export function addCard(entry: { w: string; root?: string; m: { fr: string[] }[] }): boolean {
+/** Ajoute une carte (sens TOUJOURS issu d'une source humaine). */
+export function addCardRaw(c: { kab: string; fr: string; root?: string; source?: string }): boolean {
   const s = loadCards();
-  const k = fold(entry.w);
-  if (s.cards[k]) return false;
+  const k = fold(c.kab);
+  if (s.cards[k] || !c.fr) return false;
   s.cards[k] = {
     k,
-    kab: entry.w,
-    fr: entry.m[0]?.fr.slice(0, 3).join(" · ") ?? "",
-    root: entry.root || undefined,
+    kab: c.kab,
+    fr: c.fr,
+    root: c.root,
+    source: c.source,
     addedAt: new Date().toISOString().slice(0, 10),
     state: schedule(undefined, 2), // entre dans le cycle : dû demain
   };
   save(s);
   return true;
+}
+
+/** Depuis une fiche Dallet (bouton « + ma carte » des popovers). */
+export function addCard(entry: { w: string; root?: string; m: { fr: string[] }[] }): boolean {
+  return addCardRaw({
+    kab: entry.w,
+    fr: entry.m[0]?.fr.slice(0, 3).join(" · ") ?? "",
+    root: entry.root || undefined,
+    source: "Dallet",
+  });
 }
 
 export function hasCard(word: string): boolean {

@@ -12,6 +12,7 @@ import {
   type CogStore, type Channel, type Due,
   dues, nextInduction, weakest, weakestChannel, skill,
 } from "./cognitive-model";
+import { dueCards, type MyCard } from "./cards";
 
 export const SESSION_MINUTES = 15;
 
@@ -30,7 +31,8 @@ export type ReactItem = {
 export type Block =
   | { type: "react"; items: ReactItem[] }
   | { type: "induction"; meta: PatternMeta; flood: Lite[]; probes: ProbeItem[] }
-  | { type: "generate"; items: ReactItem[] };
+  | { type: "generate"; items: ReactItem[] }
+  | { type: "cards"; cards: MyCard[] };
 
 export type BlockRequest = { type: Block["type"]; patternIds: string[] };
 
@@ -38,12 +40,15 @@ export type BlockRequest = { type: Block["type"]; patternIds: string[] };
 export function planNextBlock(
   cog: CogStore,
   metas: PatternMeta[],
-  ran: { react: number; induction: number; generate: number },
+  ran: { react: number; induction: number; generate: number; cards: number },
   elapsedMin: number
 ): BlockRequest | null {
   const due = dues(cog);
   if (ran.react === 0 && due.length > 0)
     return { type: "react", patternIds: [...new Set(due.slice(0, 10).map((d) => d.patternId))] };
+
+  // le deck personnel fait partie du quotidien : ses cartes dues passent ici
+  if (ran.cards === 0 && dueCards().length > 0) return { type: "cards", patternIds: [] };
 
   if (ran.induction === 0) {
     const next = nextInduction(cog, metas);
