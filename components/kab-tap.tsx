@@ -8,6 +8,7 @@
 import { useEffect, useRef, useState } from "react";
 import { maskSegments } from "@/lib/patterns";
 import { recordLookup } from "@/lib/vocab";
+import { addCard, hasCard } from "@/lib/cards";
 
 type DictEntry = { w: string; root: string; m: { fr: string[] }[] };
 
@@ -84,9 +85,46 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
               <span className="kab text-base font-bold text-ink">{e.w}</span>
               {e.root && <span className="ml-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">√{e.root}</span>}
               <span className="block text-sm leading-snug text-muted">{e.m[0]?.fr.slice(0, 3).join(" · ")}</span>
+              <CardButton entry={e} />
             </span>
           ))}
         </span>
+      )}
+    </span>
+  );
+}
+
+/** « + ma carte » : la carte vient de la fiche DALLET (source vérifiée),
+ *  jamais du texte environnant (qui peut être de la prose LLM). */
+function CardButton({ entry }: { entry: DictEntry }) {
+  const [added, setAdded] = useState(() => hasCard(entry.w));
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        addCard(entry);
+        setAdded(true);
+      }}
+      disabled={added}
+      className="mt-1.5 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[0.7rem] font-bold"
+      style={{
+        borderColor: added ? "rgba(91,154,111,0.4)" : "rgba(200,150,62,0.4)",
+        color: added ? "#5B9A6F" : "#A67B2E",
+        background: added ? "rgba(91,154,111,0.08)" : "rgba(200,150,62,0.08)",
+      }}
+    >
+      {added ? "✓ dans tes cartes" : "+ ma carte"}
+    </button>
+  );
+}
+
+/** Mots kabyles tappables en INLINE (bulles du chat d'Idir). */
+export function KabTapInline({ text }: { text: string }) {
+  const parts = text.split(/(\s+)/);
+  return (
+    <span className="kab font-semibold text-ink">
+      {parts.map((part, i) =>
+        /^\s+$/.test(part) || !part ? <span key={i}>{part}</span> : <Word key={i} text={part} marked={false} />
       )}
     </span>
   );

@@ -5,11 +5,16 @@
  * travail ; le disque est la sauvegarde de vérité (survit à un nettoyage du
  * navigateur, partagée entre navigateurs de la machine).
  */
-const KEYS = ["tiwizi.cog.v1", "tiwizi-game-v1", "tiwizi.srs.v1", "tiwizi.vocab.v1", "tiwizi.session.v1"];
+const KEYS = ["tiwizi.cog.v1", "tiwizi-game-v1", "tiwizi.srs.v1", "tiwizi.vocab.v1", "tiwizi.session.v1", "tiwizi.cards.v1"];
 const SYNC_AT = "tiwizi.syncedAt";
+
+// Les navigateurs de TEST (Playwright → navigator.webdriver) ne doivent JAMAIS
+// toucher la sauvegarde : incident du 2026-07-16 (état de test poussé sur disque).
+const isRobot = () => typeof navigator !== "undefined" && navigator.webdriver;
 
 /** Au démarrage : si le disque est plus récent que notre dernière sync, on restaure. */
 export async function pullState(): Promise<boolean> {
+  if (isRobot()) return false;
   try {
     const r = await fetch("/api/state");
     if (!r.ok) return false;
@@ -27,6 +32,7 @@ export async function pullState(): Promise<boolean> {
 }
 
 export async function pushState(): Promise<void> {
+  if (isRobot()) return;
   try {
     const state: Record<string, string> = {};
     for (const k of KEYS) {

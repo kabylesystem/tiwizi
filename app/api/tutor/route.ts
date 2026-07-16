@@ -76,8 +76,8 @@ export async function POST(req: NextRequest) {
 
   // grounding: real verified phrases related to the topic
   const last = coach || correct ? body.ask! : [...messages].reverse().find((m) => m.role === "user")?.content || "";
-  const refs = searchSentences(last, 8)
-    .slice(0, 8)
+  const refs = searchSentences(last, correct ? 8 : 5)
+    .slice(0, correct ? 8 : 5)
     .map((p) => `- ${p.kab} = ${p.fr}`)
     .join("\n");
   const vocab = refs
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
   // grounded GRAMMAR (naly's Anki decks: système verbal, présentatifs, prépositions…)
-  const gram = searchGrammar(last, 6)
+  const gram = searchGrammar(last, correct ? 6 : 4)
     .map((g) => `- Q: ${g.q}\n  R: ${g.a}`)
     .join("\n");
   const gramGrounding = gram
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
     : "";
 
   // the Assimil "Le Kabyle de poche" book itself (OCR), retrieved per query
-  const book = searchAssimil(last, 4)
+  const book = searchAssimil(last, correct ? 4 : 2)
     .map((c) => `[${c.title}] ${c.text}`)
     .join("\n---\n");
   const bookGrounding = book
@@ -107,12 +107,14 @@ export async function POST(req: NextRequest) {
   const prompt =
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;
+  // chat/coach : latence d'abord (haiku) · correction : précision d'abord (sonnet)
+  const model = "sonnet"; // mesuré : la latence vient du CLI, pas du modèle · on garde le meilleur kabyle
 
   try {
     const text = await new Promise<string>((resolve, reject) => {
       const child = execFile(
         "claude",
-        ["-p", prompt, "--append-system-prompt", system, "--model", "sonnet", "--max-turns", "1"],
+        ["-p", prompt, "--append-system-prompt", system, "--model", model, "--max-turns", "1"],
         { timeout: 110_000, maxBuffer: 1024 * 1024 },
         (err, stdout, stderr) => {
           if (err) reject(new Error(stderr || err.message));

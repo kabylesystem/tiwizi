@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { FennecMascot } from "@/components/fennec";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
+import { KabTapInline } from "@/components/kab-tap";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -21,13 +22,14 @@ const TOPICS = [
 ];
 
 function Rich({ text }: { text: string }) {
-  // tiny **bold** support
+  // **gras** = kabyle (convention d'Idir) → chaque mot devient tappable
+  // (fiche Dallet + « + ma carte »)
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return (
     <span className="whitespace-pre-wrap">
       {parts.map((p, i) =>
         p.startsWith("**") && p.endsWith("**") ? (
-          <strong key={i} className="kab font-semibold text-ink">{p.slice(2, -2)}</strong>
+          <KabTapInline key={i} text={p.slice(2, -2)} />
         ) : (
           <span key={i}>{p}</span>
         )
