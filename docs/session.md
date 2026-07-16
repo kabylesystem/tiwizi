@@ -72,6 +72,14 @@ est dans **`docs/pedagogie.md`** : moteur cognitif pattern-based, anti-Duolingo.
 - Idir : profil cognitif injecté, correcteur prudent, latence ≈ démarrage CLI
   (~15 s, incompressible sans daemon/streaming · piste phase 3).
 
+### Vague 2 du graphe (2026-07-16) · 13 → 26 patterns
+Conjugaison tu/il/nous (t-…-ḍ, y-/i-, n-), état d'annexion (n + w/t/y),
+possessifs (-iw/-is…), mačči (vs ur…ara), ɣef, s (instrumental), prépositions
+à pronom (fell-as, yid-i), démonstratifs (-agi/-nni), cleft (d…i…), ara relatif
+(vs ara de négation · foil dédié), ma (si). Chaque note ancrée dans grammar-kb/
+Assimil, chaque flood relu à la main (kab + fr transparents), 100% audio.
+Support `exclude` ajouté au mineur (ara-rel exclut ur).
+
 ## Phase 2 (prochaines briques, dans l'ordre de valeur)
 1. **Contraste** — quand `confusions[X]` monte : paires minimales côte à côte
    (yella⇄ulac, ɣer⇄deg⇄ɣur- sont déjà encodés dans le graphe)
