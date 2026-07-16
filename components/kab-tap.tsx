@@ -11,7 +11,7 @@ import { recordLookup } from "@/lib/vocab";
 import { addCard, hasCard } from "@/lib/cards";
 import { Gloss } from "@/components/gloss";
 
-type DictEntry = { w: string; root: string; m: { fr: string[] }[] };
+type DictEntry = { w: string; root: string; m: { fr: string[]; ex?: { kab: string; fr: string }[] }[] };
 
 function Word({ text, marked }: { text: string; marked: boolean }) {
   const [open, setOpen] = useState(false);
@@ -81,14 +81,41 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
               </a>
             </span>
           )}
-          {entries?.map((e, i) => (
-            <span key={i} className="block not-italic">
-              <span className="kab text-base font-bold text-ink">{e.w}</span>
-              {e.root && <span className="ml-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">√{e.root}</span>}
-              <Gloss text={e.m[0]?.fr.slice(0, 3).join("<br />") ?? ""} className="mt-0.5 text-sm text-muted" />
-              <CardButton entry={e} />
-            </span>
-          ))}
+          {entries?.map((e, i) => {
+            const gloss = e.m
+              .slice(0, 2)
+              .map((m) => m.fr.filter(Boolean).slice(0, 3).join("<br />"))
+              .filter(Boolean)
+              .join("<br />");
+            const exs = e.m.flatMap((m) => m.ex ?? []).slice(0, 2);
+            return (
+              <span key={i} className="block not-italic">
+                <span className="kab text-base font-bold text-ink">{e.w}</span>
+                {e.root && <span className="ml-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">√{e.root}</span>}
+                <Gloss text={gloss} className="mt-0.5 text-sm text-muted" />
+                {exs.length > 0 && (
+                  <span className="mt-1.5 block space-y-1 border-l-2 border-[rgba(200,150,62,0.25)] pl-2">
+                    {exs.map((x, k) => (
+                      <span key={k} className="block text-xs">
+                        <span className="kab font-semibold text-ink">{x.kab}</span>{" "}
+                        <span className="text-muted">· {x.fr}</span>
+                      </span>
+                    ))}
+                  </span>
+                )}
+                <span className="flex items-center gap-2">
+                  <CardButton entry={e} />
+                  <a
+                    href={`/dictionary?q=${encodeURIComponent(clean)}`}
+                    className="mt-1.5 text-[0.7rem] font-semibold underline decoration-dotted"
+                    style={{ color: "#A67B2E" }}
+                  >
+                    fiche complète ↗
+                  </a>
+                </span>
+              </span>
+            );
+          })}
         </span>
       )}
     </span>

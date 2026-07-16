@@ -9,6 +9,7 @@ export function Gloss({ text, className = "" }: { text: string; className?: stri
   const cleaned = (text || "")
     .replace(/\*\*/g, "")
     .replace(/,?\s*root:[^),]*/gi, "")
+    .replace(/\bMm\.?\s*ss\.?/gi, "même sens que la fiche sœur (les exemples ci-dessous le montrent)")
     .trim();
   const blocks = cleaned.split(/<br\s*\/?>/gi).map((b) => b.trim()).filter(Boolean);
 

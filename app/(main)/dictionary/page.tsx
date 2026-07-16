@@ -9,7 +9,9 @@ type Meaning = { fr: string[]; note?: string; ex: { kab: string; fr: string }[] 
 type Entry = { w: string; forms: string[]; root: string; note?: string; m: Meaning[] };
 
 export default function DictionaryPage() {
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(() =>
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("q") ?? "" : ""
+  );
   const [rows, setRows] = useState<Entry[]>([]);
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
