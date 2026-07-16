@@ -33,7 +33,6 @@ function read<T>(file: string): T {
 // --- module-level caches (load once per server process) ---
 let _deck: Pair[] | null = null;
 let _pairs: Pair[] | null = null;
-let _pairsFold: string[] | null = null;
 let _dict: DictEntry[] | null = null;
 let _dictForms: string[][] | null = null;
 let _dictMean: string[] | null = null;
@@ -47,13 +46,15 @@ function pairs(): Pair[] {
 }
 
 export function searchSentences(q: string, limit = 60): Pair[] {
+  // fold à la volée : le cache _pairsFold (208k strings) coûtait des centaines
+  // de Mo de RAM et faisait tuer Brave par earlyoom sur machine chargée ;
+  // ~100ms par recherche en local, c'est un bon échange
   const all = pairs();
-  _pairsFold ??= all.map((p) => fold(p.kab + " ¦ " + p.fr));
   const needle = fold(q).trim();
   if (!needle) return all.slice(0, limit);
   const out: Pair[] = [];
   for (let i = 0; i < all.length && out.length < limit; i++) {
-    if (_pairsFold[i].includes(needle)) out.push(all[i]);
+    if (fold(all[i].kab + " ¦ " + all[i].fr).includes(needle)) out.push(all[i]);
   }
   return out;
 }
