@@ -20,7 +20,6 @@ import {
   SESSION_MINUTES, type Block, type ReactItem,
 } from "@/lib/session-engine";
 import { useGameStore } from "@/lib/store/game-store";
-import { useSound } from "@/lib/sound-engine";
 import { Induction, type InductionResult } from "@/components/formats/induction";
 import { FreeProduce } from "@/components/formats/free-produce";
 import { ListenMeaning } from "@/components/formats/listen-meaning";
@@ -39,7 +38,6 @@ const BLOCK_LABEL: Record<Block["type"], string> = {
 export default function SessionPage() {
   const router = useRouter();
   const gameStore = useGameStore();
-  const { play } = useSound();
 
   const cogRef = useRef<CogStore | null>(null);
   const [metas, setMetas] = useState<PatternMeta[] | null>(null);
@@ -166,7 +164,6 @@ export default function SessionPage() {
     saveCog(cog);
     gameStore.incrementStreak();
     gameStore.addXP(statsRef.current.items * 10);
-    play("complete");
     setRunning(false);
     setPhase("recap");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,7 +175,6 @@ export default function SessionPage() {
     const ids = item.pair ? [item.pair.id] : item.corrupt ? [item.corrupt.id] : item.twin ? [item.twin.plain.id, item.twin.marked.id] : [];
     recordExposure(cog, item.patternId, ids);
     saveCog(cog);
-    play(grade >= 2 ? "correct" : "wrong");
     statsRef.current.items++;
     if (grade >= 2) statsRef.current.ok++;
     statsRef.current.patterns.add(item.patternId);
@@ -205,7 +201,6 @@ export default function SessionPage() {
     statsRef.current.items += r.probeTotal;
     statsRef.current.ok += r.probeOk;
     statsRef.current.patterns.add(meta.id);
-    play(r.abstracted ? "complete" : "tap");
     advance();
   };
 

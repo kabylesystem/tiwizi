@@ -29,3 +29,8 @@ Logo = **yaz (ⵣ)** dessiné en SVG (pas de police tifinagh requise), dans un c
 ## Revue
 Polish vérifié au screenshot (desktop 1280 + mobile 390) — accueil, /learn,
 /browse, /dictionary. Caractères spéciaux confirmés à l'écran.
+
+## Son
+La voix (native/TTS) est le SEUL son de l'app. Zéro jingle de feedback
+(réussite/échec/fin) : préférence permanente de naly (2026-07-16). Le feedback
+est visuel, l'audio est réservé au kabyle.
