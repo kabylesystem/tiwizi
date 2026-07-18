@@ -69,8 +69,15 @@ export function planNextBlock(
   // la scène du jour (progression du livre) fait partie du programme
   if (ran.scene === 0) return { type: "scene", patternIds: [] };
 
-  // time left → keep going: next induction, else more reactivation
+  // time left → keep going: 2e génération (naly veut PLUS d'écrit), induction, réactivation
   if (elapsedMin < SESSION_MINUTES) {
+    if (ran.generate === 1) {
+      const producible = metas
+        .filter((m) => (cog.patterns[m.id]?.exposure ?? 0) >= 4)
+        .sort((a, b) => a.order - b.order);
+      if (producible.length >= 2)
+        return { type: "generate", patternIds: producible.slice(0, 2).map((m) => m.id) };
+    }
     const next = nextInduction(cog, metas);
     if (next) return { type: "induction", patternIds: [next.id] };
     if (due.length) return { type: "react", patternIds: [...new Set(due.slice(0, 6).map((d) => d.patternId))] };

@@ -11,6 +11,7 @@ import { Check, X } from "lucide-react";
 import type { Corrupt } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { AudioButton } from "@/components/audio-button";
+import { KabTap } from "@/components/kab-tap";
 import { IdirHelp } from "@/components/idir-help";
 import { Panel, FmtTag, GoldButton } from "./shared";
 
@@ -49,7 +50,7 @@ export function SoundsRight({
           size="md"
         />
       </div>
-      <p className="kab text-balance text-center text-3xl font-bold text-ink sm:text-4xl">{shownSentence}</p>
+      <KabTap kab={shownSentence} className="kab text-balance text-center text-3xl font-bold leading-relaxed text-ink sm:text-4xl" />
 
       {answered === null ? (
         <div className="mt-7 grid grid-cols-2 gap-3">
@@ -84,7 +85,7 @@ export function SoundsRight({
             <p className="mt-2 text-sm text-muted">
               {useBad ? <>Phrase modifiée par Tiwizi · {OP_LABEL[corrupt.op] ?? "altérée"}. L&apos;authentique :</> : "Phrase authentique du corpus :"}
             </p>
-            <p className="kab mt-1 text-xl font-semibold text-ink">{corrupt.good}</p>
+            <KabTap kab={corrupt.good} className="kab mt-1 text-center text-xl font-semibold text-ink" />
             <p className="mt-1 text-sm text-muted">{corrupt.fr}</p>
             {(
               <div className="mt-3 flex justify-center">

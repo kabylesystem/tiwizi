@@ -12,6 +12,7 @@ import type { Lite } from "@/lib/patterns";
 import { maskSegments } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { AudioButton } from "@/components/audio-button";
+import { KabTap } from "@/components/kab-tap";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "./shared";
 
 export function Anticipate({
@@ -34,6 +35,9 @@ export function Anticipate({
       <FmtTag label="Anticipation" sub="Quelle forme manque ? Prédis-la avant de révéler." />
 
       <p className="mb-3 text-center text-base text-muted">« {pair.fr} »</p>
+      {revealed ? (
+        <KabTap kab={pair.kab} className="kab text-balance text-center text-3xl font-bold leading-relaxed text-ink sm:text-4xl" />
+      ) : (
       <p className="kab text-balance text-center text-3xl font-bold leading-relaxed text-ink sm:text-4xl">
         {segs.map((s, i) =>
           s.hidden && !revealed ? (
@@ -59,6 +63,7 @@ export function Anticipate({
           )
         )}
       </p>
+      )}
 
       {revealed && (
         <div className="mt-4 flex justify-center">

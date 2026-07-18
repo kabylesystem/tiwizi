@@ -471,7 +471,8 @@ function lev(a, b) {
 function mineTwins(patternRe, particles, max = 400) {
   const strip = (toks) => toks.filter((t) => !particles.includes(t));
   // index plain sentences by "tokens minus one" key
-  const plain = pool.filter((p) => !patternRe.test(p.kab) && p.w >= 2 && p.w <= 8);
+  // les impératifs (« Ffeɣ ! ») changent de personne dans la transformation → exclus
+  const plain = pool.filter((p) => !patternRe.test(p.kab) && p.w >= 2 && p.w <= 8 && !/!\s*$/.test(p.kab) && !/!\s*$/.test(p.fr));
   const byKey = new Map();
   for (const p of plain) {
     const toks = tokens(p.kab);
@@ -485,9 +486,30 @@ function mineTwins(patternRe, particles, max = 400) {
     }
   }
   // the changed token must keep the person prefix (yeswa→yeswi ✔, ruḥ→nruḥ ✘)
-  // and stay close: lev ≤1 (≤2 only for long tokens ≥6 chars)
-  const closeEnough = (a, b) =>
-    a[0] === b[0] && lev(a, b) <= (Math.min(a.length, b.length) >= 6 ? 2 : 1);
+  // and stay VERY close (lev ≤1) : lev 2 laissait passer des verbes différents
+  // (cemteɣ « laid » vs ceɣleɣ « occupé », bug du 2026-06-30)
+  const closeEnough = (a, b) => {
+    if (a[0] !== b[0] || lev(a, b) > 1) return false;
+    if (a.length === b.length) {
+      let d = -1;
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) { d = i; break; }
+      // substitution sur la DERNIÈRE lettre = suffixe de personne (ruḥen⇄ruḥeɣ)
+      // sauf alternance de voyelle du prétérit négatif (yeswa⇄yeswi)
+      if (d === a.length - 1) {
+        const vowels = new Set(["a", "i", "u", "e"]);
+        if (!(vowels.has(a[d]) && vowels.has(b[d]))) return false;
+      }
+    }
+    return true;
+  };
+  // …et les TRADUCTIONS doivent partager du contenu (même événement décrit)
+  const frToks = (fr) => new Set(fr.toLowerCase().replace(/[^\p{L}]+/gu, " ").split(" ").filter((t) => t.length >= 4));
+  const frClose = (a, b) => {
+    const A = frToks(a), B = frToks(b);
+    let shared = 0;
+    for (const t of A) if (B.has(t)) shared++;
+    return shared >= 2 || (shared >= 1 && Math.min(A.size, B.size) <= 3);
+  };
   const twins = [];
   const usedPlain = new Set();
   const marked = pool.filter((p) => patternRe.test(p.kab) && p.w <= 9);
@@ -501,7 +523,7 @@ function mineTwins(patternRe, particles, max = 400) {
       if (!key) continue;
       let found = false;
       for (const cand of byKey.get(key) || []) {
-        if (cand.p.id !== m.id && !usedPlain.has(cand.p.id) && closeEnough(toks[i], cand.missing)) {
+        if (cand.p.id !== m.id && !usedPlain.has(cand.p.id) && closeEnough(toks[i], cand.missing) && frClose(cand.p.fr, m.fr)) {
           twins.push({ plain: lite(cand.p), marked: lite(m) });
           usedPlain.add(cand.p.id);
           found = true;

@@ -378,7 +378,9 @@ export default function SessionPage() {
           {phase === "block" && block && (block.type === "react" || block.type === "generate") && (() => {
             const it = block.items[itemIdx];
             const m = metasById[it.patternId];
-            const known = cogRef.current?.patterns[it.patternId]?.abstracted;
+            // pas de bandeau sur anticipation/jugement : il donnerait la réponse
+            const spoils = it.fmt === "anticipate" || it.fmt === "sounds-right";
+            const known = !spoils && cogRef.current?.patterns[it.patternId]?.abstracted;
             return (
               <div>
                 {known && m && (
@@ -565,6 +567,13 @@ function RecapCard({
           Encore un bloc
         </button>
       </div>
+      <a
+        href="/tutor"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 py-3.5 font-bold"
+        style={{ borderColor: "rgba(31,99,176,0.35)", background: "rgba(31,99,176,0.07)", color: "#1f63b0" }}
+      >
+        🦊 Continuer la conversation avec Idir
+      </a>
     </Panel>
   );
 }

@@ -8,14 +8,18 @@
 import { useEffect, useRef, useState } from "react";
 import { maskSegments } from "@/lib/patterns";
 import { recordLookup } from "@/lib/vocab";
-import { addCard, hasCard } from "@/lib/cards";
+import { addCard, addCardRaw, hasCard } from "@/lib/cards";
 import { Gloss } from "@/components/gloss";
 
 type DictEntry = { w: string; root: string; m: { fr: string[]; ex?: { kab: string; fr: string }[] }[] };
+type GramHit = { kab: string; fr: string; source?: string };
+type CorpusEx = { id: number; kab: string; fr: string };
 
 function Word({ text, marked }: { text: string; marked: boolean }) {
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<DictEntry[] | null>(null);
+  const [gram, setGram] = useState<GramHit | null>(null);
+  const [examples, setExamples] = useState<CorpusEx[] | null>(null);
   const [loading, setLoading] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -45,6 +49,15 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
       const r = await fetch(`/api/dict?q=${encodeURIComponent(clean)}`);
       const d = (await r.json()) as DictEntry[];
       setEntries(d.slice(0, 2));
+      if (!d.length) {
+        // fallback AUTOMATIQUE (demande naly) : grammaire → exemples corpus
+        const g = (await fetch(`/api/card-lookup?w=${encodeURIComponent(clean)}`).then((x) => x.json())) as GramHit | null;
+        if (g) setGram(g);
+        else {
+          const ex = (await fetch(`/api/sentences?q=${encodeURIComponent(clean)}`).then((x) => x.json())) as CorpusEx[];
+          setExamples(ex.slice(0, 2));
+        }
+      }
     } catch {
       setEntries([]);
     } finally {
@@ -67,19 +80,38 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
           style={{ background: "#FFFCF5", border: "1.5px solid rgba(200,150,62,0.35)" }}
         >
           {loading && <span className="block text-xs text-muted">Dallet…</span>}
-          {entries && !entries.length && !loading && (
-            <span className="block text-xs text-muted">
-              Pas de fiche Dallet · sans doute une forme conjuguée.{" "}
-              <a
-                href={`https://fr.glosbe.com/kab/fr/${encodeURIComponent(clean)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold underline decoration-dotted"
-                style={{ color: "#1f63b0" }}
-              >
-                Voir sur Glosbe ↗
-              </a>
+          {entries && !entries.length && !loading && gram && (
+            <span className="block not-italic">
+              <span className="kab text-base font-bold text-ink">{gram.kab}</span>
+              <span className="ml-2 rounded-full bg-[rgba(31,99,176,0.1)] px-1.5 text-[0.6rem] font-bold uppercase text-[#1f63b0]">{gram.source}</span>
+              <span className="mt-0.5 block text-sm text-muted">{gram.fr}</span>
+              <GramCardButton hit={gram} />
             </span>
+          )}
+          {entries && !entries.length && !loading && !gram && examples && examples.length > 0 && (
+            <span className="block text-xs">
+              <span className="mb-1 block font-bold uppercase tracking-wider text-muted">Vu en contexte (corpus natif) :</span>
+              {examples.map((x) => (
+                <span key={x.id} className="mb-1 block">
+                  <span className="kab font-semibold text-ink">{x.kab}</span>{" "}
+                  <span className="text-muted">· {x.fr}</span>
+                </span>
+              ))}
+            </span>
+          )}
+          {entries && !entries.length && !loading && !gram && (!examples || !examples.length) && (
+            <span className="block text-xs text-muted">Introuvable dans nos sources.</span>
+          )}
+          {entries && !entries.length && !loading && (
+            <a
+              href={`https://fr.glosbe.com/kab/fr/${encodeURIComponent(clean)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1.5 block text-[0.7rem] font-semibold underline decoration-dotted"
+              style={{ color: "#1f63b0" }}
+            >
+              creuser sur Glosbe ↗
+            </a>
           )}
           {entries?.map((e, i) => {
             const gloss = e.m
@@ -131,6 +163,28 @@ function CardButton({ entry }: { entry: DictEntry }) {
       onClick={(e) => {
         e.stopPropagation();
         addCard(entry);
+        setAdded(true);
+      }}
+      disabled={added}
+      className="mt-1.5 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[0.7rem] font-bold"
+      style={{
+        borderColor: added ? "rgba(91,154,111,0.4)" : "rgba(200,150,62,0.4)",
+        color: added ? "#5B9A6F" : "#A67B2E",
+        background: added ? "rgba(91,154,111,0.08)" : "rgba(200,150,62,0.08)",
+      }}
+    >
+      {added ? "✓ dans tes cartes" : "+ ma carte"}
+    </button>
+  );
+}
+
+function GramCardButton({ hit }: { hit: GramHit }) {
+  const [added, setAdded] = useState(() => hasCard(hit.kab));
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        addCardRaw(hit);
         setAdded(true);
       }}
       disabled={added}

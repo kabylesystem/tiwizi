@@ -15,6 +15,7 @@ import type { Lite, Twin } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { fold } from "@/lib/normalize";
 import { AudioButton } from "@/components/audio-button";
+import { KabTap } from "@/components/kab-tap";
 import { IdirHelp } from "@/components/idir-help";
 import { Panel, FmtTag, GoldButton } from "./shared";
 
@@ -45,6 +46,8 @@ export function Generate({
     () => target.kab.replace(/[.!?…]+$/u, "").trim().split(/\s+/).map((tok, i) => ({ tok, i })),
     [target.kab]
   );
+  const [typing, setTyping] = useState(false);
+  const [typed, setTyped] = useState("");
   const [bank, setBank] = useState<Tok[]>(() => {
     let a = shuffle(targetToks);
     for (let t = 0; t < 8 && a.map((x) => x.tok).join(" ") === targetToks.map((x) => x.tok).join(" ") && a.length > 1; t++)
@@ -56,8 +59,10 @@ export function Generate({
   const [ok, setOk] = useState(false);
   const [t0] = useState(() => Date.now());
 
+  const norm = (x: string) => fold(x).replace(/[^\p{L}\p{N}' -]+/gu, "").replace(/\s+/g, " ").trim();
   const check = () => {
-    const good = fold(built.map((b) => b.tok).join(" ")) === fold(targetToks.map((b) => b.tok).join(" "));
+    const answer = typing ? typed : built.map((b) => b.tok).join(" ");
+    const good = norm(answer) === norm(targetToks.map((b) => b.tok).join(" "));
     setOk(good);
     setShown(true);
   };
@@ -70,7 +75,7 @@ export function Generate({
         <div className="mb-5 rounded-2xl p-4 text-center" style={{ background: "rgba(255,255,255,0.55)" }}>
           <div className="flex items-center justify-center gap-3">
             <AudioButton id={twin.plain.id} synthetic={!twin.plain.audio} size="sm" />
-            <p className="kab text-2xl font-semibold text-ink">{twin.plain.kab}</p>
+            <KabTap kab={twin.plain.kab} className="kab text-2xl font-semibold text-ink" />
           </div>
           <p className="mt-1 text-sm text-muted">{twin.plain.fr}</p>
           <p className="mt-3 text-sm font-bold" style={{ color: "#A67B2E" }}>
@@ -83,7 +88,7 @@ export function Generate({
         </p>
       )}
 
-      <div className="mb-4 min-h-[3.5rem] rounded-2xl border-2 border-dashed p-3" style={{ borderColor: "rgba(200,150,62,0.25)", background: "rgba(255,255,255,0.5)" }}>
+      <div className="mb-4 min-h-[3.5rem] rounded-2xl border-2 border-dashed p-3" style={{ borderColor: "rgba(200,150,62,0.25)", background: "rgba(255,255,255,0.5)", display: typing && !shown ? "none" : undefined }}>
         <div className="flex flex-wrap gap-2">
           {built.map((it) => (
             <button
@@ -103,7 +108,18 @@ export function Generate({
         </div>
       </div>
 
-      {!shown && (
+      {!shown && typing && (
+        <textarea
+          value={typed}
+          onChange={(e) => setTyped(e.target.value)}
+          rows={2}
+          placeholder="Écris la phrase toi-même…"
+          className="kab mb-2 w-full resize-none rounded-2xl border-2 p-4 text-xl text-ink outline-none"
+          style={{ borderColor: "rgba(200,150,62,0.3)", background: "rgba(255,255,255,0.7)" }}
+          autoFocus
+        />
+      )}
+      {!shown && !typing && (
         <div className="mb-2 flex flex-wrap justify-center gap-2">
           {bank.map((it) => (
             <motion.button
@@ -123,9 +139,18 @@ export function Generate({
       )}
 
       {!shown ? (
-        <GoldButton onClick={check} disabled={built.length !== targetToks.length}>
-          Vérifier
-        </GoldButton>
+        <>
+          <GoldButton onClick={check} disabled={typing ? !typed.trim() : built.length !== targetToks.length}>
+            Vérifier
+          </GoldButton>
+          <button
+            onClick={() => setTyping((t) => !t)}
+            className="mt-3 w-full text-center text-sm font-semibold underline decoration-dotted underline-offset-4"
+            style={{ color: "#2f7d5b" }}
+          >
+            {typing ? "revenir à la banque de mots" : "✍️ écrire sans la banque (vraie rédaction)"}
+          </button>
+        </>
       ) : (
         <div className="mt-4">
           <div
@@ -138,7 +163,7 @@ export function Generate({
             <p className="text-lg font-bold" style={{ color: ok ? "#5B9A6F" : "#D4735E" }}>
               {ok ? "Yelha !" : "Presque · la forme authentique :"}
             </p>
-            <p className="kab mt-1 text-xl font-semibold text-ink">{target.kab}</p>
+            <KabTap kab={target.kab} className="kab mt-1 text-center text-xl font-semibold text-ink" />
             {(
               <div className="mt-3 flex justify-center">
                 <AudioButton id={target.id} synthetic={!target.audio} size="sm" autoPlay />
