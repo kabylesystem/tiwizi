@@ -35,7 +35,12 @@ function loadChat(): Msg[] {
 }
 
 export default function TutorPage() {
-  const [messages, setMessages] = useState<Msg[]>(loadChat);
+  const [messages, setMessages] = useState<Msg[]>([{ role: "assistant", content: GREETING }]);
+  // la conv persistée se charge APRÈS montage (sinon hydration mismatch SSR)
+  useEffect(() => {
+    const m = loadChat();
+    if (m.length > 1) setMessages(m);
+  }, []);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [autoCards, setAutoCards] = useState(0);
