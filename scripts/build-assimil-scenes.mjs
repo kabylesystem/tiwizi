@@ -52,10 +52,23 @@ function pickVaried(instances, n) {
 const lite = (p) => ({ id: p.id, kab: p.kab, fr: p.fr, audio: p.audio, w: p.w });
 const pool = pairs.filter((p) => p.audio && p.w >= 2 && p.w <= 9);
 
+// fréquences corpus pour le score de difficulté
+const freq = new Map();
+for (const p of pairs) for (const t of tokens(p.kab)) freq.set(t, (freq.get(t) || 0) + 1);
+const difficulty = (p) => {
+  const toks = tokens(p.kab);
+  const rare = toks.filter((t) => (freq.get(t) || 0) < 15).length;
+  return toks.length + rare * 2;
+};
+
 const scenes = [];
 for (const t of THEMES) {
   const hits = pool.filter((p) => t.kw.test(p.fr));
-  const lines = pickVaried(hits, 30).map(lite);
+  // triées du plus SIMPLE au plus dur : la 1re passe d'un thème reste douce,
+  // les passes suivantes montent en difficulté (retour naly 2026-08-13)
+  const lines = pickVaried(hits, 30)
+    .sort((a, b) => difficulty(a) - difficulty(b))
+    .map(lite);
   scenes.push({ id: t.id, title: t.title, book: t.book, lines });
   console.log(`${t.id.padEnd(12)} ${String(hits.length).padStart(5)} phrases natives · gardées: ${lines.length}`);
 }

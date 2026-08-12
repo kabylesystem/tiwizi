@@ -16,9 +16,12 @@ export async function GET(req: NextRequest) {
   const n = Math.max(0, Number(req.nextUrl.searchParams.get("n") || 0));
   const seed = req.nextUrl.searchParams.get("seed") || new Date().toISOString().slice(0, 10);
   const scene = scenes[n % scenes.length];
+  // les lignes sont triées simple → dur : la tranche montée dépend du nombre
+  // de passages déjà faits dans ce thème (1er passage = le plus doux)
+  const pass = Math.floor(n / scenes.length) % Math.max(1, Math.floor(scene.lines.length / 7));
   const h = hash(seed + ":" + scene.id);
-  const start = h % scene.lines.length;
-  const lines = Array.from({ length: Math.min(7, scene.lines.length) }, (_, k) => scene.lines[(start + k * 7) % scene.lines.length]);
+  const start = pass * 7 + (h % 3); // léger jitter dans la tranche
+  const lines = Array.from({ length: 7 }, (_, k) => scene.lines[Math.min(start + k, scene.lines.length - 1)]);
   const dedup = [...new Map(lines.map((l) => [l.id, l])).values()];
   return NextResponse.json({ id: scene.id, title: scene.title, book: scene.book, lines: dedup });
 }
