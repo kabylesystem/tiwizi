@@ -11,7 +11,7 @@ const pairs = JSON.parse(fs.readFileSync(path.join(OUT, "pairs.json"), "utf8"));
 
 // Thèmes du livre, DANS L'ORDRE DU LIVRE, avec leurs mots-clés français
 const THEMES = [
-  { id: "salutations", title: "Saluer et se présenter", book: "LES SALUTATIONS / SALUER ET RÉPONDRE", kw: /(bonjour|salut|bonne nuit|bonsoir|bienvenue|au revoir|comment (vas|allez)|ça va|enchanté|je m'appelle|merci|s'il (te|vous) plaît)/i },
+  { id: "salutations", title: "Saluer et se présenter", book: "LES SALUTATIONS / SALUER ET RÉPONDRE", kw: /(bonjour|salut|bonne nuit|bonsoir|bienvenue|au revoir|comment (vas|allez)|ça va|enchanté|je m'appelle|présente)/i },
   { id: "politesses", title: "Politesses et locutions utiles", book: "QUELQUES LOCUTIONS UTILES / CONVERSATION", kw: /(merci|pardon|excuse|s'il (te|vous) plaît|de rien|d'accord|bien sûr|avec plaisir|volontiers|désolé)/i },
   { id: "route", title: "Sur la route", book: "SUR LA ROUTE", kw: /(route|chemin|taxi|bus|gare|voiture|conduire|voyage|aller à|loin|près de|tourner|tout droit|station)/i },
   { id: "nature", title: "La nature", book: "LA NATURE", kw: /(montagne|rivière|arbre|forêt|soleil|pluie|neige|ciel|fleur|oiseau|mer|champ|jardin)/i },
@@ -61,9 +61,21 @@ const difficulty = (p) => {
   return toks.length + rare * 2;
 };
 
+// chaque phrase n'appartient qu'à UN thème : les thèmes SPÉCIFIQUES piochent
+// d'abord, les génériques (salutations/politesses) prennent ce qui reste
+const CLAIM_ORDER = ["cafe", "sante", "epicerie", "route", "famille", "corps", "repas", "nature", "village", "temps", "salutations", "politesses"];
+const claimed = new Set();
+const hitsByTheme = {};
+for (const tid of CLAIM_ORDER) {
+  const t = THEMES.find((x) => x.id === tid);
+  const hits = pool.filter((p) => !claimed.has(p.id) && t.kw.test(p.fr));
+  for (const h of hits) claimed.add(h.id);
+  hitsByTheme[tid] = hits;
+}
+
 const scenes = [];
 for (const t of THEMES) {
-  const hits = pool.filter((p) => t.kw.test(p.fr));
+  const hits = hitsByTheme[t.id];
   // triées du plus SIMPLE au plus dur : la 1re passe d'un thème reste douce,
   // les passes suivantes montent en difficulté (retour naly 2026-08-13)
   const lines = pickVaried(hits, 30)
