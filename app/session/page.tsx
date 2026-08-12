@@ -109,14 +109,35 @@ export default function SessionPage() {
     return () => window.removeEventListener("tiwizi:pulled", onPulled);
   }, []);
 
-  // 15-minute clock (pauses when the tab is hidden)
+  // 15-minute clock (pauses when the tab is hidden) · snapshot du chrono
+  // toutes les 15 s + quand on quitte la page (retour maison → reprise exacte)
   useEffect(() => {
     if (!running) return;
     const t = setInterval(() => {
-      if (document.visibilityState === "visible") setElapsed((s) => s + 1);
+      if (document.visibilityState === "visible")
+        setElapsed((s) => {
+          const n = s + 1;
+          if (n % 15 === 0) persistSnap(n);
+          return n;
+        });
     }, 1000);
     return () => clearInterval(t);
-  }, [running]);
+  }, [running, persistSnap]);
+
+  useEffect(() => {
+    if (!running) return;
+    const save = () => persistSnap(elapsedRef.current);
+    window.addEventListener("pagehide", save);
+    return () => {
+      save(); // départ via navigation interne (bouton maison)
+      window.removeEventListener("pagehide", save);
+    };
+  }, [running, persistSnap]);
+
+  const elapsedRef = useRef(0);
+  useEffect(() => {
+    elapsedRef.current = elapsed;
+  }, [elapsed]);
 
   const metasById = useMemo(
     () => Object.fromEntries((metas ?? []).map((m) => [m.id, m])),

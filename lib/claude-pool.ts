@@ -21,15 +21,19 @@ const COMMON_SYSTEM =
   "Tu es Idir, tuteur de kabyle de naly. Le message utilisateur commence par TES CONSIGNES DE RÔLE puis contient la tâche : suis ces consignes strictement.";
 
 type Spare = { child: ChildProcessWithoutNullStreams; killer: NodeJS.Timeout };
-let spare: Spare | null = null;
+const POOL_SIZE = 2;
+const spares: Record<string, Spare[]> = { sonnet: [], haiku: [] };
 
-function spawnClaude(): ChildProcessWithoutNullStreams {
+function spawnClaude(model: string): ChildProcessWithoutNullStreams {
+  // systemd-run --scope : le process vit HORS du cgroup plafonné du service
   const child = spawn(
-    CLAUDE_BIN,
+    "systemd-run",
     [
+      "--user", "--scope", "--quiet", "--",
+      CLAUDE_BIN,
       "--input-format", "stream-json",
       "--output-format", "stream-json",
-      "--model", "sonnet",
+      "--model", model,
       "--max-turns", "1",
       "--verbose",
       "--append-system-prompt", COMMON_SYSTEM,
@@ -40,34 +44,41 @@ function spawnClaude(): ChildProcessWithoutNullStreams {
   return child;
 }
 
-function warmNext() {
-  if (spare) return;
-  const child = spawnClaude();
-  // un spare inutilisé est recyclé au bout de 15 min (RAM)
+function warmNext(model: string) {
+  const list = spares[model] ?? (spares[model] = []);
+  if (list.length >= POOL_SIZE) return;
+  const child = spawnClaude(model);
   const killer = setTimeout(() => {
-    if (spare?.child === child) {
-      spare = null;
+    const i = list.findIndex((s) => s.child === child);
+    if (i >= 0) {
+      list.splice(i, 1);
       child.kill();
     }
   }, 15 * 60_000);
-  spare = { child, killer };
+  list.push({ child, killer });
 }
 
-function takeChild(): ChildProcessWithoutNullStreams {
-  let child: ChildProcessWithoutNullStreams;
-  if (spare && spare.child.exitCode === null) {
-    clearTimeout(spare.killer);
-    child = spare.child;
-    spare = null;
-  } else {
-    child = spawnClaude(); // départ à froid (premier appel / spare mort)
+function takeChild(model: string): ChildProcessWithoutNullStreams {
+  const list = spares[model] ?? (spares[model] = []);
+  let child: ChildProcessWithoutNullStreams | null = null;
+  while (list.length) {
+    const s = list.shift()!;
+    clearTimeout(s.killer);
+    if (s.child.exitCode === null) {
+      child = s.child;
+      break;
+    }
   }
-  setTimeout(warmNext, 50);
+  if (!child) child = spawnClaude(model); // départ à froid
+  setTimeout(() => {
+    warmNext(model);
+    warmNext(model);
+  }, 50);
   return child;
 }
 
-export function askClaude(prompt: string, timeoutMs = 110_000): Promise<string> {
-  const child = takeChild();
+export function askClaude(prompt: string, model: "sonnet" | "haiku" = "sonnet", timeoutMs = 110_000): Promise<string> {
+  const child = takeChild(model);
   return new Promise((resolve, reject) => {
     let settled = false;
     const done = (fn: () => void) => {

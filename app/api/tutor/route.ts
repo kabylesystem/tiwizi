@@ -111,7 +111,8 @@ export async function POST(req: NextRequest) {
 
   try {
     // processus pré-chauffé : ~3-5 s au lieu de 13-15 s (boot CLI payé en avance)
-    const text = await askClaude(`${system}\n\n---\n\n${prompt}`);
+    // coach = micro-explications → haiku (rapide) · chat/correction → sonnet
+    const text = await askClaude(`${system}\n\n---\n\n${prompt}`, coach ? "haiku" : "sonnet");
     return NextResponse.json({ reply: text });
   } catch (e) {
     return NextResponse.json(
