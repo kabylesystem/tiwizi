@@ -545,6 +545,13 @@ for (const d of DEFS) {
   const instances = pool.filter((p) => d.detect.test(p.kab) && !(d.exclude && d.exclude.test(p.kab)));
   instances.sort((a, b) => (b.audio ? 1 : 0) - (a.audio ? 1 : 0) || a.w - b.w || a.c - b.c);
 
+  // un TEST doit être sans ambiguïté : les probes/foils excluent toute phrase
+  // qui contient AUSSI un pattern concurrent (ex: « Amek … d acu … ? »)
+  const contrastRes = (d.contrastsWith || [])
+    .map((cid) => DEFS.find((x) => x.id === cid)?.detect)
+    .filter(Boolean);
+  const unambiguous = (p) => !contrastRes.some((r) => r.test(p.kab));
+
   const seen = new Set();
   const shortAudio = instances.filter((p) => p.audio && p.w <= 6);
   let floodPool = shortAudio.length >= 60 ? shortAudio : instances.filter((p) => p.audio);
@@ -561,7 +568,7 @@ for (const d of DEFS) {
   const floodIds = new Set(flood.map((p) => p.id));
   // probes: fresh vocabulary relative to the flood set (abstraction test).
   // Audio d'abord partout : la voix native EST le produit.
-  const probePool = instances.filter((p) => !floodIds.has(p.id) && p.w <= 7);
+  const probePool = instances.filter((p) => !floodIds.has(p.id) && p.w <= 7 && unambiguous(p));
   const probeAudio = probePool.filter((p) => p.audio);
   const probe = pickVaried((probeAudio.length >= 18 ? probeAudio : probePool).slice(0, 1200), 24, new Set(seen));
   const probeIds = new Set(probe.map((p) => p.id));
@@ -582,7 +589,7 @@ for (const d of DEFS) {
   let foilCands;
   if (d.foilFrom) {
     const src = DEFS.find((x) => x.id === d.foilFrom);
-    foilCands = pool.filter((p) => p.audio && p.w <= 7 && src.detect.test(p.kab) && !d.detect.test(p.kab));
+    foilCands = pool.filter((p) => p.audio && p.w <= 7 && src.detect.test(p.kab) && !d.detect.test(p.kab) && unambiguous(p));
   } else {
     foilCands = neutralPool.filter((p) => !d.detect.test(p.kab));
   }
