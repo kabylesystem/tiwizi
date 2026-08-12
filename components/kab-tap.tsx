@@ -12,7 +12,7 @@ import { addCard, addCardRaw, hasCard } from "@/lib/cards";
 import { Gloss } from "@/components/gloss";
 
 type DictEntry = { w: string; root: string; m: { fr: string[]; ex?: { kab: string; fr: string }[] }[] };
-type GramHit = { kab: string; fr: string; source?: string };
+type GramHit = { kab: string; fr: string; root?: string; source?: string };
 type CorpusEx = { id: number; kab: string; fr: string };
 
 function Word({ text, marked, locked = false }: { text: string; marked: boolean; locked?: boolean }) {
@@ -60,12 +60,31 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
       const d = (await r.json()) as DictEntry[];
       setEntries(d.slice(0, 2));
       if (!d.length) {
-        // fallback AUTOMATIQUE (demande naly) : grammaire → exemples corpus
+        // fallback AUTOMATIQUE : grammaire → RACINE PROCHE (asiwel → siwel)
+        // → exemples corpus COURTS avec le mot en évidence
         const g = (await fetch(`/api/card-lookup?w=${encodeURIComponent(clean)}`).then((x) => x.json())) as GramHit | null;
         if (g) setGram(g);
         else {
-          const ex = (await fetch(`/api/sentences?q=${encodeURIComponent(clean)}`).then((x) => x.json())) as CorpusEx[];
-          setExamples(ex.slice(0, 2));
+          let found = false;
+          for (const stem of [clean.slice(1), clean.slice(2)]) {
+            if (stem.length < 3) continue;
+            const sd = (await fetch(`/api/dict?q=${encodeURIComponent(stem)}`).then((x) => x.json())) as DictEntry[];
+            const hit = sd.find((e) => e.w.toLowerCase() === stem.toLowerCase());
+            if (hit) {
+              setGram({
+                kab: hit.w,
+                fr: hit.m[0]?.fr.filter(Boolean).slice(0, 2).join(" · ") ?? "",
+                root: hit.root,
+                source: "Dallet · mot racine",
+              });
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            const ex = (await fetch(`/api/sentences?q=${encodeURIComponent(clean)}`).then((x) => x.json())) as CorpusEx[];
+            setExamples([...ex].sort((a, b) => a.kab.length - b.kab.length).slice(0, 2));
+          }
         }
       }
     } catch {
@@ -93,8 +112,9 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
           {entries && !entries.length && !loading && gram && (
             <span className="block not-italic">
               <span className="kab text-base font-bold text-ink">{gram.kab}</span>
+              {gram.root && <span className="ml-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">√{gram.root}</span>}
               <span className="ml-2 rounded-full bg-[rgba(31,99,176,0.1)] px-1.5 text-[0.6rem] font-bold uppercase text-[#1f63b0]">{gram.source}</span>
-              <span className="mt-0.5 block text-sm text-muted">{gram.fr}</span>
+              <Gloss text={gram.fr} className="mt-0.5 text-sm text-muted" />
               <GramCardButton hit={gram} />
             </span>
           )}
@@ -103,7 +123,15 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
               <span className="mb-1 block font-bold uppercase tracking-wider text-muted">Vu en contexte (corpus natif) :</span>
               {examples.map((x) => (
                 <span key={x.id} className="mb-1 block">
-                  <span className="kab font-semibold text-ink">{x.kab}</span>{" "}
+                  <span className="kab font-semibold text-ink">
+                    {x.kab.split(new RegExp(`(${clean.replace(/[.*+?^${}()|[\]\\]/g, "")})`, "i")).map((seg, k) =>
+                      seg.toLowerCase() === clean.toLowerCase() ? (
+                        <mark key={k} className="rounded px-0.5" style={{ background: "rgba(200,150,62,0.3)" }}>{seg}</mark>
+                      ) : (
+                        <span key={k}>{seg}</span>
+                      )
+                    )}
+                  </span>{" "}
                   <span className="text-muted">· {x.fr}</span>
                 </span>
               ))}
