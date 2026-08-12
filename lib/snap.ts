@@ -19,7 +19,8 @@ export function loadSnap(): Snap | null {
     if (!s) return null;
     const fresh = Date.now() - s.ts < 3 * 3600_000;
     const today = s.day === new Date().toISOString().slice(0, 10);
-    if (fresh && today && s.elapsed >= 20 && s.elapsed < SESSION_MINUTES * 60) return s;
+    // pas de plafond : le programme du jour peut légitimement dépasser 15:00
+    if (fresh && today && s.elapsed >= 20) return s;
   } catch {}
   return null;
 }

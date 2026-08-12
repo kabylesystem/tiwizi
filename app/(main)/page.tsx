@@ -95,7 +95,9 @@ export default function LearnPath() {
             >
               <Play className="h-4 w-4 fill-white" />
               {snap
-                ? `Reprendre la session · ${Math.floor(snapLeft / 60)}:${String(snapLeft % 60).padStart(2, "0")} restantes`
+                ? snapLeft > 0
+                  ? `Reprendre la session · ${Math.floor(snapLeft / 60)}:${String(snapLeft % 60).padStart(2, "0")} restantes`
+                  : "Reprendre · finir le programme du jour"
                 : "Session du jour · 15 min"}
             </Link>
             <Link

@@ -414,15 +414,15 @@ function IntroCard({
     const left = Math.max(0, SESSION_MINUTES * 60 - snap.elapsed);
     const mm = Math.floor(left / 60);
     const ss = String(left % 60).padStart(2, "0");
+    const label = left > 0 ? `Reprendre où j'en étais · ${mm}:${ss}` : "Reprendre · finir le programme du jour";
     return (
       <Panel className="text-center">
         <FennecMascot mood="encouraging" size={88} />
         <h1 className="mt-2 font-display text-3xl font-bold text-ink">On reprend ?</h1>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-          Ta session d&apos;aujourd&apos;hui s&apos;est interrompue : il te restait{" "}
-          <b>{mm}:{ss}</b> et {snap.stats.items} récupérations étaient déjà comptées. Rien n&apos;est perdu.
+          Ta session d&apos;aujourd&apos;hui s&apos;est interrompue : {left > 0 ? <>il te restait <b>{mm}:{ss}</b></> : <>il ne restait que la fin du programme</>} et {snap.stats.items} récupérations étaient déjà comptées. Rien n&apos;est perdu.
         </p>
-        <GoldButton onClick={() => onResume(snap)}>Reprendre où j&apos;en étais · {mm}:{ss}</GoldButton>
+        <GoldButton onClick={() => onResume(snap)}>{label}</GoldButton>
         <button onClick={onStart} className="mt-3 w-full text-center text-sm text-muted underline decoration-dotted underline-offset-4">
           non, repartir sur une session complète
         </button>
