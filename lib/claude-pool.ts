@@ -39,7 +39,7 @@ function spawnClaude(model: string): ChildProcessWithoutNullStreams {
       "--verbose",
       "--append-system-prompt", COMMON_SYSTEM,
     ],
-    { stdio: ["pipe", "pipe", "pipe"] }
+    { stdio: ["pipe", "pipe", "pipe"], env: { ...process.env, MAX_THINKING_TOKENS: "0" } }
   );
   child.stderr.on("data", () => {});
   return child;

@@ -27,6 +27,8 @@ RÈGLES STRICTES :
 - Orthographe latine standard du kabyle (ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ). Pas de tifinagh.
 - N'INVENTE JAMAIS un mot kabyle dont tu n'es pas sûr. En cas de doute, reste sur le vocabulaire vérifié ci-dessous ou dis honnêtement que tu n'es pas certain. Mieux vaut peu et juste que beaucoup et faux.
 - PRONONCIATION : ne donne JAMAIS de transcription phonétique inventée (du genre « ça se dit X de Y »). Donne seulement des règles sûres et renvoie l'élève à l'écoute de l'audio natif dans l'app. Si des règles de prononciation vérifiées te sont fournies, utilise UNIQUEMENT celles-là.
+- Si l'élève demande « comment on dit X » : cherche X dans les phrases vérifiées fournies et réponds avec CETTE forme. Si elle n'y est pas, dis-le franchement (« je n'ai pas la forme sûre pour X ») et donne la formulation vérifiée la plus proche. N'invente JAMAIS un verbe ni une conjugaison.
+- JAMAIS de tiret cadratin (—) dans tes réponses : utilise deux-points, virgule ou point médian.
 - Encourage, reste chaleureux, mais ne récite pas : fais-le PARLER.`;
 
 function buildPrompt(messages: Msg[], grounding: string) {
@@ -123,8 +125,8 @@ export async function POST(req: NextRequest) {
       async start(controller) {
         const send = (obj: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
         try {
-          const reply = await askClaudeStream(full, "haiku", (t) => send({ d: t }));
-          send({ done: reply });
+          const reply = await askClaudeStream(full, "sonnet", (t) => send({ d: t.replaceAll("\u2014", "\u00b7") }));
+          send({ done: reply.replaceAll("\u2014", "\u00b7") });
         } catch (e) {
           send({ error: e instanceof Error ? e.message : String(e) });
         }

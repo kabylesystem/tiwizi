@@ -45,6 +45,8 @@ function pairs(): Pair[] {
   return (_pairs ??= read<Pair[]>("pairs.json"));
 }
 
+const FR_STOP = new Set(("comment on dit dis dire dit-on je tu il elle nous vous ils elles le la les un une des de du et ou que qui quoi est suis es dans en au aux a ça c mon ma mes ton ta tes son sa ses se ne pas pour avec sur sous moi toi lui veux peux peut faire fait vais vas va plus très bien mot phrase kabyle azul stp merci svp").split(" "));
+
 export function searchSentences(q: string, limit = 60): Pair[] {
   // fold à la volée : le cache _pairsFold (208k strings) coûtait des centaines
   // de Mo de RAM et faisait tuer Brave par earlyoom sur machine chargée ;
@@ -55,6 +57,28 @@ export function searchSentences(q: string, limit = 60): Pair[] {
   const out: Pair[] = [];
   for (let i = 0; i < all.length && out.length < limit; i++) {
     if (fold(all[i].kab + " ¦ " + all[i].fr).includes(needle)) out.push(all[i]);
+  }
+  if (out.length >= Math.min(3, limit)) return out;
+
+  // la phrase entière ne matche rien (question de chat) → recherche PAR MOTS :
+  // « comment on dit "je travaille" » doit remonter les phrases avec travailler
+  const toks = needle
+    .replace(/[^\p{L}'-]+/gu, " ")
+    .split(/\s+/)
+    .filter((t) => t.length >= 3 && !FR_STOP.has(t));
+  if (!toks.length) return out;
+  const scored: { p: Pair; s: number }[] = [];
+  for (const p of all) {
+    const hay = fold(p.kab + " ¦ " + p.fr);
+    let hit = 0;
+    for (const t of toks) if (hay.includes(t)) hit++;
+    if (hit) scored.push({ p, s: hit * 100 - (p.w ?? 5) });
+  }
+  scored.sort((a, b) => b.s - a.s);
+  const seen = new Set(out.map((p) => p.id));
+  for (const { p } of scored) {
+    if (out.length >= limit) break;
+    if (!seen.has(p.id)) { out.push(p); seen.add(p.id); }
   }
   return out;
 }
