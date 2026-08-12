@@ -31,6 +31,7 @@ import { Generate } from "@/components/formats/transform";
 import { Panel, FmtTag, GoldButton, SelfGrade, CREAM } from "@/components/formats/shared";
 import type { Grade } from "@/lib/srs";
 import { FennecMascot } from "@/components/fennec";
+import { WordAudio } from "@/components/word-audio";
 
 const BLOCK_LABEL: Record<Block["type"], string> = {
   react: "Réactivation",
@@ -511,6 +512,7 @@ function CardsBlock({
   return (
     <Panel>
       <FmtTag label={`Ta carte · ${i + 1}/${cards.length}`} sub="Ton deck à toi · reconstruis le sens." />
+      <div className="mb-2 flex justify-center"><WordAudio kab={c.kab} autoPlay key={c.k} /></div>
       <p className="kab text-balance text-center text-4xl font-bold text-ink">{c.kab}</p>
       {rev && c.root && <p className="mt-1 text-center text-xs font-bold uppercase tracking-wider text-muted">√{c.root}</p>}
       {rev && <p className="mt-3 text-center text-lg text-muted">{c.fr}</p>}

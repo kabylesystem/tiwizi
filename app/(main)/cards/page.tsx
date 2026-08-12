@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Layers, Trash2 } from "lucide-react";
 import { allCards, dueCards, gradeCard, removeCard, type MyCard } from "@/lib/cards";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "@/components/formats/shared";
+import { WordAudio } from "@/components/word-audio";
 
 export default function CardsPage() {
   const [mounted, setMounted] = useState(false);
@@ -42,6 +43,7 @@ export default function CardsPage() {
       {reviewing && current ? (
         <Panel>
           <FmtTag label={`Carte ${idx + 1}/${queue.length}`} sub="Reconstruis le sens, puis sois honnête." />
+          <div className="mb-2 flex justify-center"><WordAudio kab={current.kab} autoPlay key={current.k} /></div>
           <p className="kab text-balance text-center text-4xl font-bold text-ink">{current.kab}</p>
           {current.root && revealed && (
             <p className="mt-1 text-center text-xs font-bold uppercase tracking-wider text-muted">√{current.root}</p>

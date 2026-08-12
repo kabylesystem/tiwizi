@@ -1,4 +1,14 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { existsSync } from "node:fs";
+import { homedir } from "node:os";
+
+// le PATH du service systemd peut perdre ~/.local/bin (reboot du 16/07) →
+// chemin ABSOLU d'abord, jamais de spawn silencieusement mort
+const CLAUDE_BIN = [
+  `${homedir()}/.local/bin/claude`,
+  "/usr/local/bin/claude",
+  "/usr/bin/claude",
+].find((p) => existsSync(p)) ?? "claude";
 
 /**
  * Pool de processus `claude` PRÉ-CHAUFFÉS (crédits du plan, pas l'API).
@@ -15,7 +25,7 @@ let spare: Spare | null = null;
 
 function spawnClaude(): ChildProcessWithoutNullStreams {
   const child = spawn(
-    "claude",
+    CLAUDE_BIN,
     [
       "--input-format", "stream-json",
       "--output-format", "stream-json",
@@ -26,7 +36,6 @@ function spawnClaude(): ChildProcessWithoutNullStreams {
     ],
     { stdio: ["pipe", "pipe", "pipe"] }
   );
-  child.on("error", () => {});
   child.stderr.on("data", () => {});
   return child;
 }
@@ -90,6 +99,7 @@ export function askClaude(prompt: string, timeoutMs = 110_000): Promise<string> 
         } catch {}
       }
     });
+    child.on("error", (e) => done(() => reject(new Error("spawn claude: " + e.message))));
     child.on("exit", () => done(() => reject(new Error("claude exited early"))));
     child.stdin.write(
       JSON.stringify({ type: "user", message: { role: "user", content: [{ type: "text", text: prompt }] } }) + "\n"

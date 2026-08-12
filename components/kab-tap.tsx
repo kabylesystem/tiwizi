@@ -15,7 +15,7 @@ type DictEntry = { w: string; root: string; m: { fr: string[]; ex?: { kab: strin
 type GramHit = { kab: string; fr: string; source?: string };
 type CorpusEx = { id: number; kab: string; fr: string };
 
-function Word({ text, marked }: { text: string; marked: boolean }) {
+function Word({ text, marked, locked = false }: { text: string; marked: boolean; locked?: boolean }) {
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<DictEntry[] | null>(null);
   const [gram, setGram] = useState<GramHit | null>(null);
@@ -36,7 +36,7 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
   const isWord = /\p{L}/u.test(clean);
 
   const lookup = async () => {
-    if (!isWord) return;
+    if (!isWord || locked) return;
     if (open) {
       setOpen(false);
       return;
@@ -69,7 +69,7 @@ function Word({ text, marked }: { text: string; marked: boolean }) {
     <span ref={ref} className="relative inline-block">
       <span
         onClick={lookup}
-        className={isWord ? "cursor-pointer rounded-md transition-colors hover:bg-[rgba(200,150,62,0.18)]" : ""}
+        className={isWord && !locked ? "cursor-pointer rounded-md transition-colors hover:bg-[rgba(200,150,62,0.18)]" : ""}
         style={marked ? { background: "rgba(200,150,62,0.28)", color: "#7a5a17", borderRadius: 6, padding: "0 4px" } : undefined}
       >
         {text}
@@ -217,13 +217,18 @@ export function KabTap({
   mask,
   maskFlags,
   className = "kab text-balance text-center text-3xl font-bold leading-relaxed text-ink sm:text-4xl",
+  highlight = true,
+  lockMasked = false,
 }: {
   kab: string;
   mask?: string;
   maskFlags?: string;
   className?: string;
+  /** surligner les segments du pattern (input enhancement) */
+  highlight?: boolean;
+  /** mode test : les mots du pattern ne sont PAS tappables (leur fiche spoilerait) */
+  lockMasked?: boolean;
 }) {
-  // segments surlignés (pattern) → puis découpage en mots tappables
   const segs = mask ? maskSegments(kab, mask, maskFlags || "giu") : [{ text: kab, hidden: false }];
   return (
     <p className={className}>
@@ -233,7 +238,7 @@ export function KabTap({
           /^\s+$/.test(part) || !part ? (
             <span key={`${si}-${pi}`}>{part}</span>
           ) : (
-            <Word key={`${si}-${pi}`} text={part} marked={seg.hidden} />
+            <Word key={`${si}-${pi}`} text={part} marked={seg.hidden && highlight} locked={lockMasked && seg.hidden} />
           )
         );
       })}

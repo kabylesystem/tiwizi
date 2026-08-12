@@ -83,8 +83,12 @@ export function Induction({
               {p.fr}
             </motion.p>
           ) : (
-            <button onClick={() => setRevealed(true)} className="text-sm text-muted underline decoration-dotted underline-offset-4">
-              voir le sens
+            <button
+              onClick={() => setRevealed(true)}
+              className="w-full rounded-2xl border-2 py-3 text-base font-semibold"
+              style={{ borderColor: "rgba(200,150,62,0.35)", background: "rgba(255,255,255,0.55)", color: "#8B7355" }}
+            >
+              Voir le sens
             </button>
           )}
         </div>
@@ -124,11 +128,16 @@ export function Induction({
           <AudioButton id={p.id} synthetic={!p.audio} size="md" autoPlay key={p.id} />
           {/* la phrase devient tappable et traduite APRÈS la réponse
               (avant, la traduction française donnerait la réponse) */}
-          {done ? (
-            <KabTap kab={p.kab} className="kab text-balance text-center text-2xl font-bold leading-relaxed text-ink sm:text-3xl" />
-          ) : (
-            <p className="kab text-balance text-center text-2xl font-bold text-ink sm:text-3xl">{p.kab}</p>
-          )}
+          {/* mots tappables MÊME pendant le test · seuls les mots du pattern
+              sont verrouillés avant réponse (leur fiche donnerait la réponse) */}
+          <KabTap
+            kab={p.kab}
+            mask={done ? undefined : meta.mask}
+            maskFlags={meta.maskFlags}
+            highlight={false}
+            lockMasked={!done}
+            className="kab text-balance text-center text-2xl font-bold leading-relaxed text-ink sm:text-3xl"
+          />
           {done && <p className="text-base text-muted">{p.fr}</p>}
         </div>
         <p className="mt-6 text-center text-sm font-semibold text-ink">{meta.probe.q}</p>
