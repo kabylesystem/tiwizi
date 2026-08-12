@@ -35,6 +35,16 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
   const clean = text.replace(/[.,;:!?«»"()…]/gu, "");
   const isWord = /\p{L}/u.test(clean);
 
+  // React réutilise les composants quand la phrase change (même position) :
+  // on purge le cache dès que le MOT affiché change (bug scène du 2026-08-13)
+  useEffect(() => {
+    setEntries(null);
+    setGram(null);
+    setExamples(null);
+    setOpen(false);
+    setLoading(false);
+  }, [clean]);
+
   const lookup = async () => {
     if (!isWord || locked) return;
     if (open) {
