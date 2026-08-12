@@ -17,10 +17,10 @@ export function loadSnap(): Snap | null {
   try {
     const s = JSON.parse(localStorage.getItem(SNAP_KEY) || "null") as Snap | null;
     if (!s) return null;
+    // fenêtre de 3 h, PEU IMPORTE le calendrier : une session à cheval sur
+    // minuit reste la même séance (bug du 2026-08-13 00h)
     const fresh = Date.now() - s.ts < 3 * 3600_000;
-    const today = s.day === new Date().toISOString().slice(0, 10);
-    // pas de plafond : le programme du jour peut légitimement dépasser 15:00
-    if (fresh && today && s.elapsed >= 20) return s;
+    if (fresh && s.elapsed >= 20) return s;
   } catch {}
   return null;
 }

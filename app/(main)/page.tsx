@@ -109,7 +109,7 @@ export default function LearnPath() {
             <span className="flex items-center gap-2 rounded-full bg-[rgba(200,150,62,0.1)] px-4 py-2 text-sm">
               <FennecMascot mood="encouraging" size={30} animated={false} />
               <span className="italic text-muted">
-                {doneCount === 0 ? "Azul fellak! Bdu." : "Yelha, kemmel akka!"} · Idir
+                {nAbstracted + nStarted === 0 ? "Azul fellak! Bdu." : "Yelha, kemmel akka!"} · Idir
               </span>
             </span>
           </div>
