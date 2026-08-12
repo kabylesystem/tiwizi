@@ -379,16 +379,10 @@ export default function SessionPage() {
           {phase === "block" && block && (block.type === "react" || block.type === "generate") && (() => {
             const it = block.items[itemIdx];
             const m = metasById[it.patternId];
-            // pas de bandeau sur anticipation/jugement : il donnerait la réponse
-            const spoils = it.fmt === "anticipate" || it.fmt === "sounds-right";
-            const known = !spoils && cogRef.current?.patterns[it.patternId]?.abstracted;
+            // bandeau retiré (retour naly 2026-08-12 : il spoile plus qu'il n'aide)
+            void m;
             return (
               <div>
-                {known && m && (
-                  <p className="mb-2 text-center text-xs text-muted">
-                    pattern travaillé : <b className="text-ink">{m.name}</b> · {m.family} · <span className="kab">{m.schema}</span>
-                  </p>
-                )}
             <ItemRunner
               key={`${block.type}-${ranRef.current.react}-${ranRef.current.generate}-${itemIdx}`}
               item={block.items[itemIdx]}
