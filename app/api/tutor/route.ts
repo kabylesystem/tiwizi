@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { askClaude, askClaudeStream } from "@/lib/claude-pool";
+import { askClaude, askClaudeStream, prewarm } from "@/lib/claude-pool";
 import { searchSentences, searchGrammar, searchAssimil, patternsIndex } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 import type { CogSnapshot } from "@/lib/cognitive-model";
@@ -61,6 +61,11 @@ function cogGrounding(snap: CogSnapshot | undefined): string {
   return `\n\nPROFIL COGNITIF DE L'ÉLÈVE (mesuré par l'app · fiable, utilise-le) :\n${lines.join("\n")}\nCONSIGNE : glisse naturellement dans la conversation des occasions d'utiliser les patterns à réactiver/faibles (pose des questions dont la réponse naturelle les mobilise). Ne révèle JAMAIS la règle d'un pattern en cours d'induction · donne des exemples authentiques à la place.`;
 }
 
+export async function GET() {
+  prewarm();
+  return NextResponse.json({ warm: true });
+}
+
 export async function POST(req: NextRequest) {
   let body: { messages?: Msg[]; mode?: string; ask?: string; cogState?: CogSnapshot };
   try {
@@ -71,7 +76,7 @@ export async function POST(req: NextRequest) {
 
   const coach = body.mode === "coach";
   const correct = body.mode === "correct";
-  const messages = (body.messages || []).slice(-12);
+  const messages = (body.messages || []).slice(-8);
   if (!coach && !correct && !messages.length) return NextResponse.json({ error: "no messages" }, { status: 400 });
   if ((coach || correct) && !body.ask) return NextResponse.json({ error: "no ask" }, { status: 400 });
 
@@ -86,15 +91,16 @@ export async function POST(req: NextRequest) {
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
   // grounded GRAMMAR (naly's Anki decks: système verbal, présentatifs, prépositions…)
-  const gram = searchGrammar(last, correct ? 6 : 4)
+  const gram = searchGrammar(last, correct ? 6 : 2)
     .map((g) => `- Q: ${g.q}\n  R: ${g.a}`)
     .join("\n");
   const gramGrounding = gram
     ? `\n\nGRAMMAIRE KABYLE VÉRIFIÉE (utilise ces explications/traductions EXACTES, ne les contredis pas) :\n${gram}`
     : "";
 
-  // the Assimil "Le Kabyle de poche" book itself (OCR), retrieved per query
-  const book = searchAssimil(last, correct ? 4 : 2)
+  // le livre Assimil : seulement pour la CORRECTION (chunks OCR lourds,
+  // le chat doit rester rapide : premier mot < 3 s)
+  const book = (correct ? searchAssimil(last, 4) : [])
     .map((c) => `[${c.title}] ${c.text}`)
     .join("\n---\n");
   const bookGrounding = book
@@ -117,7 +123,7 @@ export async function POST(req: NextRequest) {
       async start(controller) {
         const send = (obj: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
         try {
-          const reply = await askClaudeStream(full, "sonnet", (t) => send({ d: t }));
+          const reply = await askClaudeStream(full, "haiku", (t) => send({ d: t }));
           send({ done: reply });
         } catch (e) {
           send({ error: e instanceof Error ? e.message : String(e) });

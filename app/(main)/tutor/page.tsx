@@ -40,6 +40,7 @@ export default function TutorPage() {
   useEffect(() => {
     const m = loadChat();
     if (m.length > 1) setMessages(m);
+    fetch("/api/tutor").catch(() => {});
   }, []);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
