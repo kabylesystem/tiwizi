@@ -35,6 +35,7 @@ function spawnClaude(model: string): ChildProcessWithoutNullStreams {
       "--output-format", "stream-json",
       "--model", model,
       "--max-turns", "1",
+      "--include-partial-messages",
       "--verbose",
       "--append-system-prompt", COMMON_SYSTEM,
     ],
@@ -75,6 +76,62 @@ function takeChild(model: string): ChildProcessWithoutNullStreams {
     warmNext(model);
   }, 50);
   return child;
+}
+
+/** Comme askClaude, mais pousse le texte AU FIL DE L'EAU via onDelta. */
+export function askClaudeStream(
+  prompt: string,
+  model: "sonnet" | "haiku",
+  onDelta: (t: string) => void,
+  timeoutMs = 110_000
+): Promise<string> {
+  const child = takeChild(model);
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const done = (fn: () => void) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(to);
+      child.kill();
+      fn();
+    };
+    const to = setTimeout(() => done(() => reject(new Error("tutor timeout"))), timeoutMs);
+    let buf = "";
+    child.stdout.on("data", (chunk: Buffer) => {
+      buf += chunk.toString();
+      let i: number;
+      while ((i = buf.indexOf("\n")) >= 0) {
+        const line = buf.slice(0, i);
+        buf = buf.slice(i + 1);
+        if (!line.trim()) continue;
+        try {
+          const d = JSON.parse(line);
+          const delta = d?.event?.delta;
+          if (d.type === "stream_event" && delta?.type === "text_delta" && typeof delta.text === "string")
+            onDelta(delta.text);
+          if (d.type === "result") {
+            done(() =>
+              d.is_error
+                ? reject(new Error(String(d.result || "tutor_failed")))
+                : resolve(String(d.result ?? "").trim())
+            );
+            return;
+          }
+        } catch {}
+      }
+    });
+    child.on("error", (e) => done(() => reject(new Error("spawn claude: " + e.message))));
+    child.on("exit", () => done(() => reject(new Error("claude exited early"))));
+    child.stdin.write(
+      JSON.stringify({ type: "user", message: { role: "user", content: [{ type: "text", text: prompt }] } }) + "\n"
+    );
+  });
+}
+
+/** Pré-chauffe les deux pools (appelé quand l'app s'ouvre · idempotent). */
+export function prewarm() {
+  warmNext("sonnet");
+  warmNext("haiku");
 }
 
 export function askClaude(prompt: string, model: "sonnet" | "haiku" = "sonnet", timeoutMs = 110_000): Promise<string> {

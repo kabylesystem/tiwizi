@@ -76,9 +76,38 @@ export default function TutorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next, cogState: cogSnapshot(loadCog()) }),
       });
-      const d = await r.json();
-      setMessages((m) => [...m, { role: "assistant", content: d.reply || "…" }]);
-      if (d.reply) autoCardsFromReply(d.reply).then((n) => n && setAutoCards((t) => t + n));
+      if (r.body && r.headers.get("content-type")?.includes("event-stream")) {
+        // STREAMING : la réponse s'écrit mot à mot
+        setMessages((m) => [...m, { role: "assistant", content: "" }]);
+        const reader = r.body.getReader();
+        const dec = new TextDecoder();
+        let acc = "";
+        let buf = "";
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true });
+          const parts = buf.split("\n\n");
+          buf = parts.pop() ?? "";
+          for (const part of parts) {
+            const line = part.trim();
+            if (!line.startsWith("data:")) continue;
+            try {
+              const ev = JSON.parse(line.slice(5));
+              if (typeof ev.d === "string") acc += ev.d;
+              if (typeof ev.done === "string") acc = ev.done;
+              if (ev.error) acc = acc || "Idir n'a pas pu répondre · réessaie.";
+              const shown = acc;
+              setMessages((m) => [...m.slice(0, -1), { role: "assistant", content: shown || "…" }]);
+            } catch {}
+          }
+        }
+        if (acc) autoCardsFromReply(acc).then((n) => n && setAutoCards((t) => t + n));
+      } else {
+        const d = await r.json();
+        setMessages((m) => [...m, { role: "assistant", content: d.reply || "…" }]);
+        if (d.reply) autoCardsFromReply(d.reply).then((n) => n && setAutoCards((t) => t + n));
+      }
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "Ulac aqeddic (problème de connexion). Réessaie." }]);
     } finally {
@@ -164,7 +193,6 @@ export default function TutorPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Écris en kabyle ou en français…"
-            disabled={busy}
             className="flex-1 rounded-full border border-line-strong bg-card px-4 py-3 text-[0.95rem] text-ink outline-none transition-colors placeholder:text-muted/70 focus:border-brand disabled:opacity-60"
           />
           <button type="submit" disabled={busy || !input.trim()}

@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { patternsIndex } from "@/lib/data";
+import { prewarm } from "@/lib/claude-pool";
 
 export const dynamic = "force-dynamic";
 
 // The pattern graph, metadata only (instances come from /api/pattern-material).
 export async function GET() {
+  prewarm(); // ouvrir l'app = Idir commence à chauffer
   const { built, patterns } = patternsIndex();
   const metas = patterns.map((p) => ({
     id: p.id,

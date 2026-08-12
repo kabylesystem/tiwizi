@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { askClaude } from "@/lib/claude-pool";
+import { askClaude, askClaudeStream } from "@/lib/claude-pool";
 import { searchSentences, searchGrammar, searchAssimil, patternsIndex } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 import type { CogSnapshot } from "@/lib/cognitive-model";
@@ -109,9 +109,29 @@ export async function POST(req: NextRequest) {
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;
 
+  // le CHAT streame : les mots d'Idir arrivent au fil de l'eau
+  if (!coach && !correct) {
+    const encoder = new TextEncoder();
+    const full = `${system}\n\n---\n\n${prompt}`;
+    const stream = new ReadableStream({
+      async start(controller) {
+        const send = (obj: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
+        try {
+          const reply = await askClaudeStream(full, "sonnet", (t) => send({ d: t }));
+          send({ done: reply });
+        } catch (e) {
+          send({ error: e instanceof Error ? e.message : String(e) });
+        }
+        controller.close();
+      },
+    });
+    return new Response(stream, {
+      headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" },
+    });
+  }
+
   try {
-    // processus pré-chauffé : ~3-5 s au lieu de 13-15 s (boot CLI payé en avance)
-    // coach = micro-explications → haiku (rapide) · chat/correction → sonnet
+    // coach = micro-explications → haiku (rapide) · correction → sonnet
     const text = await askClaude(`${system}\n\n---\n\n${prompt}`, coach ? "haiku" : "sonnet");
     return NextResponse.json({ reply: text });
   } catch (e) {

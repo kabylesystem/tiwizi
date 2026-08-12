@@ -34,6 +34,21 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // 1 bis) racine proche Dallet : asiwel → siwel, tamurt → murt…
+  for (const stem of [w.slice(1), w.slice(2)]) {
+    if (stem.length < 3) continue;
+    for (const e of searchDict(stem, 4)) {
+      if (fold(e.w) === fold(stem)) {
+        return NextResponse.json({
+          kab: e.w,
+          fr: cleanGloss(e.m[0]?.fr.slice(0, 3).join(" · ") ?? ""),
+          root: e.root || undefined,
+          source: "Dallet · mot racine",
+        });
+      }
+    }
+  }
+
   // 2) grammaire de naly · le mot est le MOT-VEDETTE de la réponse d'une
   // fiche vocab (q = sens français). Filtres anti-glose-foireuse :
   // le mot doit OUVRIR la réponse, et q ne doit pas être une question.

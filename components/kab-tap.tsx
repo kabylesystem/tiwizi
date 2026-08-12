@@ -59,11 +59,17 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
       const r = await fetch(`/api/dict?q=${encodeURIComponent(clean)}`);
       const d = (await r.json()) as DictEntry[];
       setEntries(d.slice(0, 2));
+      // taper = carter (demande naly : zéro clic en plus) · exact seulement
+      const exact = d.find((e) => e.w.toLowerCase() === clean.toLowerCase());
+      if (exact) addCard(exact);
       if (!d.length) {
         // fallback AUTOMATIQUE : grammaire → RACINE PROCHE (asiwel → siwel)
         // → exemples corpus COURTS avec le mot en évidence
         const g = (await fetch(`/api/card-lookup?w=${encodeURIComponent(clean)}`).then((x) => x.json())) as GramHit | null;
-        if (g) setGram(g);
+        if (g) {
+          setGram(g);
+          addCardRaw(g); // taper = carter, même via racine/grammaire
+        }
         else {
           let found = false;
           for (const stem of [clean.slice(1), clean.slice(2)]) {
