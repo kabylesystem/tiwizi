@@ -10,6 +10,7 @@ import { maskSegments } from "@/lib/patterns";
 import { recordLookup } from "@/lib/vocab";
 import { addCard, addCardRaw, hasCard } from "@/lib/cards";
 import { Gloss } from "@/components/gloss";
+import { WordAudio } from "@/components/word-audio";
 
 type DictEntry = { w: string; root: string; m: { fr: string[]; ex?: { kab: string; fr: string }[] }[] };
 type GramHit = { kab: string; fr: string; root?: string; source?: string };
@@ -21,6 +22,7 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
   const [gram, setGram] = useState<GramHit | null>(null);
   const [examples, setExamples] = useState<CorpusEx[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [shift, setShift] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -100,6 +102,28 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
     }
   };
 
+  useEffect(() => {
+    if (!open || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    const popW = Math.min(window.innerWidth >= 640 ? 384 : 320, window.innerWidth * 0.88);
+    let lo = 8;
+    let hi = window.innerWidth - 8;
+    let el = ref.current.parentElement;
+    while (el && el !== document.body) {
+      const st = getComputedStyle(el);
+      if (st.overflowX !== "visible" || st.overflowY !== "visible") {
+        const cr = el.getBoundingClientRect();
+        lo = Math.max(lo, cr.left + 6);
+        hi = Math.min(hi, cr.right - 6);
+        break;
+      }
+      el = el.parentElement;
+    }
+    const center = r.left + r.width / 2;
+    const clamped = Math.min(Math.max(center, lo + popW / 2), hi - popW / 2);
+    setShift(clamped - center);
+  }, [open]);
+
   return (
     <span ref={ref} className="relative inline-block">
       <span
@@ -111,10 +135,15 @@ function Word({ text, marked, locked = false }: { text: string; marked: boolean;
       </span>
       {open && (
         <span
-          className="absolute left-1/2 top-full z-40 mt-2 block max-h-80 w-80 max-w-[88vw] -translate-x-1/2 overflow-y-auto rounded-2xl p-3 text-left shadow-xl sm:w-96"
-          style={{ background: "#FFFCF5", border: "1.5px solid rgba(200,150,62,0.35)" }}
+          className="absolute left-1/2 top-full z-40 mt-2 block max-h-80 w-80 max-w-[88vw] overflow-y-auto rounded-2xl p-3 text-left shadow-xl sm:w-96"
+          style={{ background: "#FFFCF5", border: "1.5px solid rgba(200,150,62,0.35)", transform: `translateX(calc(-50% + ${shift}px))` }}
         >
           {loading && <span className="block text-xs text-muted">Dallet…</span>}
+          {!loading && (
+            <span className="float-right ml-2">
+              <WordAudio kab={clean} size="sm" />
+            </span>
+          )}
           {entries && !entries.length && !loading && gram && (
             <span className="block not-italic">
               <span className="kab text-base font-bold text-ink">{gram.kab}</span>
