@@ -30,6 +30,7 @@ import { Anticipate } from "@/components/formats/anticipate";
 import { Generate } from "@/components/formats/transform";
 import { Panel, FmtTag, GoldButton, SelfGrade, CREAM } from "@/components/formats/shared";
 import type { Grade } from "@/lib/srs";
+import { SNAP_KEY, type Snap, loadSnap, clearSnap } from "@/lib/snap";
 import { FennecMascot } from "@/components/fennec";
 import { WordAudio } from "@/components/word-audio";
 
@@ -41,31 +42,6 @@ const BLOCK_LABEL: Record<Block["type"], string> = {
   scene: "La scène du jour",
 };
 
-// Snapshot de session en cours : si la fenêtre meurt (crash, oom, fausse
-// manip), on reprend au même chrono et à la même progression de blocs.
-const SNAP_KEY = "tiwizi.session.v1";
-type Snap = {
-  day: string;
-  ts: number;
-  elapsed: number;
-  ran: { react: number; induction: number; generate: number; cards: number; scene: number };
-  stats: { items: number; ok: number; patterns: string[] };
-};
-
-function loadSnap(): Snap | null {
-  try {
-    const s = JSON.parse(localStorage.getItem(SNAP_KEY) || "null") as Snap | null;
-    if (!s) return null;
-    const fresh = Date.now() - s.ts < 3 * 3600_000;
-    const today = s.day === new Date().toISOString().slice(0, 10);
-    if (fresh && today && s.elapsed >= 20 && s.elapsed < SESSION_MINUTES * 60) return s;
-  } catch {}
-  return null;
-}
-
-function clearSnap() {
-  localStorage.removeItem(SNAP_KEY);
-}
 
 export default function SessionPage() {
   const router = useRouter();
@@ -341,7 +317,7 @@ export default function SessionPage() {
             <IntroCard
               cog={cogRef.current!}
               metas={metas}
-              snap={typeof window !== "undefined" ? loadSnap() : null}
+              snap={loadSnap()}
               onStart={() => {
                 clearSnap();
                 setRunning(true);

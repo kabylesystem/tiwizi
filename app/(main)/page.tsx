@@ -8,6 +8,8 @@ import { kabyleUnits, type Unit } from "@/lib/data/kabyle-content";
 import { useGameStore } from "@/lib/store/game-store";
 import { loadCog, type CogStore, CHANNELS, CHANNEL_LABEL } from "@/lib/cognitive-model";
 import { vocabCount } from "@/lib/vocab";
+import { loadSnap } from "@/lib/snap";
+import { SESSION_MINUTES } from "@/lib/session-engine";
 import { FennecMascot } from "@/components/fennec";
 import { AxxamPreview } from "@/components/axxam";
 import { cn } from "@/lib/utils";
@@ -50,6 +52,8 @@ export default function LearnPath() {
   const nAbstracted = cog ? Object.values(cog.patterns).filter((p) => p.abstracted).length : 0;
   const nStarted = cog ? Object.values(cog.patterns).filter((p) => p.exposure > 0 && !p.abstracted).length : 0;
   const nWords = mounted ? vocabCount() : 0;
+  const snap = mounted ? loadSnap() : null;
+  const snapLeft = snap ? Math.max(0, SESSION_MINUTES * 60 - snap.elapsed) : 0;
   const overall = metas.length
     ? Math.round(((nAbstracted + nStarted * 0.3) / metas.length) * 100)
     : 0;
@@ -90,7 +94,9 @@ export default function LearnPath() {
               style={{ background: "linear-gradient(135deg,#C8963E,#A67B2E)" }}
             >
               <Play className="h-4 w-4 fill-white" />
-              Session du jour · 15 min
+              {snap
+                ? `Reprendre la session · ${Math.floor(snapLeft / 60)}:${String(snapLeft % 60).padStart(2, "0")} restantes`
+                : "Session du jour · 15 min"}
             </Link>
             <Link
               href={`/lesson?id=${next.id}`}
