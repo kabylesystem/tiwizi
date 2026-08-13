@@ -10,6 +10,7 @@ import path from "node:path";
 
 const OUT = path.join(process.cwd(), "data");
 const pairs = JSON.parse(fs.readFileSync(path.join(OUT, "pairs.json"), "utf8"));
+const dictEntries = JSON.parse(fs.readFileSync(path.join(OUT, "dict.json"), "utf8"));
 
 // --- fold (mirror of lib/normalize.ts) ---
 const FOLD = { ɣ: "g", ɛ: "a", ḥ: "h", ṣ: "s", ṭ: "t", ḍ: "d", ẓ: "z", ṛ: "r", č: "c", ǧ: "g", ž: "j", ɵ: "t" };
@@ -25,6 +26,14 @@ const tokens = (s) => fold(s).replace(/[^\p{L}\p{N}'-]+/gu, " ").trim().split(/\
 // boundaries INSIDE words ("tɣer" would match \bɣer\b). Real word boundaries:
 const wb = (alt) => `(?<!\\p{L})(?:${alt})(?!\\p{L})`;
 const re = (src, flags = "iu") => new RegExp(src, flags);
+
+// vraies formes plurielles i-…-en ATTESTÉES par le Dallet (les participes
+// verbaux « icebḥen/izemren » ont la même forme : le régex seul ne suffit pas)
+const DICT_PLURALS = new Set();
+for (const e of dictEntries)
+  for (const f of e.forms || [])
+    if (/^i\p{L}{2,}en$/iu.test(f)) DICT_PLURALS.add(fold(f));
+for (const notNoun of ["iwakken", "imiren", "iwaken"]) DICT_PLURALS.delete(notNoun);
 
 /**
  * Pattern definitions (the authored graph).
@@ -502,6 +511,93 @@ const DEFS = [
     note: "« la » + la forme en tt- = l'action EN COURS, sous tes yeux : la ttesseɣ = je suis en train de boire, la ttarguɣ = je suis en train de rêver. (La forme tt- seule dit aussi l'habitude : tetteɣ = je mange (d'habitude).)",
     probe: { q: "D'après la structure, l'action…", options: ["se déroule en ce moment", "est à venir"], answer: 0 },
   },
+  {
+    id: "plur-i-en", order: 34, family: "le pluriel",
+    name: "i-…-en · le pluriel",
+    schema: "i + NOM + en",
+    frHint: /\b(les|des|deux|trois|quatre|cinq|plusieurs|beaucoup|quelques|tous|nombreux|nombreuses)\b/i,
+    frMust: /\b(les|des|deux|trois|quatre|cinq|plusieurs|beaucoup|quelques|tous|nombreux|nombreuses)\b/i,
+    detect: re("(?<!\\p{L})i\\p{L}{2,}en(?!\\p{L})"),
+    instanceFilter: (p) => tokens(p.kab).some((t) => /^i\p{L}{2,}en$/iu.test(t) && DICT_PLURALS.has(t)),
+    mask: re("(?<!\\p{L})i\\p{L}{2,}en(?!\\p{L})", "giu"),
+    corrupt: [],
+    contrastsWith: [],
+    requires: [],
+    foilFrom: null, foilAnswer: 1,
+    note: "Le pluriel masculin le plus courant met le nom en sandwich : i-…-en · argaz (l'homme) → irgazen (les hommes), afus (la main) → ifassen. Quand tu vois i…en, pense « plusieurs ».",
+    probe: { q: "Le mot en i-…-en désigne…", options: ["PLUSIEURS choses/personnes", "une seule"], answer: 0 },
+  },
+  {
+    id: "obj-t", order: 35, family: "conjugaison",
+    name: "-t / -tt · « le / la » collé au verbe",
+    schema: "VERBE-t (m.) / VERBE-tt (f.)",
+    frHint: /-(le|la|les)\b/i,
+    frMust: /-(le|la|les)\b/i,
+    detect: re("(?<=\\p{L})-(?:i?tt?|ten|tent)(?!\\p{L})(?!-)"),
+    mask: re("(?<=\\p{L})-(?:i?tt?|ten|tent)(?!\\p{L})", "giu"),
+    corrupt: [],
+    contrastsWith: ["dat-as"],
+    requires: [],
+    foilFrom: "dat-as", foilAnswer: 1,
+    note: "« le / la / les » se colle au verbe : eǧǧ-it = laisse-LE, awi-tt = emporte-LA, muqel-iten = regarde-LES. (Différent de -as = À lui : ini-as = dis-LUI.)",
+    probe: { q: "La petite marque collée au verbe désigne…", options: ["la CHOSE traitée (le/la)", "la personne À QUI (lui)"], answer: 0 },
+  },
+  {
+    id: "mod-ilaq", order: 36, family: "modalité",
+    name: "ilaq · il faut",
+    schema: "ilaq (+ ad + VERBE)",
+    frHint: /(fau[tdr]|fallait|\bdoi[st]\b|devez|devons|devri|nécessaire|obligatoire|obligé)/i,
+    detect: re(wb("ilaq|yelaq|telaq")),
+    mask: re(wb("ilaq|yelaq|telaq"), "giu"),
+    corrupt: [],
+    contrastsWith: ["mod-zmer"],
+    requires: ["fut-ad"],
+    foilFrom: "mod-zmer", foilAnswer: 1,
+    note: "« ilaq » = il faut · ilaq ad nruḥ = il faut qu'on parte, ilaq-iyi = il ME faut (ilaq-ak = il te faut). Presque toujours suivi de « ad ».",
+    probe: { q: "La phrase exprime…", options: ["une obligation (il faut)", "une capacité (pouvoir)"], answer: 0 },
+  },
+  {
+    id: "mod-zmer", order: 37, family: "modalité",
+    name: "zmer · pouvoir",
+    schema: "zemreɣ / yezmer / nezmer…",
+    frHint: /(\bpeu[xt]\b|pouv|puisse|possible|impossible|capable)/i,
+    detect: re(wb("yezmer|tezmer|nezmer|zemreɣ|zmireɣ|tzemreḍ|tzemrem|tzemremt|zemrem|zemremt|zemren|zemrent|yezmir|izmir|tezmir|nezmir|zmiren|zmirent")),
+    mask: re(wb("yezmer|tezmer|nezmer|zemreɣ|zmireɣ|tzemreḍ|tzemrem|tzemremt|zemrem|zemremt|zemren|zemrent|yezmir|izmir|tezmir|nezmir|zmiren|zmirent"), "giu"),
+    corrupt: [],
+    contrastsWith: ["mod-ilaq"],
+    requires: [],
+    foilFrom: "mod-ilaq", foilAnswer: 1,
+    note: "La racine ZMR = pouvoir, être capable · zemreɣ = je peux, ur zmireɣ (ara) = je ne peux pas, yezmer lḥal = c'est possible. Tu y reconnais tes marques de personne : zemreɣ (-ɣ je), tzemreḍ (t-…-ḍ tu), nezmer (n- nous).",
+    probe: { q: "La phrase exprime…", options: ["une capacité / possibilité", "une obligation"], answer: 0 },
+  },
+  {
+    id: "adv-kan", order: 38, family: "petits mots",
+    name: "kan · seulement",
+    schema: "… kan",
+    frHint: /(seulement|juste|simplement|rien que|ne fai[st] que)/i,
+    detect: re(wb("kan")),
+    mask: re(wb("kan"), "giu"),
+    corrupt: [],
+    contrastsWith: [],
+    requires: [],
+    foilFrom: null, foilAnswer: 1,
+    note: "« kan » = seulement, juste : dqiqa kan = juste une minute, akka kan = c'est juste comme ça. Il se pose APRÈS le mot qu'il limite.",
+    probe: { q: "« kan » ajoute l'idée de…", options: ["seulement / juste ça", "beaucoup / très"], answer: 0 },
+  },
+  {
+    id: "neg-jamais", order: 39, family: "négation",
+    name: "werǧin · jamais",
+    schema: "werǧin + VERBE",
+    frHint: /jamais/i,
+    detect: re(wb("werǧin|urǧin|weṛǧin|leɛmer|leεmer")),
+    mask: re(wb("werǧin|urǧin|weṛǧin|leɛmer|leεmer"), "giu"),
+    corrupt: [],
+    contrastsWith: ["neg-ur-ara"],
+    requires: ["neg-ur-ara"],
+    foilFrom: "neg-ur-ara", foilAnswer: 1,
+    note: "« werǧin » (ou urǧin, leɛmer) = jamais · werǧin yeskerkis = il ne ment jamais. Plus fort que ur…ara (= pas), et il n'a pas besoin de « ara ».",
+    probe: { q: "La phrase dit que ça n'arrive…", options: ["JAMAIS", "pas cette fois"], answer: 0 },
+  },
 ];
 
 // --- candidate pool: short sentences, audio first ---
@@ -641,7 +737,7 @@ const neutralPool = pool.filter((p) => p.audio && p.w <= 7 && DEFS.every((d) => 
 // --- build each pattern's index ---
 const out = [];
 for (const d of DEFS) {
-  const instances = pool.filter((p) => d.detect.test(p.kab) && !(d.exclude && d.exclude.test(p.kab)));
+  const instances = pool.filter((p) => d.detect.test(p.kab) && !(d.exclude && d.exclude.test(p.kab)) && (!d.frMust || d.frMust.test(p.fr)) && (!d.instanceFilter || d.instanceFilter(p)));
   instances.sort((a, b) => (b.audio ? 1 : 0) - (a.audio ? 1 : 0) || a.w - b.w || a.c - b.c);
 
   // un TEST doit être sans ambiguïté : les probes/foils excluent toute phrase

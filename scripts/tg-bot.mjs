@@ -58,64 +58,100 @@ function myCards() {
   }
 }
 
+const shortGloss = (e) => {
+  const g = (e.m?.[0]?.fr ?? [])[0] || "";
+  return g.replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").replace(/[.;]\s*$/, "").trim().slice(0, 50);
+};
+
 function pickQuestion() {
   const day = new Date().getDate();
   const cards = myCards();
   const dict = readJson(path.join(DATA, "dict.json"), []);
-  const patterns = readJson(path.join(DATA, "patterns.json"), { patterns: [] }).patterns;
+  const freq = readJson(path.join(DATA, "vocab-freq.json"), {});
 
-  if (day % 3 === 0 && cards.length >= 4) {
-    const c = cards[day % cards.length];
-    return {
-      type: "card",
-      q: `🦊 *Question du jour*\n\nQue veut dire « *${c.kab}* » en français ?`,
-      answers: toks(c.fr).filter((t) => !FR_STOP.has(t)),
-      reveal: `${c.kab} = ${c.fr}`,
-      inbox: null,
-    };
-  }
+  const glossOf = (kab, fallback) => {
+    const e = dict.find((d) => norm(d.w) === norm(kab));
+    return (e && shortGloss(e)) || fallback;
+  };
+  const decoys = (excludeKab) => {
+    const cand = dict
+      .filter((d) => d.w.length >= 3 && d.w.length <= 10 && norm(d.w) !== norm(excludeKab))
+      .map((d) => shortGloss(d))
+      .filter((g) => g && g.length >= 3 && g.length <= 40);
+    const out = [];
+    let i = (day * 37) % cand.length;
+    while (out.length < 2 && cand.length) {
+      const g = cand[i % cand.length];
+      if (!out.includes(g)) out.push(g);
+      i += 101;
+    }
+    return out;
+  };
 
-  if (day % 3 === 1 && patterns.length) {
-    const p = patterns[day % patterns.length];
-    const line = (p.flood ?? []).filter((l) => l && l.w <= 7)[day % Math.max(1, (p.flood ?? []).filter((l) => l && l.w <= 7).length)];
-    if (line) {
-      const mask = new RegExp(p.mask, p.maskFlags);
-      const m = line.kab.match(mask);
-      if (m) {
-        const gap = line.kab.replace(mask, "____");
+  // un jour sur deux : QCM de COMPRÉHENSION sur une vraie phrase du corpus
+  // (pas de rédaction, jamais · demande kabylesystem 2026-08-13)
+  if (day % 2 === 1) {
+    const pairs = readJson(path.join(DATA, "pairs.json"), []).filter((p) => p.w >= 2 && p.w <= 6 && p.fr.length <= 60);
+    if (pairs.length > 50) {
+      const pick = (i) => pairs[(day * 997 + i * 7919) % pairs.length];
+      const target = pick(0);
+      const opts = [];
+      let i = 1;
+      while (opts.length < 2 && i < 50) {
+        const d = pick(i++);
+        if (d.id !== target.id && d.fr !== target.fr && Math.abs(d.fr.length - target.fr.length) < 25) opts.push(d.fr);
+      }
+      if (opts.length === 2) {
+        const correct = (day * 7) % 3;
+        opts.splice(correct, 0, target.fr);
         return {
-          type: "cloze",
-          q: `🦊 *Question du jour · pattern « ${p.name} »*\n\nComplète :\n« ${gap} »\n_(${line.fr})_`,
-          answers: [norm(m[0])],
-          reveal: `${line.kab} = ${line.fr}`,
+          kind: "poll",
+          question: `🦊 Que veut dire :\n« ${target.kab} »`,
+          options: opts,
+          correct,
+          reveal: `${target.kab} = ${target.fr}`,
           inbox: null,
         };
       }
     }
   }
 
-  const freq = readJson(path.join(DATA, "vocab-freq.json"), {});
-  const have = new Set(cards.map((c) => norm(c.kab)));
-  const list = Object.entries(freq)
-    .filter(([w]) => w.length >= 3 && /^\p{L}+$/u.test(w))
-    .sort((a, b) => b[1] - a[1])
-    .map(([w]) => w);
-  for (let i = day % 40; i < list.length; i++) {
-    const w = list[i];
-    if (have.has(norm(w))) continue;
-    const e = dict.find((d) => norm(d.w) === norm(w) || (d.forms ?? []).some((f) => norm(f) === norm(w)));
-    if (!e) continue;
-    const fr = (e.m?.[0]?.fr ?? []).slice(0, 3).join(" · ");
-    if (!fr) continue;
-    return {
-      type: "word",
-      q: `🦊 *Question du jour · nouveau mot*\n\nDevine (ou apprends) : que veut dire « *${e.w}* » ?`,
-      answers: toks(fr).filter((t) => !FR_STOP.has(t)),
-      reveal: `${e.w} = ${fr} (Dallet)`,
-      inbox: { kab: e.w, fr, root: e.root || undefined, source: "Dallet · quiz Telegram" },
-    };
+  let word = null;
+  let inbox = null;
+  if (day % 4 === 0 && cards.length >= 3) {
+    const c = cards[day % cards.length];
+    word = { kab: c.kab, fr: glossOf(c.kab, c.fr.split("·")[0].trim().slice(0, 50)) };
+  } else {
+    const have = new Set(cards.map((c) => norm(c.kab)));
+    const list = Object.entries(freq)
+      .filter(([w]) => w.length >= 3 && w.length <= 9 && /^\p{L}+$/u.test(w))
+      .sort((a, b) => b[1] - a[1])
+      .map(([w]) => w);
+    for (let i = day % 25; i < list.length; i++) {
+      const w = list[i];
+      if (have.has(norm(w))) continue;
+      const e = dict.find((d) => norm(d.w) === norm(w) || (d.forms ?? []).some((f) => norm(f) === norm(w)));
+      if (!e) continue;
+      const g = shortGloss(e);
+      if (!g) continue;
+      word = { kab: e.w, fr: g };
+      inbox = { kab: e.w, fr: (e.m?.[0]?.fr ?? []).slice(0, 3).join(" · "), root: e.root || undefined, source: "Dallet · quiz Telegram" };
+      break;
+    }
   }
-  return null;
+  if (!word) return null;
+
+  const options = decoys(word.kab);
+  const correct = (day * 7) % 3;
+  options.splice(correct, 0, word.fr);
+  return {
+    kind: "poll",
+    question: `🦊 Que veut dire « ${word.kab} » ?`,
+    options,
+    correct,
+    reveal: `${word.kab} = ${word.fr}`,
+    inbox,
+  };
 }
 
 async function sendDaily() {
@@ -124,9 +160,17 @@ async function sendDaily() {
     console.error("aucune question composable");
     process.exit(1);
   }
-  await say(q.q + "\n\nRéponds ici, je corrige. ✍️");
-  writeJson(QUIZ, { pending: q, askedAt: Date.now() });
-  console.log("question envoyée:", q.type);
+  const r = await tg("sendPoll", {
+    chat_id: CHAT,
+    question: q.question,
+    options: q.options,
+    type: "quiz",
+    correct_option_id: q.correct,
+    is_anonymous: false,
+  });
+  const pollId = r.result?.poll?.id;
+  writeJson(QUIZ, { pending: { ...q, pollId }, askedAt: Date.now() });
+  console.log("QCM envoyé:", q.reveal);
 }
 
 function grade(reply, q) {
@@ -142,23 +186,24 @@ async function handleText(text) {
     await sendDaily();
     return;
   }
+  await say("Tape sur une réponse du QCM au-dessus, ou /quiz pour une nouvelle question. 🦊");
+}
+
+async function handlePollAnswer(pa) {
   const state = readJson(QUIZ, null);
-  if (!state?.pending) {
-    await say("Pas de question en attente · envoie /quiz pour en avoir une. 🦊");
-    return;
-  }
-  const q = state.pending;
-  const ok = grade(t, q);
-  let msg = ok ? `✅ *Yerbeḥ !* ${q.reveal}` : `❌ Pas tout à fait.\n${q.reveal}`;
+  const q = state?.pending;
+  if (!q || pa.poll_id !== q.pollId) return;
+  const ok = (pa.option_ids ?? [])[0] === q.correct;
+  let msg = ok ? `✅ *Yerbeḥ !* ${q.reveal}` : `Ulac aɣilif · ${q.reveal} · elle reviendra.`;
   if (q.inbox) {
     const inbox = readJson(INBOX, []);
     if (!inbox.some((c) => norm(c.kab) === norm(q.inbox.kab))) {
       inbox.push(q.inbox);
       writeJson(INBOX, inbox);
     }
-    msg += "\n\n🃏 Ajouté dans tes cartes Tiwizi.";
+    msg += "\n🃏 Ajoutée dans tes cartes Tiwizi.";
   }
-  msg += "\n\nEncore une ? /quiz";
+  msg += "\nEncore une ? /quiz";
   writeJson(QUIZ, { pending: null, askedAt: state.askedAt, lastGrade: ok });
   await say(msg);
 }
@@ -167,10 +212,14 @@ async function poll() {
   let offset = readJson(OFFSET, { offset: 0 }).offset;
   for (;;) {
     try {
-      const r = await tg("getUpdates", { offset, timeout: 50, allowed_updates: ["message"] });
+      const r = await tg("getUpdates", { offset, timeout: 50, allowed_updates: ["message", "poll_answer"] });
       for (const u of r.result ?? []) {
         offset = u.update_id + 1;
         writeJson(OFFSET, { offset });
+        if (u.poll_answer && String(u.poll_answer.user?.id) === String(CHAT)) {
+          await handlePollAnswer(u.poll_answer);
+          continue;
+        }
         const m = u.message;
         if (!m?.text || String(m.chat?.id) !== String(CHAT)) continue;
         await handleText(m.text);
