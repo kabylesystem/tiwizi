@@ -67,13 +67,23 @@ export function searchSentences(q: string, limit = 60): Pair[] {
     .split(/\s+/)
     .filter((t) => t.length >= 3 && !FR_STOP.has(t));
   if (!toks.length) return out;
-  const scored: { p: Pair; s: number }[] = [];
+  // un mot RARE (politique) pèse plus qu'un mot banal (parler) : sans ça,
+  // les phrases banales noient le sujet réel de la question
+  const hits: { p: Pair; mask: number }[] = [];
+  const counts = new Array(toks.length).fill(0);
   for (const p of all) {
     const hay = fold(p.kab + " ¦ " + p.fr);
-    let hit = 0;
-    for (const t of toks) if (hay.includes(t)) hit++;
-    if (hit) scored.push({ p, s: hit * 100 - (p.w ?? 5) });
+    let mask = 0;
+    for (let t = 0; t < toks.length; t++)
+      if (hay.includes(toks[t])) { mask |= 1 << t; counts[t]++; }
+    if (mask) hits.push({ p, mask });
   }
+  const weight = counts.map((c) => 1 / Math.log2(2 + c));
+  const scored = hits.map(({ p, mask }) => {
+    let s = 0;
+    for (let t = 0; t < toks.length; t++) if (mask & (1 << t)) s += weight[t];
+    return { p, s: s * 100 - (p.w ?? 5) };
+  });
   scored.sort((a, b) => b.s - a.s);
   const seen = new Set(out.map((p) => p.id));
   for (const { p } of scored) {

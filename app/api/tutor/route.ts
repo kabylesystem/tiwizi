@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { askClaude, askClaudeStream, prewarm } from "@/lib/claude-pool";
 import { searchSentences, searchGrammar, searchAssimil, patternsIndex } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
+import { fold } from "@/lib/normalize";
 import type { CogSnapshot } from "@/lib/cognitive-model";
 
 export const dynamic = "force-dynamic";
@@ -21,11 +22,13 @@ RÈGLES DURES : appuie-toi sur les phrases vérifiées du corpus fournies (elles
 const SYSTEM = `Tu es Idir, un fennec sympathique, tuteur de kabyle (taqbaylit). L'élève s'appelle naly, débutant, et veut tenir de VRAIES conversations (politique, société, quotidien) d'ici décembre. Il te parle DEPUIS l'app Tiwizi : dans ce chat, il peut taper n'importe quel mot kabyle pour ouvrir sa fiche et l'écouter avec le bouton 🔊 (ne lui dis jamais qu'il n'a pas accès à l'audio).
 
 RÈGLES STRICTES :
-- Tu TIENS l'élève par la main : une seule idée et UNE seule question à la fois, réponses courtes (2-4 phrases).
-- Parle en kabyle SIMPLE, puis donne la traduction française entre parenthèses juste après. Ex : « Azul! Amek i telliḍ? (Bonjour ! Comment vas-tu ?) »
+- L'élève est un VRAI DÉBUTANT. Tu TIENS l'élève par la main : une seule idée et UNE seule question à la fois, réponses courtes (2-4 phrases).
+- MAXIMUM UNE phrase kabyle nouvelle par message, COURTE (3 à 6 mots), tirée des phrases vérifiées fournies quand c'est possible. Jamais deux phrases kabyles nouvelles d'affilée : il décroche.
+- CHAQUE phrase ou expression kabyle que tu écris, SANS AUCUNE EXCEPTION, est immédiatement suivie de sa traduction française entre parenthèses. Ex : « Azul! Amek i telliḍ? (Bonjour ! Comment vas-tu ?) » Une phrase kabyle sans traduction = interdit, même en exemple, même en question finale.
 - Corrige ses erreurs avec douceur en montrant la bonne forme.
 - Orthographe latine standard du kabyle (ɣ ɛ ḥ ṣ ṭ ḍ ẓ č ǧ). Pas de tifinagh.
 - N'INVENTE JAMAIS un mot kabyle dont tu n'es pas sûr. En cas de doute, reste sur le vocabulaire vérifié ci-dessous ou dis honnêtement que tu n'es pas certain. Mieux vaut peu et juste que beaucoup et faux.
+- Chaque mot kabyle NOUVEAU que tu enseignes doit être PRÉSENT dans les phrases vérifiées, la grammaire ou le livre fournis dans ce message. S'il n'y est pas : ne l'enseigne pas, dis « je n'ai pas le mot vérifié pour X » et construis la leçon avec ce qui existe.
 - PRONONCIATION : ne donne JAMAIS de transcription phonétique inventée (du genre « ça se dit X de Y »). Donne seulement des règles sûres et renvoie l'élève à l'écoute de l'audio natif dans l'app. Si des règles de prononciation vérifiées te sont fournies, utilise UNIQUEMENT celles-là.
 - Si l'élève demande « comment on dit X » : cherche X dans les phrases vérifiées fournies et réponds avec CETTE forme. Si elle n'y est pas, dis-le franchement (« je n'ai pas la forme sûre pour X ») et donne la formulation vérifiée la plus proche. N'invente JAMAIS un verbe ni une conjugaison.
 - Question MÉTA (prononciation, grammaire, « comment on dit », « c'est quoi ») : réponds en FRANÇAIS directement, sans phrase d'ouverture en kabyle. Le kabyle est réservé aux phrases cibles et aux exemples vérifiés.
@@ -33,6 +36,30 @@ RÈGLES STRICTES :
 - Tu n'écris QUE l'alphabet kabyle latin (a-z + ɣ ɛ ḥ ṣ ṭ ḍ ẓ ṛ č ǧ) et le français. JAMAIS un caractère cyrillique, arabe, tifinagh ou autre.
 - JAMAIS de tiret cadratin (—) dans tes réponses : utilise deux-points, virgule ou point médian.
 - Encourage, reste chaleureux, mais ne récite pas : fais-le PARLER.`;
+
+function analyzeTD(word: string): string | null {
+  const letters = [...word.toLowerCase()];
+  const parts: string[] = [];
+  for (let i = 0; i < letters.length; i++) {
+    const c = letters[i];
+    if (c === "\u1e6d" || c === "\u1e0d") {
+      parts.push(`${c} (position ${i + 1}) : emphatique, net et sombre`);
+      continue;
+    }
+    if (c !== "t" && c !== "d") continue;
+    const prev = letters[i - 1];
+    if (prev === c) continue;
+    const th = c === "t" ? "th SOURD de « thing »" : "th SONORE de « this »";
+    if (letters[i + 1] === c) parts.push(`${c}${c} (position ${i + 1}) : géminée, occlusive nette et LONGUE`);
+    else if (prev === "n" || prev === "l") parts.push(`${c} (position ${i + 1}, après ${prev}) : occlusif net`);
+    else {
+      const where = i === 0 ? "initial" : i === letters.length - 1 ? `final, après ${prev}` : `après ${prev}`;
+      parts.push(`${c} (position ${i + 1}, ${where}) : spirant, ${th}`);
+    }
+  }
+  if (!parts.length) return null;
+  return `${word} = ${letters.join("\u00b7")} \u2192 ${parts.join(" ; ")}`;
+}
 
 function buildPrompt(messages: Msg[], grounding: string) {
   const convo = messages
@@ -119,7 +146,25 @@ export async function POST(req: NextRequest) {
     : messages.filter((m) => m.role === "user").slice(-3).map((m) => m.content).join(" ");
   const pron = PRON_TRIGGER.test(pronWindow) ? `\n\n${PRONUNCIATION_REF}` : "";
 
-  const grounding = vocab + bookGrounding + gramGrounding + pron + cogGrounding(body.cogState);
+  // l'analyse t/d est DÉTERMINISTE → calculée par le code, pas par le LLM
+  // (un LLM ne sait pas épeler : « t après n » inventé, th sourd/sonore confondus)
+  let pronCalc = "";
+  if (pron) {
+    const lastAssistant = messages.filter((m) => m.role === "assistant").slice(-2).map((m) => m.content).join(" ");
+    const seen = new Set<string>();
+    const cand = (pronWindow + " " + lastAssistant)
+      .toLowerCase()
+      .replace(/[^\p{L}'-]+/gu, " ")
+      .split(/\s+/)
+      .filter((t) => t.length >= 4 && /[td\u1e6d\u1e0d]/.test(t) && !seen.has(t) && (seen.add(t), true))
+      .filter((t) => /[\u0263\u025b\u1e25\u1e63\u1e6d\u1e0d\u1e93\u1e5b\u010d\u01e7]/.test(t) || searchSentences(t, 3).some((p) => fold(p.kab).includes(fold(t))))
+      .slice(0, 6);
+    const lines = cand.map(analyzeTD).filter(Boolean) as string[];
+    if (lines.length)
+      pronCalc = `\n\nANALYSE MÉCANIQUE DES T/D (calculée par l'app en appliquant les règles vérifiées ci-dessus · FIABLE · si l'élève demande la prononciation d'un de ces mots, recopie l'analyse du mot concerné TELLE QUELLE, en français, sans la recalculer) :\n${lines.map((l) => `- ${l}`).join("\n")}`;
+  }
+
+  const grounding = vocab + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
   const prompt =
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;

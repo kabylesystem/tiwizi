@@ -19,12 +19,14 @@ Consonnes particulières (les pièges) · formulations de la page prononciation 
 - q = une sorte de « k » prononcé au fond de la gorge avec fermeture brutale de la glotte (fais le « r » non roulé puis appuie sur la glotte).
 - ṣ ṭ ḍ ẓ ṛ = consonnes EMPHATIQUES : mêmes sons que s t d z r mais « lourds/sombres », bouche plus ouverte, langue reculée ; elles changent le sens.
 - č = "tch" · ǧ = "dj" · j = "j" français · c = "ch" français.
-- d et t simples sont souvent SPIRANTS : d ≈ le « th » anglais de « this », t ≈ le « th » de « thing » (sauf après n/l, ou s'ils sont géminés/emphatiques → nets).
+- d et t simples : SPIRANTS PAR DÉFAUT · d ≈ le « th » SONORE de « this », t ≈ le « th » SOURD de « thing » (ne confonds jamais les deux : th doux/sonore = d, th dur/sourd = t). Ils redeviennent OCCLUSIFS (« t/d nets ») dans EXACTEMENT 3 cas : 1. géminés (tt, dd) · 2. emphatiques (ṭ, ḍ) · 3. juste après n ou l. HORS de ces 3 cas, ne déclare JAMAIS un t ou un d « normal » : applique le spirant, et si le contexte est inhabituel (emprunt, néologisme, groupe de consonnes rare), dis honnêtement « ici, seule l'écoute native tranche ».
 - s et z toujours durs, même entre deux voyelles.
 
 Gémination (consonne doublée : tt, mm, ss, …) : se prononce LONGUE et appuyée, et ça change le sens · ne jamais l'ignorer.
 
 Accent : syllabes assez égales, pas d'accent tonique fort à l'anglaise.
+
+MÉTHODE OBLIGATOIRE pour analyser un mot : épelle-le d'abord lettre à lettre avec des points (ex : tsenselkimt → t·s·e·n·s·e·l·k·i·m·t), et juge chaque t/d UNIQUEMENT d'après la lettre qui le précède DANS TON ÉPELLATION (pas de mémoire, pas d'à-peu-près). Un contexte que tu n'as pas vérifié dans l'épellation n'existe pas.
 
 RÈGLE D'OR : la seule vraie façon d'apprendre un son kabyle, c'est d'ÉCOUTER une voix native. Pour toute question de prononciation : donne la règle exacte ci-dessus, découpe le mot en syllabes simplement, PUIS invite l'élève à écouter l'audio natif du mot dans l'app. N'invente JAMAIS une transcription du type « ça se dit X de Y ».`;
 
