@@ -49,3 +49,6 @@ next-env.d.ts
 
 # audio TTS généré (reproductible via scripts/build-tts.py)
 /public/tts/
+/data/tg-quiz.json
+/data/tg-inbox.json
+/data/tg-offset.json
