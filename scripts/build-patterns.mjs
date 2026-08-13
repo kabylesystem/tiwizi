@@ -403,6 +403,105 @@ const DEFS = [
     note: "« ma » ouvre une condition : ma yella = s'il y a / si c'est le cas, ma tebɣiḍ = si tu veux. (Pour l'irréel, on trouve aussi « lukan » = si j'avais….)",
     probe: { q: "La phrase pose-t-elle…", options: ["une condition (si…)", "une question (quoi ?)"], answer: 0 },
   },
+  {
+    id: "q-melmi", order: 27, family: "interrogation",
+    name: "melmi · quand ?",
+    schema: "melmi (…) ?",
+    frHint: /(\bquand\b|quelle heure|quel jour|quelle date)/i,
+    detect: re(wb("melmi")),
+    mask: re(wb("melmi"), "giu"),
+    corrupt: [],
+    contrastsWith: ["q-anda", "q-acu"],
+    requires: [],
+    foilFrom: "q-anda", foilAnswer: 1,
+    note: "« melmi » = quand : melmi d-yuɣal ? = quand est-il revenu ? (Le moment, pas le lieu.)",
+    probe: { q: "On demande…", options: ["où", "quand", "quoi"], answer: 1 },
+  },
+  {
+    id: "q-acimi", order: 28, family: "interrogation",
+    name: "iwacu / ayɣer · pourquoi ?",
+    schema: "iwacu / ayɣer / acimi (…) ?",
+    frHint: /(pourquoi|pour quelle raison)/i,
+    detect: re(wb("iwacu|ayɣer|acimi|acuɣer")),
+    mask: re(wb("iwacu|ayɣer|acimi|acuɣer"), "giu"),
+    corrupt: [],
+    contrastsWith: ["q-acu", "q-amek"],
+    requires: [],
+    foilFrom: "q-acu", foilAnswer: 0,
+    note: "Pourquoi se dit de plusieurs façons : iwacu, ayɣer, acimi (régions différentes, même sens) · Iwacu tugdem ? = pourquoi avez-vous peur ? Retiens-en UNE (iwacu), reconnais les autres.",
+    probe: { q: "On demande…", options: ["la raison (pourquoi)", "la manière (comment)"], answer: 0 },
+  },
+  {
+    id: "q-anwa", order: 29, family: "interrogation",
+    name: "anwa / anta · qui ?",
+    schema: "anwa (m.) / anta (f.) (…) ?",
+    frHint: /(\bqui\b|lequel|laquelle|lesquels)/i,
+    detect: re(wb("anwa|anta|anwi|anti")),
+    mask: re(wb("anwa|anta|anwi|anti"), "giu"),
+    corrupt: [],
+    contrastsWith: ["q-acu"],
+    requires: [],
+    foilFrom: "q-acu", foilAnswer: 0,
+    note: "« anwa » = qui/lequel (masculin), « anta » = qui/laquelle (féminin) · Anwa yeɣlin ? = qui est tombé ? (« acu » demande une chose, « anwa » une personne.)",
+    probe: { q: "On demande…", options: ["une personne (qui)", "une chose (quoi)"], answer: 0 },
+  },
+  {
+    id: "q-ansi", order: 30, family: "interrogation",
+    name: "ansi · d'où ?",
+    schema: "ansi (…) ?",
+    frHint: /(d'où|d’où)/i,
+    detect: re(wb("ansi")),
+    mask: re(wb("ansi"), "giu"),
+    corrupt: [],
+    contrastsWith: ["q-anda"],
+    requires: [],
+    foilFrom: "q-anda", foilAnswer: 1,
+    note: "« ansi » = d'où (l'origine) : Ansi d-truḥeḍ ? = tu viens d'où ? · « anda » = où (le lieu), « ansi » = d'où (la provenance).",
+    probe: { q: "On demande…", options: ["le lieu (où)", "l'origine (d'où)"], answer: 1 },
+  },
+  {
+    id: "dat-as", order: 31, family: "conjugaison",
+    name: "-as · « à lui / à elle »",
+    schema: "VERBE-as / VERBE-asen (pl.)",
+    frHint: /(\b(lui|leur)\b)/i,
+    detect: re("(?<=\\p{L})-y?asen?(?!\\p{L})(?!-)"),
+    exclude: re("(?:fell|ɣur|yid|ɣer|akked|nnig|ddaw|zdat|deffir|gar|sennig)-y?asen?(?!\\p{L})", "iu"),
+    mask: re("(?<=\\p{L})-y?asen?(?!\\p{L})", "giu"),
+    corrupt: [],
+    contrastsWith: ["prep-pron"],
+    requires: [],
+    foilFrom: "prep-pron", foilAnswer: 1,
+    note: "« -as » collé au verbe = à lui / à elle : ini-as = dis-LUI, efk-as = donne-LUI · au pluriel « -asen » = à eux/elles. (À ne pas confondre avec fell-as = sur lui, où -as suit une préposition.)",
+    probe: { q: "Le « -as » ajoute…", options: ["à lui / à elle (destinataire)", "sur lui (préposition)"], answer: 0 },
+  },
+  {
+    id: "dir-d", order: 32, family: "temps & mode",
+    name: "-d · le mouvement « vers ici »",
+    schema: "VERBE-d / d-VERBE",
+    frHint: /(\bvenu(e|s|es)?\b|\bviens\b|\bvient\b|viennent|\bvenir\b|venez|apport|ramen|ramèn|arriv|revien|revenu|rentr|\bretour\b)/i,
+    detect: re("(?<=\\p{L})-d(?!\\p{L})(?!-)|(?<!\\p{L})d-(?=\\p{L})"),
+    mask: re("(?<=\\p{L})-d(?!\\p{L})(?!-)|(?<!\\p{L})d-(?=\\p{L})", "giu"),
+    corrupt: [],
+    contrastsWith: ["cop-d"],
+    requires: [],
+    foilFrom: "cop-d", foilAnswer: 1,
+    note: "La petite particule « d » accrochée au verbe oriente l'action VERS ICI, vers celui qui parle : yusa-d = il est venu (vers moi), awi-d = apporte (vers ici), uɣal-d = reviens. Sans elle, le mouvement s'éloigne.",
+    probe: { q: "Le « -d » indique que l'action…", options: ["vient vers ici (vers moi)", "présente quelque chose (c'est…)"], answer: 0 },
+  },
+  {
+    id: "prog-la", order: 33, family: "temps & mode",
+    name: "la + tt-verbe · en train de",
+    schema: "la + tt-VERBE",
+    frHint: /(en train (de|d')|est occupé à|sont occupés à)/i,
+    detect: re(`${wb("la")}\\s+(?:ye|te|ne|i|y|t|n)?e?tt\\p{L}{2,}`),
+    mask: re(wb("la"), "giu"),
+    corrupt: ["drop:la"],
+    contrastsWith: ["fut-ad"],
+    requires: ["fut-ad"],
+    foilFrom: "fut-ad", foilAnswer: 1,
+    note: "« la » + la forme en tt- = l'action EN COURS, sous tes yeux : la ttesseɣ = je suis en train de boire, la ttarguɣ = je suis en train de rêver. (La forme tt- seule dit aussi l'habitude : tetteɣ = je mange (d'habitude).)",
+    probe: { q: "D'après la structure, l'action…", options: ["se déroule en ce moment", "est à venir"], answer: 0 },
+  },
 ];
 
 // --- candidate pool: short sentences, audio first ---
@@ -561,8 +660,14 @@ for (const d of DEFS) {
     // vivier élargi : tout l'audio (w<=9), la transparence prime sur la brièveté
     const wide = instances.filter((p) => p.audio);
     const transparent = wide.filter((p) => d.frHint.test(p.fr));
+    const transparentAll = instances.filter((p) => d.frHint.test(p.fr));
     if (transparent.length >= 12) floodPool = transparent;
-    else console.log(`  ⚠ ${d.id}: seulement ${transparent.length} phrases transparentes, flood NON filtré`);
+    else if (transparentAll.length >= 12) {
+      // la transparence prime sur l'audio : mieux vaut une phrase muette dont
+      // le français MONTRE le pattern qu'une phrase audio opaque
+      floodPool = transparentAll;
+      console.log(`  ℹ ${d.id}: flood transparent mais partiellement sans audio (${transparent.length} audio / ${transparentAll.length} total)`);
+    } else console.log(`  ⚠ ${d.id}: seulement ${transparentAll.length} phrases transparentes, flood NON filtré`);
   }
   const flood = pickVaried(floodPool.slice(0, 600), 40, seen);
   const floodIds = new Set(flood.map((p) => p.id));
@@ -589,7 +694,10 @@ for (const d of DEFS) {
   let foilCands;
   if (d.foilFrom) {
     const src = DEFS.find((x) => x.id === d.foilFrom);
-    foilCands = pool.filter((p) => p.audio && p.w <= 7 && src.detect.test(p.kab) && !d.detect.test(p.kab) && unambiguous(p));
+    // le foil VIENT du pattern contrasté : on n'exclut que les AUTRES contrastes
+    const otherContrasts = contrastRes.filter((r) => r.source !== src.detect.source);
+    const cleanFoil = (p) => !otherContrasts.some((r) => r.test(p.kab));
+    foilCands = pool.filter((p) => p.audio && p.w <= 7 && src.detect.test(p.kab) && !d.detect.test(p.kab) && cleanFoil(p));
   } else {
     foilCands = neutralPool.filter((p) => !d.detect.test(p.kab));
   }
