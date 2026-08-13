@@ -20,7 +20,8 @@ import {
   SESSION_MINUTES, type Block, type ReactItem,
 } from "@/lib/session-engine";
 import { useGameStore } from "@/lib/store/game-store";
-import { dueCards, gradeCard, type MyCard } from "@/lib/cards";
+import { allCards, dueCards, gradeCard, type MyCard } from "@/lib/cards";
+import { recordPracticeDay } from "@/lib/journey";
 import { Induction, type InductionResult } from "@/components/formats/induction";
 import { SceneBlock } from "@/components/formats/scene";
 import { FreeProduce } from "@/components/formats/free-produce";
@@ -58,6 +59,7 @@ export default function SessionPage() {
   const [elapsed, setElapsed] = useState(0); // seconds, only while visible
   const [running, setRunning] = useState(false);
   const statsRef = useRef({ items: 0, ok: 0, patterns: new Set<string>() });
+  const startRef = useRef<{ cards: number; pat: Record<string, { exp: number; abs: boolean; lv: number }> } | null>(null);
 
   const [, bump] = useState(0);
 
@@ -75,6 +77,14 @@ export default function SessionPage() {
   // load graph + cognitive model
   useEffect(() => {
     cogRef.current = loadCog();
+    if (!startRef.current) {
+      const pat: Record<string, { exp: number; abs: boolean; lv: number }> = {};
+      for (const [pid, sk] of Object.entries(cogRef.current.patterns)) {
+        const lv = Object.values(sk.channels).reduce((a, c) => a + (c?.reps ?? 0), 0);
+        pat[pid] = { exp: sk.exposure, abs: sk.abstracted, lv };
+      }
+      startRef.current = { cards: allCards().length, pat };
+    }
     loadGraph();
     // si la restauration depuis le disque (StateSync) arrive après nous
     const onPulled = () => {
@@ -181,11 +191,14 @@ export default function SessionPage() {
         const mat = mats[meta.id];
         // 2 vraies + 1 piège à position imprévisible : réussir le 1er probe
         // ne donne plus les 2 suivants gratuitement
-        const probes = mat.probes.slice(0, 2).map((p) => ({ pair: p, answer: meta.probe.answer, foil: false }));
+        const gentle = (cog.patterns[meta.id]?.exposure ?? 0) < 10;
+        const floodSrc = gentle ? [...mat.flood].sort((a, b) => a.w - b.w) : mat.flood;
+        const probeSrc = gentle ? [...mat.probes].sort((a, b) => a.w - b.w) : mat.probes;
+        const probes = probeSrc.slice(0, 2).map((p) => ({ pair: p, answer: meta.probe.answer, foil: false }));
         const foil = mat.foils?.[0];
         if (foil) probes.splice(Math.floor(Math.random() * 3), 0, { pair: foil, answer: meta.foilAnswer, foil: true });
-        else probes.push({ pair: mat.probes[2], answer: meta.probe.answer, foil: false });
-        b = { type: "induction", meta, flood: mat.flood.slice(0, cog.floodLen ?? 5), probes };
+        else probes.push({ pair: probeSrc[2], answer: meta.probe.answer, foil: false });
+        b = { type: "induction", meta, flood: floodSrc.slice(0, cog.floodLen ?? 5), probes };
         ranRef.current.induction++;
       } else if (req.type === "scene") {
         const seed = new Date().toISOString().slice(0, 10);
@@ -228,6 +241,7 @@ export default function SessionPage() {
     saveCog(cog);
     gameStore.incrementStreak();
     gameStore.addXP(statsRef.current.items * 10);
+    recordPracticeDay();
     clearSnap();
     setRunning(false);
     setPhase("recap");
@@ -390,7 +404,7 @@ export default function SessionPage() {
             );
           })()}
 
-          {phase === "recap" && <RecapCard stats={statsRef.current} elapsed={elapsed} onMore={() => { setRunning(true); advance(true); }} onHome={() => router.push("/")} />}
+          {phase === "recap" && <RecapCard stats={statsRef.current} start={startRef.current} metas={metas ?? []} elapsed={elapsed} onMore={() => { setRunning(true); advance(true); }} onHome={() => router.push("/")} />}
         </div>
       </main>
     </div>
@@ -526,16 +540,38 @@ function CardsBlock({
 
 function RecapCard({
   stats,
+  start,
+  metas,
   elapsed,
   onMore,
   onHome,
 }: {
   stats: { items: number; ok: number; patterns: Set<string> };
+  start: { cards: number; pat: Record<string, { exp: number; abs: boolean; lv: number }> } | null;
+  metas: PatternMeta[];
   elapsed: number;
   onMore: () => void;
   onHome: () => void;
 }) {
   const acc = stats.items ? Math.round((stats.ok / stats.items) * 100) : 0;
+  const gains: string[] = [];
+  if (start) {
+    const cog = loadCog();
+    const nameOf = (pid: string) => metas.find((m) => m.id === pid)?.name ?? pid;
+    const newCards = allCards().length - start.cards;
+    if (newCards > 0) gains.push(`🃏 +${newCards} carte${newCards > 1 ? "s" : ""} de vocab dans ton deck`);
+    let phrases = 0;
+    let ups = 0;
+    for (const [pid, sk] of Object.entries(cog.patterns)) {
+      const b = start.pat[pid] ?? { exp: 0, abs: false, lv: 0 };
+      phrases += Math.max(0, sk.exposure - b.exp);
+      const lv = Object.values(sk.channels).reduce((a, c) => a + (c?.reps ?? 0), 0);
+      ups += Math.max(0, lv - b.lv);
+      if (sk.abstracted && !b.abs) gains.push(`🧠 pattern « ${nameOf(pid)} » : EXTRAIT par toi-même`);
+    }
+    if (phrases > 0) gains.push(`👁 ${phrases} phrases kabyles réelles rencontrées`);
+    if (ups > 0) gains.push(`📈 ${ups} niveau${ups > 1 ? "x" : ""} de mémoire gagné${ups > 1 ? "s" : ""} (elles reviendront pile avant l'oubli)`);
+  }
   return (
     <Panel className="text-center">
       <FennecMascot mood="excited" size={92} />
@@ -548,6 +584,14 @@ function RecapCard({
         <Stat n={`${acc}%`} l="réussite" c="#5B9A6F" />
         <Stat n={`${stats.patterns.size}`} l="patterns" c="#4A9ECF" />
       </div>
+      {gains.length > 0 && (
+        <div className="mx-auto mt-5 max-w-md rounded-2xl p-4 text-left" style={{ background: "rgba(91,154,111,0.08)", border: "1px solid rgba(91,154,111,0.25)" }}>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider" style={{ color: "#5B9A6F" }}>Ce que tu as gagné aujourd&apos;hui</p>
+          {gains.map((g) => (
+            <p key={g} className="mb-1 text-sm text-ink">{g}</p>
+          ))}
+        </div>
+      )}
       <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted">
         <Flame className="h-4 w-4" style={{ color: "#D4735E" }} />
         Ce qui a flanché aujourd&apos;hui reviendra plus tôt · c&apos;est le système qui bosse pour toi.

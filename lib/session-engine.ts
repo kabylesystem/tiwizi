@@ -95,10 +95,12 @@ function itemFor(
   mat: PatternMaterial,
   used: Set<number>,
   seen: Set<number>,
-  salt: number
+  salt: number,
+  gentle = false
 ): ReactItem | null {
   const fresh = (arr: Lite[]) => arr.find((p) => !used.has(p.id) && !seen.has(p.id)) || arr.find((p) => !used.has(p.id));
   const pool = [...mat.extra, ...mat.probes, ...mat.flood];
+  if (gentle) pool.sort((a, b) => a.w - b.w);
 
   if (channel === "produce") {
     // natif Tatoeba d'abord · synthétique en dernier recours
@@ -167,7 +169,8 @@ export function buildReactBlock(
     const mat = materials[d.patternId];
     if (!meta || !mat) continue;
     const seen = new Set(skill(cog, d.patternId).seenIds);
-    const item = itemFor(d.patternId, d.channel, meta, mat, used, seen, salt++);
+    const gentle = (cog.patterns[d.patternId]?.exposure ?? 0) < 15 || !cog.patterns[d.patternId]?.abstracted;
+    const item = itemFor(d.patternId, d.channel, meta, mat, used, seen, salt++, gentle);
     if (item) {
       items.push(item);
       perPattern[d.patternId] = (perPattern[d.patternId] ?? 0) + 1;
@@ -197,7 +200,8 @@ export function buildGenerateBlock(
   for (const pid of pids) {
     if (items.length >= n - 1) break;
     const seen = new Set(skill(cog, pid).seenIds);
-    const item = itemFor(pid, "produce", metasById[pid], materials[pid], used, seen, salt++);
+    const item = itemFor(pid, "produce", metasById[pid], materials[pid], used, seen, salt++,
+      (cog.patterns[pid]?.exposure ?? 0) < 15);
     if (item) items.push(item);
   }
   // le sommet : production LIBRE (sa propre phrase, corrigée par Idir)

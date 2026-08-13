@@ -7,6 +7,8 @@ import { Check, Lock, Play, Star, ChevronRight } from "lucide-react";
 import { kabyleUnits, type Unit } from "@/lib/data/kabyle-content";
 import { useGameStore } from "@/lib/store/game-store";
 import { loadCog, type CogStore, CHANNELS, CHANNEL_LABEL } from "@/lib/cognitive-model";
+import { streak, daysPracticed, villageDaysLeft } from "@/lib/journey";
+import { allCards } from "@/lib/cards";
 import { vocabCount } from "@/lib/vocab";
 import { loadSnap } from "@/lib/snap";
 import { SESSION_MINUTES } from "@/lib/session-engine";
@@ -57,6 +59,11 @@ export default function LearnPath() {
   const overall = metas.length
     ? Math.round(((nAbstracted + nStarted * 0.3) / metas.length) * 100)
     : 0;
+  const nPhrases = cog ? Object.values(cog.patterns).reduce((a, p) => a + p.exposure, 0) : 0;
+  const fire = mounted ? streak() : 0;
+  const nDays = mounted ? daysPracticed() : 0;
+  const jVillage = mounted ? villageDaysLeft() : 90;
+  const nCards = mounted ? allCards().length : 0;
 
   // a unit is unlocked once the previous unit is fully complete
   const unitDone = (u: Unit) => u.lessons.every((l) => completedLessons.includes(l.id));
@@ -112,6 +119,13 @@ export default function LearnPath() {
                 {nAbstracted + nStarted === 0 ? "Azul fellak! Bdu." : "Yelha, kemmel akka!"} · Idir
               </span>
             </span>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <ProgressChip icon="🎯" label={`Village · J-${jVillage}`} strong />
+            <ProgressChip icon="🔥" label={fire > 0 ? `${fire} jour${fire > 1 ? "s" : ""} d'affilée` : "commence ta série aujourd'hui"} />
+            <ProgressChip icon="📅" label={`${nDays} jour${nDays > 1 ? "s" : ""} pratiqué${nDays > 1 ? "s" : ""}`} />
+            <ProgressChip icon="🃏" label={`${nCards} carte${nCards > 1 ? "s" : ""} de vocab`} />
+            <ProgressChip icon="👁" label={`${nPhrases} phrases rencontrées`} />
           </div>
         </motion.div>
 
@@ -359,5 +373,19 @@ function LessonNode({
       {locked ? inner : <Link href={`/lesson?id=${id}`}>{inner}</Link>}
       <span className="max-w-[3.5rem] truncate text-[10px] text-muted">{title}</span>
     </div>
+  );
+}
+
+function ProgressChip({ icon, label, strong }: { icon: string; label: string; strong?: boolean }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold"
+      style={strong
+        ? { background: "rgba(91,154,111,0.12)", border: "1px solid rgba(91,154,111,0.35)", color: "#3f7a52" }
+        : { background: "rgba(200,150,62,0.08)", border: "1px solid rgba(200,150,62,0.22)", color: "#8B7355" }}
+    >
+      <span>{icon}</span>
+      {label}
+    </span>
   );
 }
