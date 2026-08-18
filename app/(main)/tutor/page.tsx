@@ -6,6 +6,7 @@ import { FennecMascot } from "@/components/fennec";
 import { cogSnapshot, loadCog } from "@/lib/cognitive-model";
 import { autoCardsFromReply } from "@/lib/auto-cards";
 import { IdirText } from "@/components/idir-text";
+import { KabKeys } from "@/components/kab-keys";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -46,6 +47,7 @@ export default function TutorPage() {
   const [busy, setBusy] = useState(false);
   const [autoCards, setAutoCards] = useState(0);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -186,11 +188,15 @@ export default function TutorPage() {
           ))}
         </div>
 
+        <div className="border-t border-[rgba(200,150,62,0.18)] px-3 pt-2 sm:px-4">
+          <KabKeys inputRef={inputRef} onChange={setInput} />
+        </div>
         <form
           onSubmit={(e) => { e.preventDefault(); send(input); }}
-          className="flex items-center gap-2 border-t border-[rgba(200,150,62,0.18)] p-3 sm:p-4"
+          className="flex items-center gap-2 p-3 sm:p-4"
         >
           <input
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Écris en kabyle ou en français…"

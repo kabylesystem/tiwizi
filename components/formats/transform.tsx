@@ -9,12 +9,13 @@
  * La banque de mots vient de la CIBLE authentique · on produit du corpus,
  * jamais du kabyle inventé.
  */
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import type { Lite, Twin } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
 import { fold } from "@/lib/normalize";
 import { AudioButton } from "@/components/audio-button";
+import { KabKeys } from "@/components/kab-keys";
 import { KabTap } from "@/components/kab-tap";
 import { IdirHelp } from "@/components/idir-help";
 import { Panel, FmtTag, GoldButton } from "./shared";
@@ -48,6 +49,7 @@ export function Generate({
   );
   const [typing, setTyping] = useState(false);
   const [typed, setTyped] = useState("");
+  const typeRef = useRef<HTMLTextAreaElement | null>(null);
   const [bank, setBank] = useState<Tok[]>(() => {
     let a = shuffle(targetToks);
     for (let t = 0; t < 8 && a.map((x) => x.tok).join(" ") === targetToks.map((x) => x.tok).join(" ") && a.length > 1; t++)
@@ -110,6 +112,7 @@ export function Generate({
 
       {!shown && typing && (
         <textarea
+          ref={typeRef}
           value={typed}
           onChange={(e) => setTyped(e.target.value)}
           rows={2}
@@ -119,6 +122,7 @@ export function Generate({
           autoFocus
         />
       )}
+      {!shown && typing && <div className="mb-3"><KabKeys inputRef={typeRef} onChange={setTyped} /></div>}
       {!shown && !typing && (
         <div className="mb-2 flex flex-wrap justify-center gap-2">
           {bank.map((it) => (

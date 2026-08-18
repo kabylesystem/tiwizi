@@ -7,7 +7,7 @@
  * de la pyramide (docs/pedagogie.md §5). L'auto-évaluation après correction
  * nourrit le canal production.
  */
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PenLine } from "lucide-react";
 import type { PatternMeta } from "@/lib/patterns";
 import type { Grade } from "@/lib/srs";
@@ -16,6 +16,7 @@ import { allCards, gradeCard, type MyCard } from "@/lib/cards";
 import { autoCardsFromReply } from "@/lib/auto-cards";
 import { FennecMascot } from "@/components/fennec";
 import { IdirText } from "@/components/idir-text";
+import { KabKeys } from "@/components/kab-keys";
 import { Panel, FmtTag, GoldButton, SelfGrade } from "./shared";
 
 /** La consigne-situation par pattern · une intention, pas une traduction. */
@@ -43,6 +44,7 @@ export function FreeProduce({
   onDone: (g: Grade, ms: number) => void;
 }) {
   const [text, setText] = useState("");
+  const boxRef = useRef<HTMLTextAreaElement | null>(null);
   const [myCards] = useState<MyCard[]>(() => (typeof window !== "undefined" ? allCards().slice(0, 2) : []));
   const [reply, setReply] = useState<string | null>(null);
   const [suggested, setSuggested] = useState<Grade | undefined>(undefined);
@@ -100,6 +102,7 @@ export function FreeProduce({
       )}
 
       <textarea
+        ref={boxRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
         disabled={!!reply || busy}
@@ -108,6 +111,7 @@ export function FreeProduce({
         className="kab mt-4 w-full resize-none rounded-2xl border-2 p-4 text-xl text-ink outline-none"
         style={{ borderColor: "rgba(200,150,62,0.3)", background: "rgba(255,255,255,0.7)" }}
       />
+      {!reply && !busy && <div className="mt-2"><KabKeys inputRef={boxRef} onChange={setText} /></div>}
 
       {!reply && (
         <GoldButton onClick={submit} disabled={!text.trim() || busy}>
