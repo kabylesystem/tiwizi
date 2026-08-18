@@ -46,7 +46,7 @@ export function SceneBlock({
     <Panel>
       <FmtTag label={`${title} · ${idx + 1}/${lines.length}`} />
       <div className="flex flex-col items-center gap-4">
-        <AudioButton id={l.id} synthetic={!l.audio} size="lg" autoPlay key={l.id} />
+        <AudioButton id={l.id} synthetic={!l.audio} size="lg" autoPlay key={l.id} text={l.kab} />
         <KabTap kab={l.kab} />
         {revealed ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-lg text-muted">

@@ -67,7 +67,7 @@ export function Anticipate({
 
       {revealed && (
         <div className="mt-4 flex justify-center">
-          <AudioButton id={pair.id} synthetic={!pair.audio} size="md" autoPlay />
+          <AudioButton id={pair.id} synthetic={!pair.audio} size="md" autoPlay text={pair.kab} />
         </div>
       )}
 

@@ -7,7 +7,7 @@
  * la prose d'un LLM. SRS SM-2 par carte, localStorage + réplication disque.
  */
 import { schedule, type CardState, type Grade } from "./srs";
-import { fold, cleanGloss } from "./normalize";
+import { fold, cleanGloss, primarySense } from "./normalize";
 
 export type MyCard = {
   k: string; // clé foldée
@@ -59,7 +59,7 @@ export function addCardRaw(c: { kab: string; fr: string; root?: string; source?:
 export function addCard(entry: { w: string; root?: string; m: { fr: string[] }[] }): boolean {
   return addCardRaw({
     kab: entry.w,
-    fr: entry.m[0]?.fr.slice(0, 3).join(" · ") ?? "",
+    fr: primarySense(cleanGloss(entry.m[0]?.fr[0] ?? "")),
     root: entry.root || undefined,
     source: "Dallet",
   });

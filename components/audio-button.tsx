@@ -17,6 +17,7 @@ export function AudioButton({
   size = "md",
   synthetic = false,
   src,
+  text,
 }: {
   id: number;
   autoPlay?: boolean;
@@ -25,33 +26,64 @@ export function AudioButton({
   synthetic?: boolean;
   /** URL explicite (ex : TTS d'une variante corrompue) · prime sur id */
   src?: string;
+  /** texte kabyle : permet la génération TTS à la demande en dernier recours */
+  text?: string;
 }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [dead, setDead] = useState(false); // fichier absent / CDN 403 → on s'efface
+  const [dead, setDead] = useState(false);
+  const [usingSynth, setUsingSynth] = useState(synthetic);
+
+  // fichier mort ≠ bouton mort : natif → tts local → génération à la demande
+  const candidates = useRef<string[]>([]);
+  const stage = useRef(0);
+  if (candidates.current.length === 0) {
+    const c: string[] = [];
+    if (src) c.push(src);
+    else if (synthetic) c.push(ttsUrl(id));
+    else c.push(audioUrl(id), ttsUrl(id));
+    if (text && text.length <= 60) c.push("gen:" + text);
+    candidates.current = c;
+  }
 
   // Audio HORS DOM (new Audio()) : les extensions type Video Speed Controller
   // s'accrochent aux <audio> insérés dans la page · ici il n'y en a plus.
-  const url = src ?? (synthetic ? ttsUrl(id) : audioUrl(id));
-  const ensure = useCallback(() => {
-    if (!ref.current || ref.current.src !== new URL(url, location.href).href) {
-      ref.current?.pause();
-      const a = new Audio(url);
-      a.preload = "none";
-      a.onplay = () => setPlaying(true);
-      a.onended = () => setPlaying(false);
-      a.onpause = () => setPlaying(false);
-      a.onerror = () => setDead(true);
-      ref.current = a;
+  const playStage = useCallback(async (i: number) => {
+    const cand = candidates.current[i];
+    if (!cand) {
+      setDead(true);
+      return;
     }
-    return ref.current;
-  }, [url]);
+    let url = cand;
+    if (cand.startsWith("gen:")) {
+      try {
+        const d = await fetch(`/api/tts?t=${encodeURIComponent(cand.slice(4))}`).then((r) => r.json());
+        if (!d.url) throw new Error("no url");
+        url = d.url;
+        candidates.current[i] = url;
+      } catch {
+        setDead(true);
+        return;
+      }
+    }
+    ref.current?.pause();
+    const a = new Audio(url);
+    a.preload = "none";
+    a.onplay = () => setPlaying(true);
+    a.onended = () => setPlaying(false);
+    a.onpause = () => setPlaying(false);
+    a.onerror = () => {
+      stage.current = i + 1;
+      playStage(i + 1);
+    };
+    ref.current = a;
+    if (i > 0 || synthetic) setUsingSynth(true);
+    a.play().catch(() => {});
+  }, [synthetic]);
 
   const play = useCallback(() => {
-    const a = ensure();
-    a.currentTime = 0;
-    a.play().catch(() => {});
-  }, [ensure]);
+    playStage(stage.current);
+  }, [playStage]);
 
   useEffect(() => {
     if (autoPlay) {
@@ -63,6 +95,7 @@ export function AudioButton({
   useEffect(() => () => ref.current?.pause(), []);
 
   if (dead) return null;
+  const synthLook = usingSynth;
 
   const dim =
     size === "lg" ? "h-14 w-14" : size === "sm" ? "h-9 w-9" : "h-11 w-11";
@@ -73,10 +106,10 @@ export function AudioButton({
     <button
       type="button"
       onClick={play}
-      aria-label={synthetic ? "Écouter (voix synthétique)" : "Écouter la prononciation (voix native)"}
-      title={synthetic ? "Voix synthétique (IA, MMS) : le texte est humain, la voix non" : "Voix native (Tatoeba)"}
+      aria-label={synthLook ? "Écouter (voix synthétique)" : "Écouter la prononciation (voix native)"}
+      title={synthLook ? "Voix synthétique (IA, MMS) : le texte est humain, la voix non" : "Voix native (Tatoeba)"}
       className={`group grid ${dim} place-items-center rounded-full border bg-card shadow-sm transition-all active:scale-95 ${
-        synthetic
+        synthLook
           ? "border-[rgba(31,99,176,0.35)] text-[#1f63b0] hover:bg-[rgba(31,99,176,0.08)]"
           : "border-line-strong text-brand hover:border-brand hover:bg-brand-soft"
       }`}

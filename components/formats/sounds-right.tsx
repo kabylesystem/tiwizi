@@ -89,7 +89,7 @@ export function SoundsRight({
             <p className="mt-1 text-sm text-muted">{corrupt.fr}</p>
             {(
               <div className="mt-3 flex justify-center">
-                <AudioButton id={corrupt.id} synthetic={!corrupt.audio} size="sm" autoPlay />
+                <AudioButton id={corrupt.id} synthetic={!corrupt.audio} size="sm" autoPlay text={corrupt.good} />
               </div>
             )}
             {!ok && (

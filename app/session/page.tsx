@@ -31,6 +31,7 @@ import { Anticipate } from "@/components/formats/anticipate";
 import { Generate } from "@/components/formats/transform";
 import { Panel, FmtTag, GoldButton, SelfGrade, CREAM } from "@/components/formats/shared";
 import type { Grade } from "@/lib/srs";
+import { primarySense } from "@/lib/normalize";
 import { SNAP_KEY, type Snap, loadSnap, clearSnap } from "@/lib/snap";
 import { FennecMascot } from "@/components/fennec";
 import { WordAudio } from "@/components/word-audio";
@@ -520,7 +521,7 @@ function CardsBlock({
       <div className="mb-2 flex justify-center"><WordAudio kab={c.kab} autoPlay key={c.k} /></div>
       <p className="kab text-balance text-center text-4xl font-bold text-ink">{c.kab}</p>
       {rev && c.root && <p className="mt-1 text-center text-xs font-bold uppercase tracking-wider text-muted">√{c.root}</p>}
-      {rev && <p className="mt-3 text-center text-lg text-muted">{c.fr}</p>}
+      {rev && <p className="mt-3 text-center text-lg text-muted">{primarySense(c.fr)}</p>}
       {!rev ? (
         <GoldButton onClick={() => setRev(true)}>Révéler</GoldButton>
       ) : (

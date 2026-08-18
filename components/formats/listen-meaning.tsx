@@ -32,9 +32,9 @@ export function ListenMeaning({
       />
 
       <div className="flex flex-col items-center gap-4">
-        {audioFirst && <AudioButton id={pair.id} synthetic={!pair.audio} size="lg" autoPlay />}
+        {audioFirst && <AudioButton id={pair.id} synthetic={!pair.audio} size="lg" autoPlay text={pair.kab} />}
         {(!audioFirst || revealed) && <KabTap kab={pair.kab} />}
-        {!audioFirst && revealed && <AudioButton id={pair.id} synthetic={!pair.audio} size="md" />}
+        {!audioFirst && revealed && <AudioButton id={pair.id} synthetic={!pair.audio} size="md" text={pair.kab} />}
         {revealed && <p className="text-center text-lg text-muted">{pair.fr}</p>}
       </div>
 

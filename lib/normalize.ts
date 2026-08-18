@@ -31,6 +31,16 @@ export function fold(s: string): string {
  * Nettoie une glose du Dallet numérisé pour un affichage COMPACT (1 ligne) :
  * <br /> → séparateur, ** retirés, ''mot'' → mot, cruft "root:…" retiré.
  */
+/** UN seul sens pour la révision : le premier du Dallet, sans renvois (v. seg). */
+export function primarySense(s: string): string {
+  const first = (s || "").split("·")[0].split(";")[0];
+  return first
+    .replace(/\s*\(v\.[^)]*\)/gi, "")
+    .replace(/\s+/g, " ")
+    .replace(/[.,\s]+$/, "")
+    .trim();
+}
+
 export function cleanGloss(s: string): string {
   return (s || "")
     .replace(/<br\s*\/?>/gi, " · ")

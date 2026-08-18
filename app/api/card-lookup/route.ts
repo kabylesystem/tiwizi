@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchDict, searchGrammar } from "@/lib/data";
-import { fold, cleanGloss } from "@/lib/normalize";
+import { fold, cleanGloss, primarySense } from "@/lib/normalize";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
       if (fold(e.w) === fold(stem)) {
         return NextResponse.json({
           kab: e.w,
-          fr: cleanGloss(e.m[0]?.fr.slice(0, 3).join(" · ") ?? ""),
+          fr: primarySense(cleanGloss(e.m[0]?.fr[0] ?? "")),
           root: e.root || undefined,
           source: "Dallet · mot racine",
         });

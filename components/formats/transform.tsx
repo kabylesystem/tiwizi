@@ -74,7 +74,7 @@ export function Generate({
       {twin ? (
         <div className="mb-5 rounded-2xl p-4 text-center" style={{ background: "rgba(255,255,255,0.55)" }}>
           <div className="flex items-center justify-center gap-3">
-            <AudioButton id={twin.plain.id} synthetic={!twin.plain.audio} size="sm" />
+            <AudioButton id={twin.plain.id} synthetic={!twin.plain.audio} size="sm" text={twin.plain.kab} />
             <KabTap kab={twin.plain.kab} className="kab text-2xl font-semibold text-ink" />
           </div>
           <p className="mt-1 text-sm text-muted">{twin.plain.fr}</p>
@@ -166,7 +166,7 @@ export function Generate({
             <KabTap kab={target.kab} className="kab mt-1 text-center text-xl font-semibold text-ink" />
             {(
               <div className="mt-3 flex justify-center">
-                <AudioButton id={target.id} synthetic={!target.audio} size="sm" autoPlay />
+                <AudioButton id={target.id} synthetic={!target.audio} size="sm" autoPlay text={target.kab} />
               </div>
             )}
             {!ok && (
