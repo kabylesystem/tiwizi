@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { askClaude, askClaudeStream, prewarm } from "@/lib/claude-pool";
-import { searchSentences, searchGrammar, searchAssimil, patternsIndex } from "@/lib/data";
+import { searchSentences, searchGrammar, searchAssimil, searchDict, patternsIndex } from "@/lib/data";
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
-import { fold } from "@/lib/normalize";
+import { fold, cleanGloss } from "@/lib/normalize";
 import type { CogSnapshot } from "@/lib/cognitive-model";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ const CORRECT = `Tu es Idir, correcteur de kabyle bienveillant et PRUDENT. L'él
 2. La forme corrigée en kabyle (orthographe latine ɣ ɛ ḥ ṣ ṭ ḍ ẓ) · reste au PLUS PRÈS de sa phrase, corrige seulement ce qui est faux.
 3. UNE phrase d'explication (la structure, pas un cours).
 0. AVANT tout, ta TOUTE PREMIÈRE ligne doit être exactement « NIVEAU:x » où x est ton jugement de la phrase : 0 = à revoir entièrement · 1 = plusieurs fautes mais la structure est là · 2 = bien, une petite faute · 3 = parfaite. Rien d'autre sur cette ligne.
-RÈGLES DURES : appuie-toi sur les phrases vérifiées du corpus fournies (elles montrent l'usage réel) ; si tu n'es pas SÛR d'un mot ou d'une forme, dis-le honnêtement (« je ne suis pas certain de X ») plutôt que d'inventer ; félicite ce qui est juste. JAMAIS de kabyle inventé exotique.`;
+RÈGLES DURES : AVANT de corriger, déduis ce qu'il a VOULU dire (ses mots décodés + la situation te le disent) : ta correction exprime CETTE intention et GARDE ses mots à lui (s'il a mis le mot « eau », ta phrase corrigée parle de l'eau · ne remplace JAMAIS son sujet par un mot générique). Un mot décodé qui colle à la situation n'est pas hors-sujet : c'est son intention. Ta phrase corrigée doit être TOTALEMENT cohérente avec ton explication (si tu expliques « anda en tête », ta correction COMMENCE par anda). Appuie-toi sur la phrase vérifiée du corpus la plus proche ; n'introduis AUCUN mot sans rapport avec son intention. Si tu n'es pas SÛR d'un mot ou d'une forme, dis-le honnêtement plutôt que d'inventer ; félicite ce qui est juste. JAMAIS de kabyle inventé exotique.`;
 
 const SYSTEM = `Tu es Idir, un fennec sympathique, tuteur de kabyle (taqbaylit). L'élève s'appelle naly, débutant, et veut tenir de VRAIES conversations (politique, société, quotidien) d'ici décembre. Il te parle DEPUIS l'app Tiwizi : dans ce chat, il peut taper n'importe quel mot kabyle pour ouvrir sa fiche et l'écouter avec le bouton 🔊 (ne lui dis jamais qu'il n'a pas accès à l'audio).
 
@@ -99,7 +99,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { messages?: Msg[]; mode?: string; ask?: string; cogState?: CogSnapshot };
+  let body: { messages?: Msg[]; mode?: string; ask?: string; focus?: string; sentence?: string; cogState?: CogSnapshot };
   try {
     body = await req.json();
   } catch {
@@ -114,7 +114,9 @@ export async function POST(req: NextRequest) {
 
   // grounding: real verified phrases related to the topic
   const last = coach || correct ? body.ask! : [...messages].reverse().find((m) => m.role === "user")?.content || "";
-  const refs = searchSentences(last, correct ? 8 : 5)
+  // la recherche cible la PHRASE + l'intention (pas tout le blob de consignes)
+  const searchKey = (coach || correct) && body.focus ? body.focus : last;
+  const refs = searchSentences(searchKey, correct ? 8 : 5)
     .slice(0, correct ? 8 : 5)
     .map((p) => `- ${p.kab} = ${p.fr}`)
     .join("\n");
@@ -123,7 +125,27 @@ export async function POST(req: NextRequest) {
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
   // grounded GRAMMAR (naly's Anki decks: système verbal, présentatifs, prépositions…)
-  const gram = searchGrammar(last, correct ? 6 : 2)
+  // les mots de l'élève, décodés via Dallet : « amane » → aman = eau ·
+  // sans ça, le correcteur ne peut pas deviner l'INTENTION de la phrase
+  let decode = "";
+  if (correct && body.sentence) {
+    const stoks = [...new Set(fold(body.sentence).replace(/[^\p{L}'-]+/gu, " ").split(/\s+/).filter((t) => t.length >= 3))].slice(0, 8);
+    const dlines: string[] = [];
+    for (const t of stoks) {
+      let e = searchDict(t, 4).find((x) => fold(x.w) === t || (x.forms || []).some((f) => fold(f) === t));
+      if (!e)
+        for (const stem of [t.slice(0, -1), t.slice(1), t.slice(2)]) {
+          if (stem.length < 3) continue;
+          e = searchDict(stem, 4).find((x) => fold(x.w) === fold(stem));
+          if (e) break;
+        }
+      if (e) dlines.push(`- « ${t} » ≈ ${e.w} = ${cleanGloss(e.m[0]?.fr[0] ?? "")}`);
+    }
+    if (dlines.length)
+      decode = `\n\nLES MOTS DE L'ÉLÈVE, DÉCODÉS (Dallet · sers-t'en pour comprendre son INTENTION) :\n${dlines.join("\n")}`;
+  }
+
+  const gram = searchGrammar(searchKey, correct ? 6 : 2)
     .map((g) => `- Q: ${g.q}\n  R: ${g.a}`)
     .join("\n");
   const gramGrounding = gram
@@ -164,7 +186,7 @@ export async function POST(req: NextRequest) {
       pronCalc = `\n\nANALYSE MÉCANIQUE DES T/D (calculée par l'app en appliquant les règles vérifiées ci-dessus · FIABLE · si l'élève demande la prononciation d'un de ces mots, recopie l'analyse du mot concerné TELLE QUELLE, en français, sans la recalculer) :\n${lines.map((l) => `- ${l}`).join("\n")}`;
   }
 
-  const grounding = vocab + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
+  const grounding = vocab + decode + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
   const prompt =
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;

@@ -58,6 +58,8 @@ export function FreeProduce({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "correct",
+          sentence: text.trim(),
+          focus: `${SITUATION[meta.id] ?? meta.name} ${text.trim()}`,
           ask: `Situation donnée à l'élève : « ${SITUATION[meta.id] ?? meta.name} » (structure attendue : ${meta.schema}).${myCards.length ? ` Mots à placer si possible (fiches Dallet) : ${myCards.map((c) => `${c.kab} (${c.fr})`).join(", ")}.` : ""} Sa phrase kabyle : « ${text.trim()} »`,
           cogState: cogSnapshot(loadCog()),
         }),

@@ -89,6 +89,7 @@ Input narratif pur : audio natif, mots tappables, sens optionnel, zéro test.
 dev : `/session?demo=scene`.
 
 ## Phase 2 (prochaines briques, dans l'ordre de valeur)
+- vérif MÉCANIQUE des corrections d'Idir : chaque forme de la phrase corrigée attestée dans corpus/Dallet (bigrammes), sinon avertissement · reste du 2026-08-13 (« Anda-t yellan » assemblé douteux)
 1. **Contraste** — quand `confusions[X]` monte : paires minimales côte à côte
    (yella⇄ulac, ɣer⇄deg⇄ɣur- sont déjà encodés dans le graphe)
 2. **Sprint d'automatisation** — fenêtre de réponse qui rétrécit, sevrage du texte
