@@ -132,6 +132,24 @@ export async function POST(req: NextRequest) {
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
   // grounded GRAMMAR (naly's Anki decks: système verbal, présentatifs, prépositions…)
+  // le CHAT consulte aussi le DICTIONNAIRE : « comment on dit apprendre »
+  // se répond avec le Dallet (lmed), pas seulement avec des phrases
+  let dictHints = "";
+  if (!coach && !correct) {
+    const STOP_CHAT = new Set("comment exemple dire dites sais sait vais vaut avec pour mais quoi quel quelle chose veux veut peux peut suis nekk azul idir alors donc aussi bien plus dans phrase kabyle taqbaylit".split(" "));
+    const qtoks = [...new Set(fold(last).replace(/[^\p{L}'-]+/gu, " ").split(/\s+/).filter((t) => t.length >= 4 && !STOP_CHAT.has(t)))].slice(0, 6);
+    const hlines: string[] = [];
+    const seen = new Set<string>();
+    for (const t of qtoks) {
+      const e = searchDict(t, 3)[0];
+      if (!e || seen.has(e.w)) continue;
+      seen.add(e.w);
+      hlines.push(`- « ${t} » → ${e.w} = ${cleanGloss(e.m[0]?.fr.slice(0, 2).join(" · ") ?? "")}`);
+    }
+    if (hlines.length)
+      dictHints = `\n\nDICTIONNAIRE DALLET (mots vérifiés en lien avec sa question · c'est LA source pour « comment on dit X ») :\n${hlines.join("\n")}`;
+  }
+
   // les mots de l'élève, décodés via Dallet : « amane » → aman = eau ·
   // sans ça, le correcteur ne peut pas deviner l'INTENTION de la phrase
   let decode = "";
@@ -193,7 +211,7 @@ export async function POST(req: NextRequest) {
       pronCalc = `\n\nANALYSE MÉCANIQUE DES T/D (calculée par l'app en appliquant les règles vérifiées ci-dessus · FIABLE · si l'élève demande la prononciation d'un de ces mots, recopie l'analyse du mot concerné TELLE QUELLE, en français, sans la recalculer) :\n${lines.map((l) => `- ${l}`).join("\n")}`;
   }
 
-  const grounding = vocab + decode + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
+  const grounding = vocab + dictHints + decode + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
   const prompt =
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;
