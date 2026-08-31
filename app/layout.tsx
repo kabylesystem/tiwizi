@@ -3,6 +3,7 @@ import { Nunito, Noto_Sans, Noto_Sans_Tifinagh } from "next/font/google";
 import "./globals.css";
 import { TifinaghBackground } from "@/components/tifinagh-bg";
 import { StateSync } from "@/components/state-sync";
+import { VersionWatch } from "@/components/version-watch";
 
 // Friendly, rounded, warm · fits a language app (no more serifs).
 const nunito = Nunito({ variable: "--font-nunito", subsets: ["latin", "latin-ext"], display: "swap" });
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body className="min-h-full">
         <StateSync />
+        <VersionWatch />
         <TifinaghBackground />
         {children}
       </body>

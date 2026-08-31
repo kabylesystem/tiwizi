@@ -66,9 +66,13 @@ const difficulty = (p) => {
 const CLAIM_ORDER = ["cafe", "sante", "epicerie", "route", "famille", "corps", "repas", "nature", "village", "temps", "salutations", "politesses"];
 const claimed = new Set();
 const hitsByTheme = {};
+const frWords = (fr) => fr.replace(/[^\p{L}'-]+/gu, " ").trim().split(/\s+/).filter(Boolean).length;
 for (const tid of CLAIM_ORDER) {
   const t = THEMES.find((x) => x.id === tid);
-  const hits = pool.filter((p) => !claimed.has(p.id) && t.kw.test(p.fr));
+  // salutations/politesses = LOCUTIONS : courtes, sinon « Il lit volontiers
+  // des livres » finit dans les politesses (bug du 2026-08-13)
+  const maxW = tid === "politesses" || tid === "salutations" ? 4 : 99;
+  const hits = pool.filter((p) => !claimed.has(p.id) && t.kw.test(p.fr) && frWords(p.fr) <= maxW);
   for (const h of hits) claimed.add(h.id);
   hitsByTheme[tid] = hits;
 }
