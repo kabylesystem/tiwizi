@@ -164,7 +164,7 @@ export function searchAssimil(q: string, limit = 4): AssimilChunk[] {
   return scored.slice(0, limit).map((x) => _assimil![x.i]);
 }
 
-export type Lite = { id: number; kab: string; fr: string; audio: boolean; w: number };
+export type Lite = { id: number; kab: string; fr: string; audio: boolean; w: number; d?: number };
 export type PatternEntry = {
   id: string; order: number; family: string; name: string; schema: string;
   note: string; probe: { q: string; options: string[]; answer: number };

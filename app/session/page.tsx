@@ -193,8 +193,8 @@ export default function SessionPage() {
         // 2 vraies + 1 piège à position imprévisible : réussir le 1er probe
         // ne donne plus les 2 suivants gratuitement
         const gentle = (cog.patterns[meta.id]?.exposure ?? 0) < 10;
-        const floodSrc = gentle ? [...mat.flood].sort((a, b) => a.w - b.w) : mat.flood;
-        const probeSrc = gentle ? [...mat.probes].sort((a, b) => a.w - b.w) : mat.probes;
+        const floodSrc = gentle ? [...mat.flood].sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w)) : mat.flood;
+        const probeSrc = gentle ? [...mat.probes].sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w)) : mat.probes;
         const probes = probeSrc.slice(0, 2).map((p) => ({ pair: p, answer: meta.probe.answer, foil: false }));
         const foil = mat.foils?.[0];
         if (foil) probes.splice(Math.floor(Math.random() * 3), 0, { pair: foil, answer: meta.foilAnswer, foil: true });

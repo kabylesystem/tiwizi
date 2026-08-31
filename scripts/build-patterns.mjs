@@ -651,7 +651,13 @@ function pickVaried(instances, n, seenTokens) {
   return chosen;
 }
 
-const lite = (p) => ({ id: p.id, kab: p.kab, fr: p.fr, audio: p.audio, w: p.w });
+// d = difficulté RÉELLE : nb de mots + 2 par mot rare (fréquence corpus < 15)
+// · une phrase courte pleine de mots rares est plus dure qu'une longue courante
+const diffOf = (p) => {
+  const toks = tokens(p.kab);
+  return toks.length + 2 * toks.filter((t) => (freq.get(t) || 0) < 15).length;
+};
+const lite = (p) => ({ id: p.id, kab: p.kab, fr: p.fr, audio: p.audio, w: p.w, d: diffOf(p) });
 
 // --- twin mining: pairs differing only by a particle set + ≤1 changed token ---
 // (negation changes the verb vowel: "Yeswa aman" / "Ur yeswi ara aman")

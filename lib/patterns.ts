@@ -23,7 +23,7 @@ export type PatternMeta = {
 /** Un item de probe : phrase réelle ou piège, avec SA bonne réponse. */
 export type ProbeItem = { pair: Lite; answer: number; foil: boolean };
 
-export type Lite = { id: number; kab: string; fr: string; audio: boolean; w: number };
+export type Lite = { id: number; kab: string; fr: string; audio: boolean; w: number; d?: number };
 export type Corrupt = { id: number; good: string; bad: string; fr: string; audio: boolean; op: string };
 export type Twin = { plain: Lite; marked: Lite };
 

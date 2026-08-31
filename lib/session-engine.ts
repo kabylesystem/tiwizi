@@ -100,7 +100,7 @@ function itemFor(
 ): ReactItem | null {
   const fresh = (arr: Lite[]) => arr.find((p) => !used.has(p.id) && !seen.has(p.id)) || arr.find((p) => !used.has(p.id));
   const pool = [...mat.extra, ...mat.probes, ...mat.flood];
-  if (gentle) pool.sort((a, b) => a.w - b.w);
+  if (gentle) pool.sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w));
 
   if (channel === "produce") {
     // natif Tatoeba d'abord · synthétique en dernier recours
