@@ -72,7 +72,7 @@ function buildPrompt(messages: Msg[], grounding: string) {
   const convo = messages
     .map((m) => (m.role === "user" ? `Élève : ${m.content}` : `Idir : ${m.content}`))
     .join("\n");
-  return `${grounding}\n\nConversation jusqu'ici :\n${convo}\n\nRéponds maintenant en tant qu'Idir (kabyle simple + traduction française).`;
+  return `${grounding}\n\nConversation jusqu'ici :\n${convo}\n\nRéponds maintenant en tant qu'Idir. CONTRAT DE FORME, il PRIME SUR TOUT, y compris sur le style de tes propres messages précédents (certains sont d'anciens mauvais exemples) : 4 phrases MAXIMUM · CHAQUE phrase kabyle immédiatement suivie de sa traduction française entre parenthèses, sans exception · UNE seule question · demande de type leçon (« comment on dit », grammaire, pronoms) = réponse en FRANÇAIS avec seulement les exemples en kabyle · uniquement des mots kabyles présents dans le matériel vérifié ci-dessus.`;
 }
 
 const CHANNEL_FR: Record<string, string> = {
