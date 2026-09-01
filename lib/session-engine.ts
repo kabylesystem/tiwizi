@@ -12,7 +12,8 @@ import {
   type CogStore, type Channel, type Due,
   dues, nextInduction, weakest, weakestChannel, skill,
 } from "./cognitive-model";
-import { dueCards, type MyCard } from "./cards";
+import { allCards, dueCards, type MyCard } from "./cards";
+import { fold } from "./normalize";
 
 export const SESSION_MINUTES = 15;
 
@@ -88,6 +89,21 @@ export function planNextBlock(
 }
 
 /** Pick the format that targets a channel, given available material. */
+const sentTokens = (kab: string) =>
+  fold(kab).replace(/[^\p{L}'-]+/gu, " ").trim().split(/\s+/).filter(Boolean);
+
+/** Le lexique CONNU de l'élève : ses cartes + toutes les phrases déjà vues. */
+export function knownLexicon(cog: CogStore, materials: Record<string, PatternMaterial>): Set<string> {
+  const known = new Set<string>();
+  for (const c of allCards()) for (const t of sentTokens(c.kab)) known.add(t);
+  for (const [pid, mat] of Object.entries(materials)) {
+    const seenIds = new Set(skill(cog, pid).seenIds);
+    for (const p of [...mat.flood, ...mat.probes, ...mat.extra])
+      if (p && seenIds.has(p.id)) for (const t of sentTokens(p.kab)) known.add(t);
+  }
+  return known;
+}
+
 function itemFor(
   patternId: string,
   channel: Channel,
@@ -96,11 +112,13 @@ function itemFor(
   used: Set<number>,
   seen: Set<number>,
   salt: number,
-  gentle = false
+  gentle = false,
+  known: Set<string> | null = null
 ): ReactItem | null {
-  // gentle : pattern jeune → phrases avec AU PLUS 1 mot rare, les plus
-  // faciles d'abord, et on peut RESSERVIR une phrase déjà vue (revoir une
-  // phrase facile vaut mieux qu'escalader vers l'incompréhensible)
+  // gentle : pattern jeune → tri par SON lexique à lui (i+1 personnel) :
+  // d'abord le nombre de mots hors de son vocabulaire connu, puis la rareté
+  // corpus · et on peut RESSERVIR une phrase déjà vue (revoir une phrase
+  // facile vaut mieux qu'escalader vers l'incompréhensible)
   const fresh = (arr: Lite[]) =>
     gentle
       ? arr.find((p) => !used.has(p.id))
@@ -109,7 +127,14 @@ function itemFor(
   if (gentle) {
     const easy = pool.filter((p) => (p.d ?? p.w) - p.w <= 2);
     if (easy.length >= 6) pool = easy;
-    pool.sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w));
+    if (known) {
+      const unk = (p: Lite) => sentTokens(p.kab).filter((t) => !known.has(t)).length;
+      pool.sort((a, b) => unk(a) - unk(b) || (a.d ?? a.w) - (b.d ?? b.w));
+      const reachable = pool.filter((p) => unk(p) <= 1);
+      if (reachable.length >= 4) pool = reachable;
+    } else {
+      pool.sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w));
+    }
   }
 
   if (channel === "produce") {
@@ -161,6 +186,7 @@ export function buildReactBlock(
   const items: ReactItem[] = [];
   const used = new Set<number>();
   const perPattern: Record<string, number> = {};
+  const lex = knownLexicon(cog, materials);
   let salt = new Date().getDate();
 
   const pickList: Due[] = due.length
@@ -180,7 +206,7 @@ export function buildReactBlock(
     if (!meta || !mat) continue;
     const seen = new Set(skill(cog, d.patternId).seenIds);
     const gentle = (cog.patterns[d.patternId]?.exposure ?? 0) < 15 || !cog.patterns[d.patternId]?.abstracted;
-    const item = itemFor(d.patternId, d.channel, meta, mat, used, seen, salt++, gentle);
+    const item = itemFor(d.patternId, d.channel, meta, mat, used, seen, salt++, gentle, lex);
     if (item) {
       items.push(item);
       perPattern[d.patternId] = (perPattern[d.patternId] ?? 0) + 1;
@@ -206,12 +232,13 @@ export function buildGenerateBlock(
   const items: ReactItem[] = [];
   const used = new Set<number>();
   let salt = new Date().getDate() + 3;
+  const genLex = knownLexicon(cog, materials);
   const pids = Object.keys(materials);
   for (const pid of pids) {
     if (items.length >= n - 1) break;
     const seen = new Set(skill(cog, pid).seenIds);
     const item = itemFor(pid, "produce", metasById[pid], materials[pid], used, seen, salt++,
-      (cog.patterns[pid]?.exposure ?? 0) < 15);
+      (cog.patterns[pid]?.exposure ?? 0) < 15, genLex);
     if (item) items.push(item);
   }
   // le sommet : production LIBRE (sa propre phrase, corrigée par Idir)

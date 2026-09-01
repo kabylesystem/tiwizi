@@ -16,7 +16,7 @@ import {
   type CogStore, CHANNELS, CHANNEL_LABEL,
 } from "@/lib/cognitive-model";
 import {
-  planNextBlock, buildReactBlock, buildGenerateBlock,
+  planNextBlock, buildReactBlock, buildGenerateBlock, knownLexicon,
   SESSION_MINUTES, type Block, type ReactItem,
 } from "@/lib/session-engine";
 import { useGameStore } from "@/lib/store/game-store";
@@ -31,7 +31,7 @@ import { Anticipate } from "@/components/formats/anticipate";
 import { Generate } from "@/components/formats/transform";
 import { Panel, FmtTag, GoldButton, SelfGrade, CREAM } from "@/components/formats/shared";
 import type { Grade } from "@/lib/srs";
-import { primarySense } from "@/lib/normalize";
+import { fold, primarySense } from "@/lib/normalize";
 import { SNAP_KEY, type Snap, loadSnap, clearSnap } from "@/lib/snap";
 import { FennecMascot } from "@/components/fennec";
 import { WordAudio } from "@/components/word-audio";
@@ -193,8 +193,13 @@ export default function SessionPage() {
         // 2 vraies + 1 piège à position imprévisible : réussir le 1er probe
         // ne donne plus les 2 suivants gratuitement
         const gentle = (cog.patterns[meta.id]?.exposure ?? 0) < 10;
-        const floodSrc = gentle ? [...mat.flood].sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w)) : mat.flood;
-        const probeSrc = gentle ? [...mat.probes].sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w)) : mat.probes;
+        const lex = knownLexicon(cog, materialsRef.current);
+        const unkOf = (kab: string) =>
+          fold(kab).split(/[^\p{L}'-]+/u).filter(Boolean).filter((t) => !lex.has(t)).length;
+        const easyFirst = (a: { kab: string; d?: number; w: number }, b: { kab: string; d?: number; w: number }) =>
+          unkOf(a.kab) - unkOf(b.kab) || (a.d ?? a.w) - (b.d ?? b.w);
+        const floodSrc = gentle ? [...mat.flood].sort(easyFirst) : mat.flood;
+        const probeSrc = gentle ? [...mat.probes].sort(easyFirst) : mat.probes;
         const probes = probeSrc.slice(0, 2).map((p) => ({ pair: p, answer: meta.probe.answer, foil: false }));
         const foil = mat.foils?.[0];
         if (foil) probes.splice(Math.floor(Math.random() * 3), 0, { pair: foil, answer: meta.foilAnswer, foil: true });
