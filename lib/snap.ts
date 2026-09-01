@@ -17,10 +17,12 @@ export function loadSnap(): Snap | null {
   try {
     const s = JSON.parse(localStorage.getItem(SNAP_KEY) || "null") as Snap | null;
     if (!s) return null;
-    // fenêtre de 3 h, PEU IMPORTE le calendrier : une session à cheval sur
-    // minuit reste la même séance (bug du 2026-08-13 00h)
+    // la reprise vaut TOUTE LA JOURNÉE (demande kabylesystem : le programme du
+    // jour doit se finir même s'il part des heures) · + fenêtre de 3 h pour
+    // les sessions à cheval sur minuit (bug du 2026-08-13 00h)
+    const sameDay = s.day === new Date().toISOString().slice(0, 10);
     const fresh = Date.now() - s.ts < 3 * 3600_000;
-    if (fresh && s.elapsed >= 20) return s;
+    if ((sameDay || fresh) && s.elapsed >= 20) return s;
   } catch {}
   return null;
 }

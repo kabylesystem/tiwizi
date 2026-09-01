@@ -36,7 +36,9 @@ RÈGLES STRICTES :
 - N'INVENTE JAMAIS un mot kabyle dont tu n'es pas sûr. En cas de doute, reste sur le vocabulaire vérifié ci-dessous ou dis honnêtement que tu n'es pas certain. Mieux vaut peu et juste que beaucoup et faux.
 - Chaque mot kabyle NOUVEAU que tu enseignes doit être PRÉSENT dans les phrases vérifiées, la grammaire ou le livre fournis dans ce message. S'il n'y est pas : ne l'enseigne pas, dis « je n'ai pas le mot vérifié pour X » et construis la leçon avec ce qui existe.
 - PRONONCIATION : ne donne JAMAIS de transcription phonétique inventée (du genre « ça se dit X de Y »). Donne seulement des règles sûres et renvoie l'élève à l'écoute de l'audio natif dans l'app. Si des règles de prononciation vérifiées te sont fournies, utilise UNIQUEMENT celles-là.
-- Si l'élève demande « comment on dit X » : cherche X dans les phrases vérifiées fournies et réponds avec CETTE forme. Si elle n'y est pas, dis-le franchement (« je n'ai pas la forme sûre pour X ») et donne la formulation vérifiée la plus proche. N'invente JAMAIS un verbe ni une conjugaison.
+- « Comment on dit X » : réponds en 3 lignes MAX : 1) LA phrase kabyle en gras + (traduction) · 2) une seule ligne d'explication si utile · 3) invite à l'essayer. RIEN d'autre.
+- Ne montre JAMAIS ton raisonnement, tes recherches ni tes hésitations (« travailler ? non, ça c'est... » = interdit). Donne directement le résultat.
+- Un VERBE vérifié (dictionnaire ou phrases fournies) se conjugue SANS t'excuser avec les marques régulières : -eɣ (je), t-…-ḍ (tu), y-/i- (il), t- (elle), n- (nous). « Le dictionnaire ne me donne que la 3e personne » n'est pas une raison : applique la marque. Ce qui reste interdit : inventer le VERBE lui-même.
 - Question MÉTA (prononciation, grammaire, pronoms, conjugaison, « comment on dit », « c'est quoi », « apprends-moi X ») : c'est une LEÇON → réponds en FRANÇAIS structuré, sans AUCUNE phrase d'ouverture en kabyle. Le kabyle n'apparaît que dans les exemples, entre guillemets, chacun suivi de (traduction).
 - Si des RÈGLES DE PRONONCIATION te sont fournies et que l'élève demande la prononciation d'un mot : APPLIQUE-les concrètement à CE mot, lettre par lettre ou syllabe par syllabe (ce n'est pas une transcription inventée, c'est la règle vérifiée). Puis termine par : « tape le mot dans le chat, sa fiche s'ouvre avec un bouton 🔊 pour l'écouter ».
 - CLAVIER DE L'ÉLÈVE : il n'a pas toujours les lettres kabyles (ɣ č ḥ ɛ ḍ ṭ ẓ ṛ ṣ ǧ). S'il écrit y ou gh pour ɣ, c pour č, d pour ḍ, h pour ḥ, s pour ṣ, t pour ṭ, z pour ẓ, r pour ṛ, a pour ɛ : ce n'est PAS une faute. Juge la phrase comme si elle était écrite en graphie standard, montre la graphie correcte une fois, sans jamais baisser le niveau ni gronder pour ça. Exemple : il tape « Ad ccey seksu » → lis « Ad ččeɣ seksu » (cc→čč, y→ɣ) → c'est PARFAIT, NIVEAU:3.
@@ -141,10 +143,11 @@ export async function POST(req: NextRequest) {
     const hlines: string[] = [];
     const seen = new Set<string>();
     for (const t of qtoks) {
-      const e = searchDict(t, 3)[0];
-      if (!e || seen.has(e.w)) continue;
-      seen.add(e.w);
-      hlines.push(`- « ${t} » → ${e.w} = ${cleanGloss(e.m[0]?.fr.slice(0, 2).join(" · ") ?? "")}`);
+      for (const e of searchDict(t, 4).slice(0, 2)) {
+        if (!e || seen.has(e.w)) continue;
+        seen.add(e.w);
+        hlines.push(`- « ${t} » → ${e.w} = ${cleanGloss(e.m[0]?.fr.slice(0, 2).join(" · ") ?? "")}`);
+      }
     }
     if (hlines.length)
       dictHints = `\n\nDICTIONNAIRE DALLET (mots vérifiés en lien avec sa question · c'est LA source pour « comment on dit X ») :\n${hlines.join("\n")}`;

@@ -231,10 +231,31 @@ async function poll() {
   }
 }
 
+async function remind() {
+  const state = readJson(path.join(DATA, "progress.json"), { state: {} }).state ?? {};
+  const today = new Date().toISOString().slice(0, 10);
+  let cog = null;
+  let snap = null;
+  try { cog = JSON.parse(state["tiwizi.cog.v1"] || "null"); } catch {}
+  try { snap = JSON.parse(state["tiwizi.session.v1"] || "null"); } catch {}
+  if (cog?.lastSession === today) {
+    console.log("session du jour finie · pas de rappel");
+    return;
+  }
+  const enCours = snap?.day === today;
+  await say(
+    enCours
+      ? "🦊 Azul! Ta session Tiwizi du jour est EN COURS mais pas finie · ouvre l'app, le bouton « Reprendre » te remet exactement où tu étais."
+      : "🦊 Azul! Ta session Tiwizi du jour t'attend encore · 15 min et le programme est plié. Ulac aɣilif, mais vas-y. 💪"
+  );
+  console.log("rappel envoyé", enCours ? "(reprise)" : "(pas commencée)");
+}
+
 const mode = process.argv[2];
 if (mode === "send") await sendDaily();
+else if (mode === "remind") await remind();
 else if (mode === "poll") await poll();
 else {
-  console.error("usage: tg-bot.mjs send|poll");
+  console.error("usage: tg-bot.mjs send|poll|remind");
   process.exit(1);
 }
