@@ -96,6 +96,15 @@ export default function SessionPage() {
     return () => window.removeEventListener("tiwizi:pulled", onPulled);
   }, []);
 
+  // l'auto-update ne recharge JAMAIS en plein exercice (retour naly : « tu
+  // fais que reset ») · il attend l'intro, le récap ou un onglet caché
+  useEffect(() => {
+    (window as unknown as { __tiwiziBusy?: boolean }).__tiwiziBusy = phase === "block";
+    return () => {
+      (window as unknown as { __tiwiziBusy?: boolean }).__tiwiziBusy = false;
+    };
+  }, [phase]);
+
   // 15-minute clock (pauses when the tab is hidden)
   useEffect(() => {
     if (!running) return;
@@ -307,7 +316,9 @@ export default function SessionPage() {
           </button>
           <div className="flex-1">
             <span className="mb-1 block text-xs font-medium text-muted">
-              {phase === "block" && block ? BLOCK_LABEL[block.type] : "Session du jour"}
+              {phase === "block" && block
+                ? `Étape ${["react", "cards", "induction", "generate", "scene"].indexOf(block.type) + 1}/5 · ${BLOCK_LABEL[block.type]}`
+                : "Session du jour"}
             </span>
             <div className="h-2 overflow-hidden rounded-full" style={{ background: "rgba(200,150,62,0.15)" }}>
               <div
@@ -466,10 +477,14 @@ function IntroFresh({ cog, metas, onStart }: { cog: CogStore; metas: PatternMeta
     <Panel className="text-center">
       <FennecMascot mood="happy" size={88} />
       <h1 className="mt-2 font-display text-3xl font-bold text-ink">La session du jour</h1>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-        15 minutes. Le moteur enchaîne tout seul : ce que ton cerveau doit retrouver aujourd&apos;hui,
-        {next ? " puis un pattern nouveau (tu le découvriras par toi-même, c'est le principe)," : " puis de la consolidation,"} puis de la production.
-      </p>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">15 minutes, toujours le même programme :</p>
+      <ol className="mx-auto mt-3 max-w-xs space-y-1.5 text-left text-sm text-ink">
+        <li>1. <b>Revoir</b> · on te ré-interroge sur ce que tu as vu hier</li>
+        <li>2. <b>Tes cartes</b> · le vocab qui revient pile avant l&apos;oubli</li>
+        <li>3. <b>Un pas nouveau</b> · {next ? "un pattern à découvrir toi-même" : "consolidation"}</li>
+        <li>4. <b>Écrire</b> · tu produis, Idir corrige</li>
+        <li>5. <b>La scène</b> · du kabyle réel en situation</li>
+      </ol>
       <div className="mx-auto mt-5 grid max-w-sm grid-cols-2 gap-3 text-sm">
         <div className="rounded-2xl p-3" style={{ background: "rgba(200,150,62,0.1)" }}>
           <p className="font-display text-xl font-bold" style={{ color: "#A67B2E" }}>{due}</p>

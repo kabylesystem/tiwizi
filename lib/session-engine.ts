@@ -119,9 +119,11 @@ function itemFor(
   // d'abord le nombre de mots hors de son vocabulaire connu, puis la rareté
   // corpus · et on peut RESSERVIR une phrase déjà vue (revoir une phrase
   // facile vaut mieux qu'escalader vers l'incompréhensible)
+  // gentle : ACTIVE RECALL d'abord · une phrase DÉJÀ VUE en priorité (on
+  // ré-interroge l'acquis d'hier), le nouveau facile ensuite
   const fresh = (arr: Lite[]) =>
     gentle
-      ? arr.find((p) => !used.has(p.id))
+      ? arr.find((p) => !used.has(p.id) && seen.has(p.id)) || arr.find((p) => !used.has(p.id))
       : arr.find((p) => !used.has(p.id) && !seen.has(p.id)) || arr.find((p) => !used.has(p.id));
   let pool = [...mat.extra, ...mat.probes, ...mat.flood];
   if (gentle) {

@@ -15,8 +15,9 @@ export function VersionWatch() {
       const el = document.activeElement;
       return !!el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA");
     };
+    const midExercise = () => (window as unknown as { __tiwiziBusy?: boolean }).__tiwiziBusy === true;
     const maybeReload = () => {
-      if (stale && !typing()) location.reload();
+      if (stale && !typing() && !midExercise()) location.reload();
     };
     const tick = async () => {
       try {
