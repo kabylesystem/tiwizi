@@ -98,9 +98,19 @@ function itemFor(
   salt: number,
   gentle = false
 ): ReactItem | null {
-  const fresh = (arr: Lite[]) => arr.find((p) => !used.has(p.id) && !seen.has(p.id)) || arr.find((p) => !used.has(p.id));
-  const pool = [...mat.extra, ...mat.probes, ...mat.flood];
-  if (gentle) pool.sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w));
+  // gentle : pattern jeune → phrases avec AU PLUS 1 mot rare, les plus
+  // faciles d'abord, et on peut RESSERVIR une phrase déjà vue (revoir une
+  // phrase facile vaut mieux qu'escalader vers l'incompréhensible)
+  const fresh = (arr: Lite[]) =>
+    gentle
+      ? arr.find((p) => !used.has(p.id))
+      : arr.find((p) => !used.has(p.id) && !seen.has(p.id)) || arr.find((p) => !used.has(p.id));
+  let pool = [...mat.extra, ...mat.probes, ...mat.flood];
+  if (gentle) {
+    const easy = pool.filter((p) => (p.d ?? p.w) - p.w <= 2);
+    if (easy.length >= 6) pool = easy;
+    pool.sort((a, b) => (a.d ?? a.w) - (b.d ?? b.w));
+  }
 
   if (channel === "produce") {
     // natif Tatoeba d'abord · synthétique en dernier recours
