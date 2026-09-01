@@ -4,6 +4,21 @@ import { searchSentences, searchGrammar, searchAssimil, searchDict, patternsInde
 import { PRONUNCIATION_REF, PRON_TRIGGER } from "@/lib/pronunciation";
 import { fold, cleanGloss } from "@/lib/normalize";
 import type { CogSnapshot } from "@/lib/cognitive-model";
+import fs from "node:fs";
+import path from "node:path";
+
+type VerbEntry = { kab: string; fr: string; forms: Record<string, string> };
+let _verbs: VerbEntry[] | null = null;
+const verbs = (): VerbEntry[] => {
+  if (!_verbs) {
+    try {
+      _verbs = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "verbs.json"), "utf8"));
+    } catch {
+      _verbs = [];
+    }
+  }
+  return _verbs!;
+};
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -38,7 +53,7 @@ RÈGLES STRICTES :
 - PRONONCIATION : ne donne JAMAIS de transcription phonétique inventée (du genre « ça se dit X de Y »). Donne seulement des règles sûres et renvoie l'élève à l'écoute de l'audio natif dans l'app. Si des règles de prononciation vérifiées te sont fournies, utilise UNIQUEMENT celles-là.
 - « Comment on dit X » : réponds en 3 lignes MAX : 1) LA phrase kabyle en gras + (traduction) · 2) une seule ligne d'explication si utile · 3) invite à l'essayer. RIEN d'autre.
 - Ne montre JAMAIS ton raisonnement, tes recherches ni tes hésitations (« travailler ? non, ça c'est... » = interdit). Donne directement le résultat.
-- Un VERBE vérifié (dictionnaire ou phrases fournies) se conjugue SANS t'excuser avec les marques régulières : -eɣ (je), t-…-ḍ (tu), y-/i- (il), t- (elle), n- (nous). « Le dictionnaire ne me donne que la 3e personne » n'est pas une raison : applique la marque. Ce qui reste interdit : inventer le VERBE lui-même.
+- Les marques de personne RÉGULIÈRES, valables pour tout verbe : -eɣ (je), t-…-ḍ (tu), y-/i- (il), t- (elle), n- (nous), t-…-m (vous, hommes), t-…-mt (vous, femmes), -n (ils), -nt (elles). Tu les APPLIQUES sans t'excuser, y compris vous/ils/elles : « je n'ai pas la forme vérifiée » est interdit quand un tableau de conjugaison attesté t'est fourni ci-dessus. ATTENTION : -nneɣ/-nwen/-nsen sont les POSSESSIFS (notre/votre/leur), jamais des conjugaisons. Ce qui reste interdit : inventer le VERBE lui-même.
 - Question MÉTA (prononciation, grammaire, pronoms, conjugaison, « comment on dit », « c'est quoi », « apprends-moi X ») : c'est une LEÇON → réponds en FRANÇAIS structuré, sans AUCUNE phrase d'ouverture en kabyle. Le kabyle n'apparaît que dans les exemples, entre guillemets, chacun suivi de (traduction).
 - Si des RÈGLES DE PRONONCIATION te sont fournies et que l'élève demande la prononciation d'un mot : APPLIQUE-les concrètement à CE mot, lettre par lettre ou syllabe par syllabe (ce n'est pas une transcription inventée, c'est la règle vérifiée). Puis termine par : « tape le mot dans le chat, sa fiche s'ouvre avec un bouton 🔊 pour l'écouter ».
 - CLAVIER DE L'ÉLÈVE : il n'a pas toujours les lettres kabyles (ɣ č ḥ ɛ ḍ ṭ ẓ ṛ ṣ ǧ). S'il écrit y ou gh pour ɣ, c pour č, d pour ḍ, h pour ḥ, s pour ṣ, t pour ṭ, z pour ẓ, r pour ṛ, a pour ɛ : ce n'est PAS une faute. Juge la phrase comme si elle était écrite en graphie standard, montre la graphie correcte une fois, sans jamais baisser le niveau ni gronder pour ça. Exemple : il tape « Ad ccey seksu » → lis « Ad ččeɣ seksu » (cc→čč, y→ɣ) → c'est PARFAIT, NIVEAU:3.
@@ -134,6 +149,21 @@ export async function POST(req: NextRequest) {
     : "Reste sur le vocabulaire kabyle de base que tu connais avec certitude.";
 
   // grounded GRAMMAR (naly's Anki decks: système verbal, présentatifs, prépositions…)
+  // tableaux de conjugaison ATTESTÉS : si la question touche un verbe connu
+  // (ou parle de conjugaison), Idir reçoit le tableau complet, vous/ils inclus
+  let verbTables = "";
+  {
+    const win = fold(last + " " + messages.slice(-2).map((m) => m.content).join(" "));
+    const matched = verbs().filter(
+      (v) => win.includes(fold(v.kab)) || Object.values(v.forms).some((f) => win.includes(fold(f))) || /conjug/.test(win) && ["xdem", "ruḥ"].includes(v.kab)
+    ).slice(0, 2);
+    if (matched.length) {
+      const P: Record<string, string> = { je: "je", tu: "tu", il: "il", elle: "elle", nous: "nous", vous: "vous (h.)", ils: "ils" };
+      verbTables = "\n\nCONJUGAISON ATTESTÉE PAR LE CORPUS (recopie ces formes TELLES QUELLES · accompli/usuel) :\n" +
+        matched.map((v) => `- ${v.kab} (${v.fr}) : ` + Object.entries(v.forms).map(([p, f]) => `${P[p] ?? p} = ${f}`).join(" · ")).join("\n");
+    }
+  }
+
   // le CHAT consulte aussi le DICTIONNAIRE : « comment on dit apprendre »
   // se répond avec le Dallet (lmed), pas seulement avec des phrases
   let dictHints = "";
@@ -214,10 +244,36 @@ export async function POST(req: NextRequest) {
       pronCalc = `\n\nANALYSE MÉCANIQUE DES T/D (calculée par l'app en appliquant les règles vérifiées ci-dessus · FIABLE · si l'élève demande la prononciation d'un de ces mots, recopie l'analyse du mot concerné TELLE QUELLE, en français, sans la recalculer) :\n${lines.map((l) => `- ${l}`).join("\n")}`;
   }
 
-  const grounding = vocab + dictHints + decode + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
+  const grounding = vocab + verbTables + dictHints + decode + bookGrounding + gramGrounding + pron + pronCalc + cogGrounding(body.cogState);
   const prompt =
     coach || correct ? `${grounding}\n\nDemande : ${body.ask}` : buildPrompt(messages, grounding);
   const system = correct ? CORRECT : coach ? COACH : SYSTEM;
+
+  // demande de CONJUGAISON sur un verbe connu → réponse DÉTERMINISTE du
+  // serveur (tables attestées corpus), le LLM n'a pas voix au chapitre
+  if (!coach && !correct && /conjug/i.test(fold(last))) {
+    const win = fold(last);
+    const hit = verbs().find((v) => win.includes(fold(v.kab)) || Object.values(v.forms).some((f) => win.includes(fold(f))))
+      ?? (/(travail|xdem|xeddem)/.test(win) ? verbs().find((v) => v.kab === "xdem") : undefined);
+    if (hit) {
+      const P: Record<string, string> = { je: "je", tu: "tu", il: "il", elle: "elle", nous: "nous", vous: "vous (à des hommes)", ils: "ils" };
+      const lines = Object.entries(hit.forms).map(([pp, f]) => `- ${P[pp] ?? pp} : **${f}**`);
+      const missing = ["je", "tu", "il", "elle", "nous", "vous", "ils"].filter((pp) => !hit.forms[pp]);
+      const reply = `**${hit.kab}** (${hit.fr}) · les formes attestées dans le corpus :\n${lines.join("\n")}` +
+        (missing.length ? `\n\n(${missing.join(", ")} : pas encore de forme attestée dans mes sources, je ne l'invente pas · « elles » suit le modèle de « ils » avec -nt.)` : "") +
+        `\n\nTape n'importe quelle forme dans le chat pour l'écouter 🔊, puis essaie-en une dans une phrase.`;
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: reply })}\n\n`));
+          controller.close();
+        },
+      });
+      return new Response(stream, {
+        headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" },
+      });
+    }
+  }
 
   // le CHAT streame : les mots d'Idir arrivent au fil de l'eau
   if (!coach && !correct) {
