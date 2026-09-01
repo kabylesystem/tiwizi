@@ -17,6 +17,8 @@ export type MyCard = {
   source?: string; // Dallet · grammaire (cours) · …
   addedAt: string;
   state: CardState;
+  /** verbe : formes de personne attestées corpus → drill de conjugaison */
+  forms?: Record<string, string>;
 };
 
 type CardStore = { v: 1; cards: Record<string, MyCard> };
@@ -38,7 +40,7 @@ function save(s: CardStore) {
 }
 
 /** Ajoute une carte (sens TOUJOURS issu d'une source humaine). */
-export function addCardRaw(c: { kab: string; fr: string; root?: string; source?: string }): boolean {
+export function addCardRaw(c: { kab: string; fr: string; root?: string; source?: string; forms?: Record<string, string> }): boolean {
   const s = loadCards();
   const k = fold(c.kab);
   if (s.cards[k] || !c.fr) return false;
@@ -50,6 +52,7 @@ export function addCardRaw(c: { kab: string; fr: string; root?: string; source?:
     source: c.source,
     addedAt: new Date().toISOString().slice(0, 10),
     state: schedule(undefined, 2), // entre dans le cycle : dû demain
+    forms: c.forms,
   };
   save(s);
   return true;

@@ -12,7 +12,7 @@ import {
   type CogStore, type Channel, type Due,
   dues, nextInduction, weakest, weakestChannel, skill,
 } from "./cognitive-model";
-import { allCards, dueCards, type MyCard } from "./cards";
+import { addCardRaw, allCards, dueCards, hasCard, type MyCard } from "./cards";
 import { fold } from "./normalize";
 
 export const SESSION_MINUTES = 15;
@@ -102,6 +102,21 @@ export function knownLexicon(cog: CogStore, materials: Record<string, PatternMat
       if (p && seenIds.has(p.id)) for (const t of sentTokens(p.kab)) known.add(t);
   }
   return known;
+}
+
+export type VerbEntry = { kab: string; fr: string; forms: Record<string, string> };
+
+/** Un verbe dont une forme a été RENCONTRÉE devient une carte-verbe (drill). */
+export function seedVerbCards(cog: CogStore, materials: Record<string, PatternMaterial>, verbs: VerbEntry[]): number {
+  const lex = knownLexicon(cog, materials);
+  let added = 0;
+  for (const v of verbs) {
+    if (hasCard(v.kab)) continue;
+    const met = lex.has(fold(v.kab)) || Object.values(v.forms).some((f) => lex.has(fold(f)));
+    if (!met) continue;
+    if (addCardRaw({ kab: v.kab, fr: v.fr, source: "verbe · formes attestées corpus", forms: v.forms })) added++;
+  }
+  return added;
 }
 
 function itemFor(

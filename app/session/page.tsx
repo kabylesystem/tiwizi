@@ -16,8 +16,8 @@ import {
   type CogStore, CHANNELS, CHANNEL_LABEL,
 } from "@/lib/cognitive-model";
 import {
-  planNextBlock, buildReactBlock, buildGenerateBlock, knownLexicon,
-  SESSION_MINUTES, type Block, type ReactItem,
+  planNextBlock, buildReactBlock, buildGenerateBlock, knownLexicon, seedVerbCards,
+  SESSION_MINUTES, type Block, type ReactItem, type VerbEntry,
 } from "@/lib/session-engine";
 import { useGameStore } from "@/lib/store/game-store";
 import { allCards, dueCards, gradeCard, type MyCard } from "@/lib/cards";
@@ -52,6 +52,7 @@ export default function SessionPage() {
   const cogRef = useRef<CogStore | null>(null);
   const [metas, setMetas] = useState<PatternMeta[] | null>(null);
   const materialsRef = useRef<Record<string, PatternMaterial>>({});
+  const verbsRef = useRef<VerbEntry[]>([]);
   const ranRef = useRef({ react: 0, induction: 0, generate: 0, cards: 0, scene: 0 });
 
   const [phase, setPhase] = useState<"loading" | "intro" | "block" | "recap" | "error">("loading");
@@ -87,6 +88,7 @@ export default function SessionPage() {
       startRef.current = { cards: allCards().length, pat };
     }
     loadGraph();
+    fetch("/api/verbs").then((r) => r.json()).then((d) => { verbsRef.current = d.verbs ?? []; }).catch(() => {});
     // si la restauration depuis le disque (StateSync) arrive après nous
     const onPulled = () => {
       cogRef.current = loadCog();
@@ -178,6 +180,7 @@ export default function SessionPage() {
     async (ignoreClock = false, elapsedSecOverride?: number) => {
       const sec = elapsedSecOverride ?? elapsed;
       const cog = cogRef.current!;
+      if (verbsRef.current.length) seedVerbCards(cog, materialsRef.current, verbsRef.current);
       let req = planNextBlock(cog, metas!, ranRef.current, ignoreClock ? 0 : sec / 60);
       // outil de dev : /session?demo=scene force la scène en premier bloc
       if (ranRef.current.scene === 0 && typeof location !== "undefined" && new URLSearchParams(location.search).get("demo") === "scene")
@@ -535,6 +538,40 @@ function CardsBlock({
   const [i, setI] = useState(0);
   const [rev, setRev] = useState(false);
   const c = cards[i];
+  const persons = c.forms ? Object.keys(c.forms) : [];
+  const person = persons.length ? persons[(c.state.reps + i) % persons.length] : null;
+  const PERSON_FR: Record<string, string> = { je: "je", tu: "tu", il: "il", elle: "elle", nous: "nous" };
+  if (c.forms && person) {
+    return (
+      <Panel>
+        <FmtTag label={`Ton verbe · ${i + 1}/${cards.length}`} sub="Conjugue de tête, puis vérifie." />
+        <p className="kab text-balance text-center text-4xl font-bold text-ink">{c.kab}</p>
+        <p className="mt-1 text-center text-sm text-muted">{primarySense(c.fr)}</p>
+        <p className="mt-4 text-center text-lg text-ink">
+          Comment tu dis « <b>{PERSON_FR[person] ?? person}</b> » ?
+        </p>
+        {rev && (
+          <div className="mt-3 text-center">
+            <p className="kab text-3xl font-bold" style={{ color: "#A67B2E" }}>{c.forms[person]}</p>
+            <div className="mt-2 flex justify-center"><WordAudio kab={c.forms[person]} autoPlay key={c.forms[person]} /></div>
+          </div>
+        )}
+        {!rev ? (
+          <GoldButton onClick={() => setRev(true)}>Révéler</GoldButton>
+        ) : (
+          <SelfGrade
+            prompt="Tu l'avais ?"
+            onGrade={(g) => {
+              onCard(c.k, g);
+              setRev(false);
+              if (i < cards.length - 1) setI(i + 1);
+              else onDone();
+            }}
+          />
+        )}
+      </Panel>
+    );
+  }
   return (
     <Panel>
       <FmtTag label={`Ta carte · ${i + 1}/${cards.length}`} sub="Ton deck à toi · reconstruis le sens." />
